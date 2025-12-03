@@ -1,0 +1,51 @@
+body{
+    background-image: url('hatter.jpg');
+    background-repeat: no-repeat;
+    background-size: cover;
+    font-family: Georgia, 'Times New Roman', Times, serif;
+}
+
+.navbar ul {
+    display: flex;
+    justify-content: center;   
+    gap: 20px;                 
+    padding: 0;
+    margin: 20px 0;
+}
+
+.navbar .menu-item {
+    padding: 10px 25px;
+    border: 2px solid black;
+    color: black;
+    background: white;
+    list-style-type: none;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: 0.3s;
+    
+}
+h2{
+    font-size: 18px;
+}
+#info{
+    border: 2px solid black;
+    color: black;
+    background: white;
+    border-radius: 10px;
+    padding: 10px;
+}
+
+
+#contacts{
+    border: 2px solid black;
+    color: black;
+    background: white;
+    border-radius: 10px;
+    
+}
+.content-wrapper {
+    display: flex;
+    gap: 30px;               /* távolság a két box között */
+    justify-content: center; /* középre igazítás */
+    margin-top: 20px;
+}
