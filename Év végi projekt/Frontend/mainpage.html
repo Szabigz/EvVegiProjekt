@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="hu">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -12,17 +12,18 @@
         <header>
             <nav class="navbar">
                 <ul>
-                    <h1><li class="menu-item">Slick Barber Shop</li></h1>
-                    <h2><li class="menu-item">Információ Rólunk</li></h2>
-                    <h2><li class="menu-item">Barbereink</li></h2>
-                    <h2><li class="menu-item">Foglalj Időpontot</li></h2>
-                    <h2><li class="menu-item">Hol találsz meg minket?</li></h2>
+                    <li class="menu-item"><img src="images/iconwithoutbg.jpg" alt="Slick Barber Shop" title="Slick Barber Shop" class="menu-img"></li>
+                    <li class="menu-item"><span class="menu-text h2ok"><h2>Információ Rólunk</h2></span></li>
+                    <li class="menu-item"><span class="menu-text h2ok"><h2>Csapat</h2></span></li>
+                    <li class="menu-item"><span class="menu-text h2ok"><h2>Munkáink</h2></span></li>
+                    <li class="menu-item"><span class="menu-text h2ok"><h2>Foglalj Időpontot</h2></span></li>
+                    <li class="menu-item"><span class="menu-text h2ok"><h2>Hol találsz meg minket?</h2></span></li>
                 </ul>
             </nav>
         </header>
         <main>
             <div class="row g-4">
-                <div class="col-lg-10" id="info">
+                <div class="col-lg-10 col-md-8 col-sm-6" id="info">
                     <p>A BlackSteel Barber Shop egy modern, mégis klasszikus hangulatot idéző férfi fodrászszalon, ahol a minőségi szolgáltatás és a kényelmes, barátságos környezet kiemelt szerepet kap.
                         Célunk, hogy minden vendégünk számára személyre szabott, professzionális frizurát és szakállápolást biztosítsunk — legyen szó hagyományos borotválásról, modern hajvágásról vagy teljes átalakításról.
                     </p>
@@ -37,9 +38,9 @@
                         A BlackSteel Barber Shop a férfiak számára nem csupán egy szalon, hanem kikapcsolódási hely is, ahol a vendégek nyugodt környezetben, egy jó beszélgetés vagy akár egy pohár ital mellett frissülhetnek fel.
                     </p>
                 </div>
-                <div class="col-lg-2" id="contacts">
+                <div class="col-lg-2 col-md-4 col-sm-6" id="contacts">
                     <h2>
-                        📞 Elérhetőségek
+                        📞 Kapcsolat
                     </h2>
                     <p>📍 Cím: <br>
                         Budapest, Fő utca 12. <br>
@@ -64,6 +65,54 @@
                     </p>
                 </div>
             </div>
+            <div class="row">
+                <!-- Nagy div (naptár) -->
+                <div class="col-lg-6 my-4">
+                  <div class="calendar card p-3">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                      <button class="btn btn-outline-primary" id="prevMonth">&lt;</button>
+                      <button class="btn btn-outline-primary" id="nextMonth">&gt;</button>
+                    </div>
+              
+                    <table class="table table-bordered text-center mb-0">
+                      <thead class="table-light">
+                        <tr>
+                          <th colspan="6" id="monthYear" class="text-center fw-bold"></th>
+                        </tr>
+                        <tr>
+                          <th>H</th>
+                          <th>K</th>
+                          <th>Sze</th>
+                          <th>Cs</th>
+                          <th>P</th>
+                          <th>Szo</th>
+                        </tr>
+                      </thead>
+                      <tbody id="calendarBody"></tbody>
+                    </table>
+                  </div>
+                </div>
+              
+                <!-- Közepes div (fodrászok) -->
+                <div class="col-lg-4 my-4 barbers">
+                  <div class="card h-100 text-center">
+                    <img src="images/barber1.jpg" class="card-img-top" alt="Fodrász neve">
+                    <div class="card-body">
+                      <h5 class="card-title">Kiss Péter</h5>
+                      <p class="card-text">Specialista a klasszikus férfi hajvágásokban és szakállformázásban.</p>
+                    </div>
+                  </div>
+                </div>
+              
+                <!-- Kicsi div (foglalás) -->
+                <div class="col-lg-2 my-4 booking">
+                  <div class="card h-100 text-center p-3">
+                    <button>Foglalás</button>
+                  </div>
+                </div>
+              </div>
+              
+              
         </main>
         <footer></footer>
     </div>

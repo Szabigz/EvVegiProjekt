@@ -1,5 +1,5 @@
 body{
-    background-image: url('hatter.jpg');
+    background-image: url('images/hatter.jpg');
     background-repeat: no-repeat;
     background-size: cover;
     font-family: Georgia, 'Times New Roman', Times, serif;
@@ -7,45 +7,161 @@ body{
 
 .navbar ul {
     display: flex;
-    justify-content: center;   
-    gap: 20px;                 
+    justify-content: center;
+    gap: 20px;
     padding: 0;
     margin: 20px 0;
+    list-style-type: none;
+    align-items: center;
 }
 
 .navbar .menu-item {
-    padding: 10px 25px;
+    position: relative;
+    display: inline-block;
     border: 2px solid black;
-    color: black;
-    background: white;
-    list-style-type: none;
     border-radius: 10px;
+    overflow: hidden;
     cursor: pointer;
-    transition: 0.3s;
-    
+    transition: transform 0.3s, box-shadow 0.3s;
 }
+
+.navbar .menu-item:first-child {
+    flex: 1 1 auto; 
+    border: none;
+}
+
+.menu-img {
+    display: block;
+    width: 100%;
+    height: 140px; 
+    object-fit: cover;
+    border-radius: 10px;
+}
+
+
+.navbar .menu-item:not(:first-child) {
+    flex: 0 0 auto;
+    padding: 10px 25px;
+    background: rgba(255, 255, 255, 0.8);
+    transition: transform 0.3s, box-shadow 0.3s;
+}
+
+
+.menu-text {
+    position: relative;
+    z-index: 2;
+    color: black;
+    font-weight: bold;
+    transition: color 0.3s;
+}
+
+.navbar .menu-item:not(:first-child):hover {
+    background-image: url('images/scissors_invert.jpg');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    transform: scale(1.08);
+    box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+}
+
+.navbar .menu-item:not(:first-child):hover::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.5);
+    border-radius: 10px;
+    z-index: 1;
+}
+
+.navbar .menu-item:not(:first-child):hover .menu-text {
+    color: white;
+}
+
 h2{
     font-size: 18px;
 }
+
+
 #info{
     border: 2px solid black;
     color: black;
-    background: white;
+    background: rgba(255, 255, 255, 0.8);
     border-radius: 10px;
     padding: 10px;
-}
+    margin-right: 20px;
+    width: 1000px;
 
+}
 
 #contacts{
     border: 2px solid black;
     color: black;
-    background: white;
+    background: rgba(255, 255, 255, 0.8);
     border-radius: 10px;
-    
+}
+#contacts:hover{
+    background: black;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    color: white;
+    transform: scale(1.08);
+    box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+
 }
 .content-wrapper {
     display: flex;
-    gap: 30px;               /* távolság a két box között */
-    justify-content: center; /* középre igazítás */
+    gap: 30px;               
+    justify-content: center;
     margin-top: 20px;
+}
+
+.calendar td {
+    cursor: pointer;
+    height: 60px;
+    vertical-align: middle;
+    transition: background 0.2s;
+}
+
+.calendar{
+    width: 800px;
+    height: 400px;
+}
+.calendar td:hover {
+    background-color: rgba(0, 123, 255, 0.2);
+    border-radius: 5px;
+}
+  
+.calendar .today {
+    background-color: rgba(0, 123, 255, 0.4);
+    font-weight: bold;
+    border-radius: 5px;
+}
+  
+.card-img-top {
+    height: 200px;
+    object-fit: cover;
+    border-radius: 10px 10px 0 0;
+}
+
+.card {
+    border: 2px solid black;
+    border-radius: 10px;
+    transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.card:hover {
+    transform: scale(1.05);
+    box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+}
+.barbers{
+    width: 300px;
+    height: 200px;
+}
+.booking{
+    height: 100px;
+    width: 100px;
 }
