@@ -11,108 +11,157 @@
     <div class="container">
         <header>
             <nav class="navbar">
+                <script src="nav.js"></script>
                 <ul>
                     <li class="menu-item"><img src="images/iconwithoutbg.jpg" alt="Slick Barber Shop" title="Slick Barber Shop" class="menu-img"></li>
-                    <li class="menu-item"><span class="menu-text h2ok"><h2>Információ Rólunk</h2></span></li>
-                    <li class="menu-item"><span class="menu-text h2ok"><h2>Csapat</h2></span></li>
-                    <li class="menu-item"><span class="menu-text h2ok"><h2>Munkáink</h2></span></li>
-                    <li class="menu-item"><span class="menu-text h2ok"><h2>Foglalj Időpontot</h2></span></li>
-                    <li class="menu-item"><span class="menu-text h2ok"><h2>Hol találsz meg minket?</h2></span></li>
+                    <li class="menu-item"><span class="menu-text h2ok" id="info"><h2>Információ Rólunk</h2></span></li>
+                    <li class="menu-item"><span class="menu-text h2ok" id="team"><h2>Csapat</h2></span></li>
+                    <li class="menu-item"><span class="menu-text h2ok" id="works"><h2>Munkáink</h2></span></li>
+                    <li class="menu-item"><span class="menu-text h2ok" id="book-appointments"><h2>Foglalj Időpontot</h2></span></li>
+                    <li class="menu-item"><span class="menu-text h2ok" id="location"><h2>Hol találsz meg minket?</h2></span></li>
                 </ul>
             </nav>
         </header>
         <main>
-            <div class="row g-4">
-                <div class="col-lg-10 col-md-8 col-sm-6" id="info">
-                    <p>A BlackSteel Barber Shop egy modern, mégis klasszikus hangulatot idéző férfi fodrászszalon, ahol a minőségi szolgáltatás és a kényelmes, barátságos környezet kiemelt szerepet kap.
-                        Célunk, hogy minden vendégünk számára személyre szabott, professzionális frizurát és szakállápolást biztosítsunk — legyen szó hagyományos borotválásról, modern hajvágásról vagy teljes átalakításról.
-                    </p>
-                    <p>Szalonunkban nagy hangsúlyt fektetünk a részletekre:</p>
-                    <ul class=".scissor-list">
-                        <li>prémium minőségű haj- és szakállápoló termékeket használunk</li>
-                        <li>minden munkát tapasztalt, képzett barber végez</li>
-                        <li>a vendégek számára igényes, letisztult környezetet biztosítunk</li>
-                        <li>minden szolgáltatás mellé stílustanácsadást is nyújtunk, ha szükséges.</li>
-                    </ul>
+            <div class="row" id="info-div">
+                  <div class="col-lg-10 col-md-8 col-sm-12" id="info-box">
+
+                    <h2 class="info-title">Rólunk</h2>
+                
                     <p>
-                        A BlackSteel Barber Shop a férfiak számára nem csupán egy szalon, hanem kikapcsolódási hely is, ahol a vendégek nyugodt környezetben, egy jó beszélgetés vagy akár egy pohár ital mellett frissülhetnek fel.
+                        A BlackSteel Barber Shop egy modern, mégis klasszikus hangulatot idéző férfi fodrászszalon,
+                        ahol a minőségi szolgáltatás és a kényelmes, barátságos környezet kiemelt szerepet kap.
+                        Célunk, hogy minden vendégünk számára személyre szabott, professzionális frizurát és
+                        szakállápolást biztosítsunk — legyen szó hagyományos borotválásról, modern hajvágásról
+                        vagy teljes átalakításról.
                     </p>
+                
+                    <p>Szalonunkban nagy hangsúlyt fektetünk a részletekre:</p>
+                
+                    <ul class="scissor-list">
+                        <li> Prémium minőségű haj- és szakállápoló termékek</li>
+                        <li> Tapasztalt és képzett barber csapat</li>
+                        <li> Igényes, letisztult környezet</li>
+                        <li> Egyéni stílustanácsadás minden vendégnek</li>
+                    </ul>
+                
+                    <p>
+                        A BlackSteel Barber Shop a férfiak számára nem csupán egy szalon, hanem kikapcsolódási hely,
+                        ahol egy jó beszélgetés vagy akár egy pohár ital mellett frissülhetnek fel.
+                    </p>
+                
                 </div>
-                <div class="col-lg-2 col-md-4 col-sm-6" id="contacts">
-                    <h2>
+                
+                <script src="contacts.js"></script>
+                <div class="col-lg-2 col-md-4 col-sm-6 contact-box">
+                    <h2 class="contact-title">
                         📞 Kapcsolat
                     </h2>
-                    <p>📍 Cím: <br>
+                    <div class="contact-content">
+                      <p>📍 Cím: <br>
                         Budapest, Fő utca 12. <br>
-                    </p>
-                    <p>
+                      </p>
+                      <p>
                         ☎️ Telefonszám: <br>
                         +36 20 123 4567
-                    </p>
-                    <p>
+                      </p>
+                      <p>
                         📧 E-mail: <br>
                         <a href="">slickbarbershop@gmail.com</a>
-                    </p>
-                    <p>
+                      </p>
+                      <p>
                         📸 Instagram: <br>
                         <a href="">www.slickbarbershop.hu</a>
-                    </p>
-                    <p>
+                      </p>
+                      <p>
                         🕒 Nyitvatartás: <br>
                         H–P: 9:00 – 19:00 <br>
                         Szo: 9:00 – 14:00 <br>
                         V: Zárva
-                    </p>
+                      </p>
+                    </div>
                 </div>
             </div>
-            <div class="row">
-                <!-- Nagy div (naptár) -->
-                <div class="col-lg-6 my-4">
-                  <div class="calendar card p-3">
-                    <div class="d-flex justify-content-between align-items-center mb-3">
-                      <button class="btn btn-outline-primary" id="prevMonth">&lt;</button>
-                      <button class="btn btn-outline-primary" id="nextMonth">&gt;</button>
-                    </div>
-              
-                    <table class="table table-bordered text-center mb-0">
-                      <thead class="table-light">
-                        <tr>
-                          <th colspan="6" id="monthYear" class="text-center fw-bold"></th>
-                        </tr>
-                        <tr>
-                          <th>H</th>
-                          <th>K</th>
-                          <th>Sze</th>
-                          <th>Cs</th>
-                          <th>P</th>
-                          <th>Szo</th>
-                        </tr>
-                      </thead>
-                      <tbody id="calendarBody"></tbody>
-                    </table>
-                  </div>
-                </div>
-              
-                <!-- Közepes div (fodrászok) -->
-                <div class="col-lg-4 my-4 barbers">
-                  <div class="card h-100 text-center">
-                    <img src="images/barber1.jpg" class="card-img-top" alt="Fodrász neve">
-                    <div class="card-body">
-                      <h5 class="card-title">Kiss Péter</h5>
-                      <p class="card-text">Specialista a klasszikus férfi hajvágásokban és szakállformázásban.</p>
-                    </div>
-                  </div>
-                </div>
-              
-                <!-- Kicsi div (foglalás) -->
-                <div class="col-lg-2 my-4 booking">
-                  <div class="card h-100 text-center p-3">
-                    <button>Foglalás</button>
-                  </div>
-                </div>
+            
+            <!--Munkaink-->
+            <div class="row works" id="works-div">
+              <h2>Munkáink</h2>
+              <div class="col-lg-4">
+                <img src="images/work1.jpg" alt="" class="bw-img img-fluid img-circle-hover">
               </div>
-              
-              
+              <div class="col-lg-4">
+                <img src="images/work2.jpg" alt="" class="bw-img img-fluid img-circle-hover">
+              </div>
+              <div class="col-lg-4">
+                <img src="images/work3.jpg" alt="" class="bw-img img-fluid img-circle-hover">
+              </div>
+            </div>
+
+            <!--Fodraszok-->
+            <div id="team-div">
+
+            </div>
+
+            <div class="row d-flex align-items-start" id="book-appointment-div">
+
+              <!-- Naptár bal oldalt -->
+              <div class="col-lg-6 my-4">
+                  <div class="calendar p-3">
+                      <div class="d-flex justify-content-between align-items-center mb-3">
+                          <button class="btn btn-outline-primary" id="prevMonth">&lt;</button>
+                          <h4 id="monthYear" class="fw-bold mb-0"></h4>
+                          <button class="btn btn-outline-primary" id="nextMonth">&gt;</button>
+                      </div>
+          
+                      <table class="table table-bordered text-center mb-0">
+                          <thead class="table-light">
+                              <tr>
+                                  <th>H</th>
+                                  <th>K</th>
+                                  <th>Sze</th>
+                                  <th>Cs</th>
+                                  <th>P</th>
+                                  <th>Szo</th>
+                              </tr>
+                          </thead>
+                          <tbody id="calendarBody"></tbody>
+                      </table>
+                  </div>
+              </div>
+          
+              <!-- Fodrászkártyák középen -->
+              <div class="col-lg-4 my-4">
+                  <div class="barber-list">
+          
+                      <div class="card mb-3 text-center">
+                          <img src="images/barber.jpg" class="card-img-top" alt="Fodrász">
+                          <div class="card-body">
+                              <h5 class="card-title">Kiss Péter</h5>
+                          </div>
+                      </div>
+          
+                      <div class="card mb-3 text-center">
+                          <img src="images/barber.jpg" class="card-img-top" alt="Fodrász">
+                          <div class="card-body">
+                              <h5 class="card-title">Nagy Ádám</h5>
+                          </div>
+                      </div>
+          
+                  </div>
+              </div>
+          
+              <!-- Foglalás jobb oldalt -->
+              <div class="col-lg-2 my-4">
+                  <div class="card booking-card text-center p-4">
+                      <button class="btn btn-dark w-100 py-2">Foglalás</button>
+                  </div>
+              </div>
+          </div>
+
+          <!--Terkep-->
+          <div id="location-div">
+
+          </div>
         </main>
         <footer></footer>
     </div>
