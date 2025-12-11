@@ -14,28 +14,32 @@ body::before {
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(0,0,0,0.4); 
+    background-color: rgba(0,0,0,0.6); 
     pointer-events: none; 
-    z-index: -1; /* <- itt a lényeg, hátrébb tesszük */
+    z-index: -1;
 }
 
 .container, .works h2, #info-box {
     position: relative;
-    z-index: 1; /* a fontos fehér tartalmak előre */
+    z-index: 1; 
 }
 
-#black-section {
-    background-color: black;
-    width: 100%;
-    padding: 40px 0;
-    position: relative;  
+.footer-style {
+    padding: 20px;
+    background: #111;
 }
 
-#black-section * {
-    color: white !important;
+.footer-style a {
+    color: #bbb;
+    text-decoration: none;
+    font-weight: 500;
+    transition: color 0.3s;
 }
 
-/*Navigáció*/
+.footer-style a:hover {
+    color: white;
+}
+
 
 
 .navbar ul {
@@ -65,10 +69,10 @@ body::before {
 
 .navbar .menu-item:not(:first-child) {
     padding: 12px 28px;
-    background: linear-gradient(135deg, #ffffff, #ececec);
-    border: 2px solid #000;
     box-shadow: 0 4px 12px rgba(0,0,0,0.2);
-
+    background: rgba(255,255,255,0.15);
+    border: 1px solid rgba(255,255,255,0.3);
+    backdrop-filter: blur(4px);
     position: relative;
 }
 
@@ -79,7 +83,7 @@ body::before {
     left: 0;
     height: 35%;
     width: 100%;
-    background: rgba(255,255,255,0.4);
+    background: rgba(255,255,255,0.1);
     border-radius: inherit;
     pointer-events: none;
 }
@@ -182,10 +186,15 @@ body::before {
 }
 
 /*Kapcsolatok*/
+
 .contact-box h2{
     font-size: 20px;
 }
-
+.contact-img{
+    width: 60px;
+    height: 35px;
+    margin: 0;
+}
 .contact-box{
     position: fixed;
     margin-left: 1250px;
@@ -195,6 +204,9 @@ body::before {
     border-radius: 10px;
     cursor: pointer;
     z-index: 1;
+    right: 20px;
+    bottom: 20px;
+    width: 260px;
     
 }
 .contact-content {
@@ -208,17 +220,19 @@ body::before {
 
 /*Munkak*/
 
-.works{
+.works-team{
     margin-top: 20px;
 }
-.works h2{
+.works-team h2{
     text-align: center;
     font-style: italic;
-    background-color: rgba(255, 255, 255, 0.8);
+    background-color: rgba(255, 255, 255, 0.15);
     font-weight: bold;
     border-radius: 50%;
-    border: solid black 2px;
+    color: white;
     box-shadow: 0 12px 28px rgba(0,0,0,0.35);
+    border: 1px solid rgba(255,255,255,0.25);
+    padding: 10px 20px;
 
 }
 .img-circle-hover {
@@ -240,6 +254,7 @@ body::before {
 }
 
 /* Naptár */
+
 .calendar {
     width: 100%;
 }
@@ -363,28 +378,136 @@ body::before {
     color: white;
 }
 
+/*Csapat*/
+
+#team-div {
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+    flex-wrap: wrap;
+    padding: 40px 0;
+}
+
+.team-card {
+    background: rgba(255, 255, 255, 0.1); 
+    backdrop-filter: blur(6px);          
+    border-radius: 15px;
+    padding: 20px;
+    width: 250px;
+    text-align: center;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+}
+.team-card p{
+    color: white;
+    font-style: italic;
+}
+.team-card ul{
+    color: white;
+    list-style-type: none;
+}
+
+
+.team-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+}
+
+.team-img {
+    width: 140px;
+    height: 140px;
+    object-fit: cover;
+    border-radius: 50%;      /* kör alakú */
+    margin-bottom: 15px;
+    border: 4px solid white;
+}
+
+.team-name {
+    color: white;
+    font-weight: 600;
+    font-size: 1.2rem;
+    margin-top: 10px;
+}
+
 
 
 /*Reszponzivitas*/
+@media (max-width: 576px) {
+
+    .menu-text h2 {
+        font-size: 0.9rem;
+    }
+
+    .contact-box {
+        width: 85%;
+        right: 50%;
+        transform: translateX(50%);
+    }
+}
 @media (max-width: 768px) {
+
+    .container {
+        padding-left: 10px;
+        padding-right: 10px;
+    }
+
+    .img-circle-hover {
+        width: 170px;
+        height: 170px;
+        margin: 15px auto;
+        display: block;
+    }
+
+    .barber-list .card {
+        width: 250px;
+        height: auto;
+    }
+
+    .calendar td {
+        height: 45px;
+        font-size: 0.85rem;
+    }
+
+    .booking-card {
+        width: 100%;
+    }
+
+    .barber-list {
+        width: 100%;
+        max-width: 350px;
+    }
+
+    #team-div {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .team-card {
+        width: 90%;
+        max-width: 350px;
+    }
+}
+@media (max-width: 992px) {
+
     .navbar ul {
         flex-direction: column;
-        gap: 10px;
+        padding: 0;
     }
 
     .navbar .menu-item:not(:first-child) {
         width: 100%;
-        text-align: center;
-        padding: 15px;
+        padding: 10px 15px;
+        margin: 5px 0;
+    }
+
+    .menu-text h2 {
+        font-size: 1rem;
     }
 
     .menu-img {
-        height: 100px;
-        object-fit: contain;
+        height: 80px;
     }
-}
 
-@media (max-width: 992px) {
     .contact-box {
         position: fixed;
         bottom: 20px;
@@ -393,24 +516,7 @@ body::before {
         width: 260px;
         z-index: 2000;
     }
-}
 
-@media (max-width: 768px) {
-    .img-circle-hover {
-        width: 180px;
-        height: 180px;
-        margin: 20px auto;
-        display: block;
-    }
-}
-@media (max-width: 768px) {
-    .barber-list .card {
-        width: 250px;     
-        height: auto;
-    }
-}
-
-@media (max-width: 992px) {
     #book-appointment-div {
         flex-direction: column;
         align-items: center !important;
@@ -422,12 +528,5 @@ body::before {
         width: 100%;
         max-width: 500px;
         margin-bottom: 20px;
-    }
-}
-
-@media (max-width: 768px) {
-    .container {
-        padding-left: 10px;
-        padding-right: 10px;
     }
 }
