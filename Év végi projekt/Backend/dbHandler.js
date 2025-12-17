@@ -19,6 +19,10 @@ const userTable = dbHandler.define('user',{
         type:DataTypes.STRING,
         allowNull:false
     },
+    password:{
+        type:DataTypes.STRING,
+        allowNull:false
+    },
     phoneNum:{
       type:DataTypes.INTEGER,
         allowNull:false
