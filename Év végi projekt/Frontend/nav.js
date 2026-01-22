@@ -1,25 +1,26 @@
 document.addEventListener("DOMContentLoaded", function() {
-    document.getElementById("info").addEventListener("click", function() {
-        document.getElementById("info-div").scrollIntoView({ behavior: "smooth" });
-    });
+    const scrollToElement = (elementId) => {
+        const element = document.getElementById(elementId);
+        if (element) {
+            element.scrollIntoView({ behavior: "smooth" });
+        }
+    };
 
-    document.getElementById("team").addEventListener("click", function() {
-        document.getElementById("team-div").scrollIntoView({ behavior: "smooth" });
-    });
+    const infoBtn = document.getElementById("info");
+    if (infoBtn) infoBtn.addEventListener("click", () => scrollToElement("info-div"));
 
-    document.getElementById("works").addEventListener("click", function() {
-        document.getElementById("works-div").scrollIntoView({ behavior: "smooth" });
-    });
+    const teamBtn = document.getElementById("team");
+    if (teamBtn) teamBtn.addEventListener("click", () => scrollToElement("team-div"));
 
-    document.getElementById("prices").addEventListener("click", function() {
-        document.getElementById("prices-div").scrollIntoView({ behavior: "smooth" });
-    });
+    const worksBtn = document.getElementById("works");
+    if (worksBtn) worksBtn.addEventListener("click", () => scrollToElement("works-div"));
 
-    document.getElementById("book-appointments").addEventListener("click", function() {
-        document.getElementById("book-appointment-div").scrollIntoView({ behavior: "smooth" });
-    });
+    const pricesBtn = document.getElementById("prices");
+    if (pricesBtn) pricesBtn.addEventListener("click", () => scrollToElement("prices-div"));
 
-    document.getElementById("location").addEventListener("click", function() {
-        document.getElementById("location-div").scrollIntoView({ behavior: "smooth" });
-    });
+    const bookBtn = document.getElementById("book-appointments");
+    if (bookBtn) bookBtn.addEventListener("click", () => scrollToElement("book-appointment-div"));
+
+    const locationBtn = document.getElementById("location");
+    if (locationBtn) locationBtn.addEventListener("click", () => scrollToElement("location-div"));
 });

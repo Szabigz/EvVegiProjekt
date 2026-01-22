@@ -1,3 +1,7 @@
+html {
+    scroll-behavior: smooth;
+}
+
 body {
     background-image: url('images/hatter.jpg');
     background-repeat: no-repeat;
@@ -239,20 +243,19 @@ body::before {
 }
 .img-circle-hover {
     filter: grayscale(100%);
-    transition: filter 0.4s ease, transform 0.4s ease;
+    transition: filter 0.4s ease, transform 0.4s ease, box-shadow 0.3s ease;
     width: 250px;
     height: 250px;
-    margin-top: 40px;
+    margin: 40px auto 0;
     border-radius: 50%;
     object-fit: cover;
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    display: block;
 }
 
 .img-circle-hover:hover {
-    transform: scale(1.1);
+    transform: scale(1.05);
     box-shadow: 0 8px 20px rgba(0,0,0,0.4);
     filter: grayscale(0);
-    transform: scale(1.05);
 }
 
 /*Áraink*/
