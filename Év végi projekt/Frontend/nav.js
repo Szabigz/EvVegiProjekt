@@ -11,6 +11,10 @@ document.addEventListener("DOMContentLoaded", function() {
         document.getElementById("works-div").scrollIntoView({ behavior: "smooth" });
     });
 
+    document.getElementById("prices").addEventListener("click", function() {
+        document.getElementById("prices-div").scrollIntoView({ behavior: "smooth" });
+    });
+
     document.getElementById("book-appointments").addEventListener("click", function() {
         document.getElementById("book-appointment-div").scrollIntoView({ behavior: "smooth" });
     });

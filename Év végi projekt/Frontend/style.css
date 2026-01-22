@@ -255,129 +255,215 @@ body::before {
     transform: scale(1.05);
 }
 
-/* Naptár */
+/*Áraink*/
+.prices{
+    margin-top: 20px;
+}
+.prices h2{
+    text-align: center;
+    font-style: italic;
+    background-color: rgba(255, 255, 255, 0.15);
+    font-weight: bold;
+    border-radius: 50%;
+    color: white;
+    box-shadow: 0 12px 28px rgba(0,0,0,0.35);
+    border: 1px solid rgba(255,255,255,0.25);
+    padding: 10px 20px;
 
-.calendar {
+}
+
+/*Árak - Tab System*/
+
+.prices-container {
     width: 100%;
-}
-
-.calendar td {
-    cursor: pointer;
-    height: 60px;
-    vertical-align: middle;
-    transition: background 0.2s;
-}
-
-.calendar td:hover {
-    background-color: rgba(0, 123, 255, 0.2);
-    border-radius: 5px;
-}
-
-.calendar .today {
-    background-color: rgba(0, 123, 255, 0.4);
-    font-weight: bold;
-    border-radius: 5px;
-}
-
-/* Fodrász kártyák */
-.card-img-top {
-    height: 150px;
-    width: 150px;
+    max-width: 1000px;
     margin: 0 auto;
-    object-fit: cover;
-    border-radius: 10px 10px 0 0;
+    padding: 20px;
 }
 
-.card {
-    border: 2px solid black;
-    border-radius: 10px;
-    transition: transform 0.3s, box-shadow 0.3s;
-    height: 220px;
-    width: 200px;
+.booking-btn {
+    background: rgba(0, 0, 0, 0.6);
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    color: white;
+    padding: 15px 50px;
+    font-size: 1.1rem;
+    font-weight: 700;
+    border-radius: 30px;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    display: inline-block;
 }
 
-.card:hover {
-    transform: scale(1.05);
-    box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+.booking-btn:hover {
+    background: rgba(0, 0, 0, 0.8);
+    border-color: rgba(255, 255, 255, 0.6);
+    transform: translateY(-3px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+    color: white;
 }
 
-.barber-list {
+.price-tabs {
     display: flex;
-    flex-direction: column;
-    align-items: center;     
-    justify-content: flex-start;
-    gap: 20px;
-    max-height: 400px;
-    overflow-y: auto;
-    padding: 10px 0;
-}
-
-.barber-list .card img {
-    margin-top: 15px; 
-}
-
-/* Foglalás */
-.booking-card {
-    border: 2px solid black;
-    border-radius: 10px;
-    height: auto;
-    min-height: 200px; 
-    transition: all 0.3s ease; 
-    padding: 15px;
-}
-
-.selected-day {
-    background: rgba(0, 123, 255, 0.5) !important;
-    color: white;
-    border-radius: 5px;
-    font-weight: bold;
-}
-
-.selected-barber {
-    border: 2px solid blue !important;
-    transform: scale(1.05);
-}
-
-.disabled-day {
-    background: rgba(0,0,0,0.4) !important;
-    color: white !important;
-    cursor: not-allowed !important;
-    pointer-events: none !important;
-    border-radius: 5px;
-    opacity: 0.6;
-}
-
-
-.time-slot-wrapper {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
+    justify-content: center;
     gap: 10px;
-    max-height: 0;
-    overflow: hidden;
-    transition: max-height 0.5s ease, opacity 0.5s ease;
-    opacity: 0;
-    margin-top: 15px;
+    margin-bottom: 30px;
+    flex-wrap: wrap;
 }
 
-.time-slot-wrapper.show {
-    max-height: 1000px;
-    opacity: 1;
-}
-
-.time-slot-btn {
-    opacity: 0;
-    transform: translateY(-10px);
-    transition: opacity 0.3s ease, transform 0.3s ease;
-}
-
-.time-slot-btn.show {
-    opacity: 1;
-    transform: translateY(0);
-}
-
-.time-slot-btn.active {
-    background-color: #007bff;
+.price-tab-btn {
+    padding: 12px 24px;
+    font-size: 1rem;
+    font-weight: 600;
+    background: rgba(255, 255, 255, 0.1);
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    border-radius: 25px;
     color: white;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    backdrop-filter: blur(4px);
+}
+
+.price-tab-btn:hover {
+    background: rgba(255, 255, 255, 0.2);
+    border-color: rgba(255, 255, 255, 0.5);
+    transform: translateY(-2px);
+}
+
+.price-tab-btn.active {
+    background: rgba(57, 59, 65, 0.699);
+    border-color: #2c2e30;
+    color: white;
+    box-shadow: 0 0 20px rgb(0, 0, 0);
+}
+
+.price-content {
+    position: relative;
+    min-height: auto;
+}
+
+.price-tab-content {
+    display: none;
+    opacity: 0;
+    animation: fadeIn 0.4s ease;
+}
+
+.price-tab-content.active {
+    display: block;
+    opacity: 1;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.price-cards-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 25px;
+    padding: 20px 0;
+}
+
+.price-card {
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.02));
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 15px;
+    padding: 25px;
+    text-align: center;
+    transition: all 0.3s ease;
+    color: white;
+}
+
+.price-card:hover {
+    transform: translateY(-8px);
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.15), rgba(255, 255, 255, 0.05));
+    border-color: rgba(255, 255, 255, 0.4);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+}
+
+.price-card h3 {
+    font-size: 1.3rem;
+    font-weight: 700;
+    margin-bottom: 15px;
+    color: #ffffff;
+}
+
+.price-value {
+    font-size: 2.2rem;
+    font-weight: 800;
+    color: #ffffff;
+    margin: 15px 0;
+    text-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+}
+
+.price-desc {
+    font-size: 0.95rem;
+    color: rgba(255, 255, 255, 0.8);
+    font-style: italic;
+    margin: 0;
+}
+
+/*Árak - Reszponzivitas*/
+
+@media (max-width: 768px) {
+    .price-tab-btn {
+        padding: 10px 16px;
+        font-size: 0.9rem;
+    }
+
+    .price-cards-grid {
+        grid-template-columns: 1fr;
+        gap: 15px;
+    }
+
+    .price-card {
+        padding: 20px;
+    }
+
+    .price-value {
+        font-size: 1.8rem;
+    }
+}
+
+@media (max-width: 576px) {
+    .prices-container {
+        padding: 10px;
+    }
+
+    .price-tabs {
+        gap: 8px;
+    }
+
+    .price-tab-btn {
+        padding: 8px 12px;
+        font-size: 0.8rem;
+    }
+
+    .price-card {
+        padding: 15px;
+    }
+
+    .price-card h3 {
+        font-size: 1.1rem;
+    }
+
+    .price-value {
+        font-size: 1.6rem;
+    }
+
+    .price-desc {
+        font-size: 0.85rem;
+    }
+
+    .price-content {
+        min-height: auto;
+    }
 }
 
 /*Csapat*/
@@ -419,7 +505,7 @@ body::before {
     width: 140px;
     height: 140px;
     object-fit: cover;
-    border-radius: 50%;      /* kör alakú */
+    border-radius: 50%;   
     margin-bottom: 15px;
     border: 4px solid white;
 }
@@ -431,7 +517,20 @@ body::before {
     margin-top: 10px;
 }
 
+@media (min-width: 751px) and (max-width: 999px) {
+    .works-team {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
 
+    .img-circle-hover {
+        width: 200px;
+        height: 200px;
+        margin: 20px auto;
+        display: block;
+    }
+}
 
 /*Reszponzivitas*/
 @media (max-width: 576px) {
