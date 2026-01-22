@@ -435,15 +435,95 @@ body::before {
 
 /*Reszponzivitas*/
 @media (max-width: 576px) {
+    .navbar .menu-item:not(:first-child) {
+        padding: 8px 12px;
+    }
 
     .menu-text h2 {
-        font-size: 0.9rem;
+        font-size: 0.75rem;
+    }
+
+    .menu-img {
+        height: 100px;
+    }
+
+    #info-box {
+        padding: 15px 20px;
+    }
+
+    .info-title {
+        font-size: 1.5rem;
+    }
+
+    #info-box p {
+        font-size: 0.95rem;
+    }
+
+    .scissor-list li {
+        font-size: 0.95rem;
     }
 
     .contact-box {
         width: 85%;
         right: 50%;
         transform: translateX(50%);
+        margin-left: 0 !important;
+    }
+
+    .img-circle-hover {
+        width: 120px;
+        height: 120px;
+        margin-top: 20px;
+    }
+
+    .card {
+        width: 150px;
+        height: auto;
+    }
+
+    .card-img-top {
+        height: 100px;
+        width: 100px;
+    }
+
+    .calendar td {
+        height: 40px;
+        font-size: 0.7rem;
+        padding: 4px;
+    }
+
+    .time-slot-wrapper {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 5px;
+    }
+
+    .time-slot-btn {
+        padding: 6px 8px;
+        font-size: 0.8rem;
+    }
+
+    .team-card {
+        width: 95%;
+        max-width: 280px;
+        padding: 15px;
+    }
+
+    .team-img {
+        width: 100px;
+        height: 100px;
+    }
+
+    .team-name {
+        font-size: 1rem;
+    }
+
+    .booking-card {
+        padding: 10px;
+        min-height: 150px;
+    }
+
+    #location-div {
+        height: 250px !important;
     }
 }
 @media (max-width: 768px) {
@@ -451,6 +531,30 @@ body::before {
     .container {
         padding-left: 10px;
         padding-right: 10px;
+    }
+
+    .navbar ul {
+        gap: 10px;
+    }
+
+    .navbar .menu-item:not(:first-child) {
+        padding: 10px 18px;
+    }
+
+    .menu-text h2 {
+        font-size: 0.85rem;
+    }
+
+    #info-box {
+        padding: 20px 25px;
+    }
+
+    .info-title {
+        font-size: 1.7rem;
+    }
+
+    #info-box p {
+        font-size: 1rem;
     }
 
     .img-circle-hover {
@@ -461,13 +565,17 @@ body::before {
     }
 
     .barber-list .card {
-        width: 250px;
-        height: auto;
+        width: 180px;
+    }
+
+    .card-img-top {
+        height: 120px;
+        width: 120px;
     }
 
     .calendar td {
         height: 45px;
-        font-size: 0.85rem;
+        font-size: 0.8rem;
     }
 
     .booking-card {
@@ -479,14 +587,23 @@ body::before {
         max-width: 350px;
     }
 
+    .time-slot-wrapper {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
     #team-div {
         flex-direction: column;
         align-items: center;
+        gap: 20px;
     }
 
     .team-card {
-        width: 90%;
+        width: 85%;
         max-width: 350px;
+    }
+
+    #location-div {
+        height: 300px !important;
     }
 }
 @media (max-width: 992px) {
