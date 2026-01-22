@@ -1,75 +1,92 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="hu">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
     <link rel="stylesheet" href="booking.css">
-    <title>Document</title>
+    <title>Foglalás - Slick Barber Shop</title>
 </head>
-<body>
-    <header><h1 class="text-center my-4">Foglalás</h1></header>
-    <main>
-        <div class="container">
-            <div class="row d-flex align-items-start" id="book-appointment-div">
-              <!-- Naptár -->
-              <div class="col-lg-6 my-4">
-                  <div class="calendar p-3">
-                      <div class="d-flex justify-content-between align-items-center mb-3">
-                          <button class="btn btn-outline-dark" id="prevMonth">&lt;</button>
-                          <h4 id="monthYear" class="fw-bold mb-0"></h4>
-                          <button class="btn btn-outline-dark" id="nextMonth">&gt;</button>
-                      </div>
-          
-                      <table class="table table-bordered text-center mb-0">
-                          <thead class="table-dark">
-                              <tr>
-                                  <th>H</th>
-                                  <th>K</th>
-                                  <th>Sze</th>
-                                  <th>Cs</th>
-                                  <th>P</th>
-                                  <th>Szo</th>
-                              </tr>
-                          </thead>
-                          <tbody id="calendarBody"></tbody>
-                      </table>
-                  </div>
-              </div>
-          
-              <!-- Fodrászkártyák középen -->
-              <div class="col-lg-4 my-4">
-                  <div class="barber-list">
-          
-                      <div class="card mb-3 text-center">
-                          <img src="images/barber.jpg" class="card-img-top" alt="Fodrász">
-                          <div class="card-body">
-                              <h5 class="card-title">Kiss Péter</h5>
-                          </div>
-                      </div>
-          
-                      <div class="card mb-3 text-center">
-                          <img src="images/barber.jpg" class="card-img-top" alt="Fodrász">
-                          <div class="card-body">
-                              <h5 class="card-title">Nagy Ádám</h5>
-                          </div>
-                      </div>
-          
-                  </div>
-              </div>
-          
-              <!-- Foglalás -->
-              <div class="col-lg-2 my-4">
-                <div class="card booking-card text-center p-4">
-                    <h5>Válassz Időpontot:</h5>
-                    <div class="time-slot-wrapper"></div>
-                    <button class="btn btn-dark w-100 mt-3" id="finalBookingBtn">Foglalás</button>
+<body id="dark-overlay">
+    <div class="container">
+        <main>
+            <div class="booking-wrapper">
+                <h1 class="text-center mb-5"> Foglalj Időpontot</h1>
+
+                <div class="booking-steps">
+                    <!-- 1. Fodrászok kiválasztása -->
+                    <div class="booking-step">
+                        <h2 class="step-title"> Válassz Fodrászt</h2>
+                        <div class="barber-selection">
+                            <div class="barber-card" data-barber="Kiss Péter">
+                                <img src="images/barber.jpg" alt="Kiss Péter">
+                                <h5>Kiss Péter</h5>
+                            </div>
+                            <div class="barber-card" data-barber="Nagy Ádám">
+                                <img src="images/barber.jpg" alt="Nagy Ádám">
+                                <h5>Nagy Ádám</h5>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 2. Szolgáltatás kiválasztása -->
+                    <div class="booking-step">
+                        <h2 class="step-title"> Válassz Szolgáltatást</h2>
+                        <div class="service-selection">
+                            <button class="service-btn" data-service="Férfi hajvágás">Férfi hajvágás<br>6 000 Ft</button>
+                            <button class="service-btn" data-service="Szakállvágás">Szakállvágás<br>4 000 Ft</button>
+                            <button class="service-btn" data-service="Borotválás">Borotválás<br>5 000 Ft</button>
+                            <button class="service-btn" data-service="Gyermek hajvágás">Gyermek hajvágás<br>4 000 Ft</button>
+                            <button class="service-btn" data-service="Hajmosás">Hajmosás<br>3 000 Ft</button>
+                            <button class="service-btn" data-service="Teljes átalakítás">Teljes átalakítás<br>12 000 Ft</button>
+                        </div>
+                    </div>
+
+                    <!-- 3. Naptár -->
+                    <div class="booking-step">
+                        <h2 class="step-title">Válassz Dátumot</h2>
+                        <div class="calendar-wrapper">
+                            <div class="d-flex justify-content-between align-items-center mb-3">
+                                <button class="btn btn-outline-light" id="prevMonth">&lt;</button>
+                                <h4 id="monthYear" class="fw-bold mb-0"></h4>
+                                <button class="btn btn-outline-light" id="nextMonth">&gt;</button>
+                            </div>
+                            <table class="table table-bordered text-center mb-0">
+                                <thead class="table-dark">
+                                    <tr>
+                                        <th>H</th>
+                                        <th>K</th>
+                                        <th>Sze</th>
+                                        <th>Cs</th>
+                                        <th>P</th>
+                                        <th>Szo</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="calendarBody"></tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- 4. Időpontok kiválasztása -->
+                    <div class="booking-step">
+                        <h2 class="step-title">Válassz Időpontot</h2>
+                        <div class="time-slot-wrapper"></div>
+                    </div>
+
+                    <!-- Foglalás gomb -->
+                    <div class="text-center mt-5">
+                        <button class="booking-btn" id="finalBookingBtn"> Foglalás Megerősítése</button>
+                    </div>
+                </div>
+
+                <!-- Vissza gomb -->
+                <div class="text-center mt-4 mb-5">
+                    <a href="mainpage.html" class="back-btn">← Vissza a főoldalra</a>
                 </div>
             </div>
-          </div>
-          <script src="booking.js"></script>
-        </div>
-    </main>
-    <footer><a href="mainpage.html">Vissza a főoldalra</a></footer>
+        </main>
+    </div>
+
+    <script src="booking.js"></script>
 </body>
 </html>

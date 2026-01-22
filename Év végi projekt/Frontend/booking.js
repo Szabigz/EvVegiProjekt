@@ -1,7 +1,36 @@
 // ===== GLOBAL STATE =====
-let selectedDate = null;
 let selectedBarber = null;
+let selectedService = null;
+let selectedDate = null;
 let selectedTime = null;
+
+// ===== SMOOTH SCROLL HELPER =====
+function scrollToStep(stepNumber) {
+    const steps = document.querySelectorAll(".booking-step");
+    if (steps[stepNumber]) {
+        steps[stepNumber].scrollIntoView({ behavior: "smooth", block: "center" });
+    }
+}
+
+// ===== BARBER SELECTION =====
+document.querySelectorAll(".barber-card").forEach(card => {
+    card.addEventListener("click", () => {
+        document.querySelectorAll(".barber-card").forEach(c => c.classList.remove("selected"));
+        card.classList.add("selected");
+        selectedBarber = card.getAttribute("data-barber");
+        scrollToStep(1); // Scroll to service selection
+    });
+});
+
+// ===== SERVICE SELECTION =====
+document.querySelectorAll(".service-btn").forEach(btn => {
+    btn.addEventListener("click", () => {
+        document.querySelectorAll(".service-btn").forEach(b => b.classList.remove("selected"));
+        btn.classList.add("selected");
+        selectedService = btn.getAttribute("data-service");
+        scrollToStep(2); // Scroll to calendar
+    });
+});
 
 // ===== CALENDAR =====
 const calendarBody = document.getElementById("calendarBody");
@@ -13,15 +42,12 @@ function renderCalendar() {
     const month = current.getMonth();
 
     monthYear.innerText = current.toLocaleString("hu-HU", { month: "long", year: "numeric" });
-    monthYear.style.color = "white";
-    monthYear.style.backgroundColor = "rgba(0,0,0,0.6)";
-    monthYear.style.borderRadius = "10px";
 
     calendarBody.innerHTML = "";
 
     const firstDay = new Date(year, month, 1).getDay(); 
     const daysInMonth = new Date(year, month + 1, 0).getDate();
-    let dayIndex = (firstDay + 6) % 7; // hétfői kezdés
+    let dayIndex = (firstDay + 6) % 7;
 
     let row = document.createElement("tr");
 
@@ -39,7 +65,7 @@ function renderCalendar() {
         const dateObj = new Date(year, month, day);
 
         if (dateObj.getDay() === 0) {
-            cell.classList.add("disabled-day"); // vasárnap
+            cell.classList.add("disabled-day");
         } else {
             cell.addEventListener("click", () => {
                 selectedDate = dateObj;
@@ -55,34 +81,16 @@ function renderCalendar() {
 }
 
 function highlightSelectedDay(selectedCell) {
-    // korábbi kijelölés törlése
     document.querySelectorAll("#calendarBody td").forEach(td => td.classList.remove("selected-day"));
     selectedCell.classList.add("selected-day");
-
-    // időpontok betöltése
+    scrollToStep(3); // Scroll to time slots
     generateTimeSlots();
-
-    // wrapper megjelenítése animáltan
-    const wrapper = document.querySelector('.time-slot-wrapper');
-    wrapper.classList.add('show');
-
-    // scroll simán a wrapperhez
-    wrapper.scrollIntoView({ behavior: 'smooth', block: 'start' });
 }
 
 document.getElementById("prevMonth").onclick = () => { current.setMonth(current.getMonth() - 1); renderCalendar(); };
 document.getElementById("nextMonth").onclick = () => { current.setMonth(current.getMonth() + 1); renderCalendar(); };
 
 renderCalendar();
-
-// ===== BARBER SELECTION =====
-document.querySelectorAll(".barber-list .card").forEach(card => {
-    card.addEventListener("click", () => {
-        document.querySelectorAll(".barber-list .card").forEach(c => c.classList.remove("selected-barber"));
-        card.classList.add("selected-barber");
-        selectedBarber = card.querySelector(".card-title").innerText;
-    });
-});
 
 // ===== TIME SLOTS =====
 const timeSlotsContainer = document.querySelector('.time-slot-wrapper');
@@ -94,18 +102,18 @@ function generateTimeSlots() {
 
     times.forEach((time, index) => {
         const btn = document.createElement("button");
-        btn.classList.add("btn", "btn-outline-dark", "time-slot-btn");
+        btn.classList.add("time-slot-btn");
         btn.textContent = time;
 
         btn.addEventListener("click", () => {
             timeSlotsContainer.querySelectorAll("button").forEach(b => b.classList.remove("active"));
             btn.classList.add("active");
             selectedTime = time;
+            scrollToStep(3); // Stay on time slots or scroll to booking button
         });
 
         timeSlotsContainer.appendChild(btn);
 
-        // animáció késleltetéssel
         setTimeout(() => {
             btn.classList.add("show");
         }, index * 50);
@@ -116,10 +124,17 @@ function generateTimeSlots() {
 document.getElementById("finalBookingBtn").addEventListener("click", finalizeBooking);
 
 function finalizeBooking() {
+    if (!selectedBarber) return alert("Kérlek válassz egy fodrászt!");
+    if (!selectedService) return alert("Kérlek válassz egy szolgáltatást!");
     if (!selectedDate) return alert("Kérlek válassz egy napot!");
-    if (!selectedBarber) return alert("Kérlek válassz egy barber-t!");
     if (!selectedTime) return alert("Kérlek válassz időpontot!");
 
     const dateText = selectedDate.toLocaleDateString("hu-HU");
-    alert(`Foglalás sikeres! \nDátum: ${dateText}\nIdőpont: ${selectedTime}\nBarber: ${selectedBarber}`);
+    alert(`Foglalás sikeres! \n\nFodrász: ${selectedBarber}\nSzolgáltatás: ${selectedService}\nDátum: ${dateText}\nIdőpont: ${selectedTime}`);
+    
+    // Foglalás adatok resetelése
+    selectedBarber = null;
+    selectedService = null;
+    selectedDate = null;
+    selectedTime = null;
 }

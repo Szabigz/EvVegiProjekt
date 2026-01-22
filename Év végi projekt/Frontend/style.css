@@ -585,22 +585,6 @@ body::before {
         width: 100px;
     }
 
-    .calendar td {
-        height: 40px;
-        font-size: 0.7rem;
-        padding: 4px;
-    }
-
-    .time-slot-wrapper {
-        grid-template-columns: repeat(2, 1fr);
-        gap: 5px;
-    }
-
-    .time-slot-btn {
-        padding: 6px 8px;
-        font-size: 0.8rem;
-    }
-
     .team-card {
         width: 95%;
         max-width: 280px;
@@ -663,31 +647,9 @@ body::before {
         display: block;
     }
 
-    .barber-list .card {
-        width: 180px;
-    }
-
     .card-img-top {
         height: 120px;
         width: 120px;
-    }
-
-    .calendar td {
-        height: 45px;
-        font-size: 0.8rem;
-    }
-
-    .booking-card {
-        width: 100%;
-    }
-
-    .barber-list {
-        width: 100%;
-        max-width: 350px;
-    }
-
-    .time-slot-wrapper {
-        grid-template-columns: repeat(2, 1fr);
     }
 
     #team-div {
