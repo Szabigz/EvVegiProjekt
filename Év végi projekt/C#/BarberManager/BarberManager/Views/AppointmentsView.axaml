@@ -1,0 +1,185 @@
+﻿<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="using:BarberManager.ViewModels"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:DataType="vm:AppointmentsViewModel"
+             x:Class="BarberManager.Views.AppointmentsView">
+	
+	<Grid>
+		<Grid.ColumnDefinitions>
+			<ColumnDefinition Width="60" />
+			<ColumnDefinition Width="*" />
+			<ColumnDefinition Width="*" />
+			<ColumnDefinition Width="*" />
+			<ColumnDefinition Width="*" />
+			<ColumnDefinition Width="*" />
+			<ColumnDefinition Width="*" />
+			<ColumnDefinition Width="*" />
+			<ColumnDefinition Width="Auto" />
+			<ColumnDefinition Width="Auto" />
+		</Grid.ColumnDefinitions>
+
+		<Grid.RowDefinitions>
+			<RowDefinition Height="Auto" />
+			<RowDefinition Height="*" />
+		</Grid.RowDefinitions>
+
+		<!-- Fejléc -->
+		<Grid Grid.Row="0" Grid.ColumnSpan="10" Background="White">
+			<Grid.ColumnDefinitions>
+				<ColumnDefinition Width="60" />
+				<ColumnDefinition Width="*" />
+				<ColumnDefinition Width="*" />
+				<ColumnDefinition Width="*" />
+				<ColumnDefinition Width="*" />
+				<ColumnDefinition Width="*" />
+				<ColumnDefinition Width="*" />
+				<ColumnDefinition Width="*" />
+				<ColumnDefinition Width="Auto" />
+				<ColumnDefinition Width="Auto" />
+			</Grid.ColumnDefinitions>
+
+			<Border Grid.ColumnSpan="10" BorderThickness="0,0,0,1" BorderBrush="{StaticResource DividerColor}" VerticalAlignment="Bottom"/>
+
+			<StackPanel Grid.Column="1" HorizontalAlignment="Center" Margin="0,5,0,5">
+				<TextBlock Text="Hétfő" FontWeight="Bold" FontSize="14" />
+				<TextBlock Text="{Binding Mon}" FontSize="12" Foreground="#555555" HorizontalAlignment="Center"/>
+			</StackPanel>
+			<StackPanel Grid.Column="2" HorizontalAlignment="Center" Margin="0,5,0,5">
+				<TextBlock Text="Kedd" FontWeight="Bold" FontSize="14" />
+				<TextBlock Text="{Binding Tue}" FontSize="12" Foreground="#555555" HorizontalAlignment="Center"/>
+			</StackPanel>
+			<StackPanel Grid.Column="3" HorizontalAlignment="Center" Margin="0,5,0,5">
+				<TextBlock Text="Szerda" FontWeight="Bold" FontSize="14" />
+				<TextBlock Text="{Binding Wed}" FontSize="12" Foreground="#555555" HorizontalAlignment="Center"/>
+			</StackPanel>
+			<StackPanel Grid.Column="4" HorizontalAlignment="Center" Margin="0,5,0,5">
+				<TextBlock Text="Csütörtök" FontWeight="Bold" FontSize="14" />
+				<TextBlock Text="{Binding Thu}" FontSize="12" Foreground="#555555" HorizontalAlignment="Center"/>
+			</StackPanel>
+			<StackPanel Grid.Column="5" HorizontalAlignment="Center" Margin="0,5,0,5">
+				<TextBlock Text="Péntek" FontWeight="Bold" FontSize="14" />
+				<TextBlock Text="{Binding Fri}" FontSize="12" Foreground="#555555" HorizontalAlignment="Center"/>
+			</StackPanel>
+			<StackPanel Grid.Column="6" HorizontalAlignment="Center" Margin="0,5,0,5">
+				<TextBlock Text="Szombat" FontWeight="Bold" FontSize="14" />
+				<TextBlock Text="{Binding Sat}" FontSize="12" Foreground="#555555" HorizontalAlignment="Center"/>
+			</StackPanel>
+			<StackPanel Grid.Column="7" HorizontalAlignment="Center" Margin="0,5,0,5">
+				<TextBlock Text="Vasárnap" FontWeight="Bold" FontSize="14" />
+				<TextBlock Text="{Binding Sun}" FontSize="12" Foreground="#555555" HorizontalAlignment="Center"/>
+			</StackPanel>
+
+			<Button Grid.Column="8" VerticalAlignment="Center" Command="{Binding PrevWeek}" Content="&lt;" Width="30" Height="30" />
+			<Button Grid.Column="9" VerticalAlignment="Center" Command="{Binding NextWeek}" Content=">" Width="30" Height="30" Margin="5,0,10,0" />
+		</Grid>
+
+		<!-- Idősávok -->
+		<ScrollViewer Grid.Row="1" Grid.ColumnSpan="10" VerticalScrollBarVisibility="Auto">
+			<Grid x:Name="CalendarContentGrid">
+				<Grid.ColumnDefinitions>
+					<ColumnDefinition Width="60" />
+					<ColumnDefinition Width="*" />
+					<ColumnDefinition Width="*" />
+					<ColumnDefinition Width="*" />
+					<ColumnDefinition Width="*" />
+					<ColumnDefinition Width="*" />
+					<ColumnDefinition Width="*" />
+					<ColumnDefinition Width="*" />
+				</Grid.ColumnDefinitions>
+
+				<Grid.RowDefinitions>
+					<RowDefinition Height="Auto" MinHeight="60" />
+					<RowDefinition Height="Auto" MinHeight="60" />
+					<RowDefinition Height="Auto" MinHeight="60" />
+					<RowDefinition Height="Auto" MinHeight="60" />
+					<RowDefinition Height="Auto" MinHeight="60" />
+					<RowDefinition Height="Auto" MinHeight="60" />
+					<RowDefinition Height="Auto" MinHeight="60" />
+					<RowDefinition Height="Auto" MinHeight="60" />
+					<RowDefinition Height="Auto" MinHeight="60" />
+					<RowDefinition Height="Auto" MinHeight="60" />
+					<RowDefinition Height="Auto" MinHeight="60" />
+					<RowDefinition Height="Auto" MinHeight="60" />
+					<RowDefinition Height="Auto" MinHeight="60" />
+					<RowDefinition Height="Auto" MinHeight="60" />
+					<RowDefinition Height="Auto" MinHeight="60" />
+					<RowDefinition Height="Auto" MinHeight="60" />
+					<RowDefinition Height="Auto" MinHeight="60" />
+					<RowDefinition Height="Auto" MinHeight="60" />
+					<RowDefinition Height="Auto" MinHeight="60" />
+					<RowDefinition Height="Auto" MinHeight="60" />
+					<RowDefinition Height="Auto" MinHeight="60" />
+					<RowDefinition Height="Auto" MinHeight="60" />
+					<RowDefinition Height="Auto" MinHeight="60" />
+					<RowDefinition Height="Auto" MinHeight="60" />
+					<RowDefinition Height="Auto" MinHeight="60" />
+					<RowDefinition Height="Auto" MinHeight="60" />
+					<RowDefinition Height="Auto" MinHeight="60" />
+				</Grid.RowDefinitions>
+
+				<!-- Órák szövegei -->
+				<TextBlock Grid.Row="0" Grid.Column="0" Text="8:00" Margin="0, 0, 5, 0" HorizontalAlignment="Right" VerticalAlignment="Top" Foreground="Black" FontWeight="SemiBold" FontSize="12"/>
+				<TextBlock Grid.Row="1" Grid.Column="0" Text="8:30" Margin="0, -8, 5, 0" HorizontalAlignment="Right" VerticalAlignment="Top" Foreground="{StaticResource HourLabelColor}" FontSize="12"/>
+				<TextBlock Grid.Row="2" Grid.Column="0" Text="9:00" Margin="0, -8, 5, 0" HorizontalAlignment="Right" VerticalAlignment="Top" Foreground="Black" FontWeight="SemiBold" FontSize="12"/>
+				<TextBlock Grid.Row="3" Grid.Column="0" Text="9:30" Margin="0, -8, 5, 0" HorizontalAlignment="Right" VerticalAlignment="Top" Foreground="{StaticResource HourLabelColor}" FontSize="12"/>
+				<TextBlock Grid.Row="4" Grid.Column="0" Text="10:00" Margin="0, -8, 5, 0" HorizontalAlignment="Right" VerticalAlignment="Top" Foreground="Black" FontWeight="SemiBold" FontSize="12"/>
+				<TextBlock Grid.Row="5" Grid.Column="0" Text="10:30" Margin="0, -8, 5, 0" HorizontalAlignment="Right" VerticalAlignment="Top" Foreground="{StaticResource HourLabelColor}" FontSize="12"/>
+				<TextBlock Grid.Row="6" Grid.Column="0" Text="11:00" Margin="0, -8, 5, 0" HorizontalAlignment="Right" VerticalAlignment="Top" Foreground="Black" FontWeight="SemiBold" FontSize="12"/>
+				<TextBlock Grid.Row="7" Grid.Column="0" Text="11:30" Margin="0, -8, 5, 0" HorizontalAlignment="Right" VerticalAlignment="Top" Foreground="{StaticResource HourLabelColor}" FontSize="12"/>
+				<TextBlock Grid.Row="8" Grid.Column="0" Text="12:00" Margin="0, -8, 5, 0" HorizontalAlignment="Right" VerticalAlignment="Top" Foreground="Black" FontWeight="SemiBold" FontSize="12"/>
+				<TextBlock Grid.Row="9" Grid.Column="0" Text="12:30" Margin="0, -8, 5, 0" HorizontalAlignment="Right" VerticalAlignment="Top" Foreground="{StaticResource HourLabelColor}" FontSize="12"/>
+				<TextBlock Grid.Row="10" Grid.Column="0" Text="13:00" Margin="0, -8, 5, 0" HorizontalAlignment="Right" VerticalAlignment="Top" Foreground="Black" FontWeight="SemiBold" FontSize="12"/>
+				<TextBlock Grid.Row="11" Grid.Column="0" Text="13:30" Margin="0, -8, 5, 0" HorizontalAlignment="Right" VerticalAlignment="Top" Foreground="{StaticResource HourLabelColor}" FontSize="12"/>
+				<TextBlock Grid.Row="12" Grid.Column="0" Text="14:00" Margin="0, -8, 5, 0" HorizontalAlignment="Right" VerticalAlignment="Top" Foreground="Black" FontWeight="SemiBold" FontSize="12"/>
+				<TextBlock Grid.Row="13" Grid.Column="0" Text="14:30" Margin="0, -8, 5, 0" HorizontalAlignment="Right" VerticalAlignment="Top" Foreground="{StaticResource HourLabelColor}" FontSize="12"/>
+				<TextBlock Grid.Row="14" Grid.Column="0" Text="15:00" Margin="0, -8, 5, 0" HorizontalAlignment="Right" VerticalAlignment="Top" Foreground="Black" FontWeight="SemiBold" FontSize="12"/>
+				<TextBlock Grid.Row="15" Grid.Column="0" Text="15:30" Margin="0, -8, 5, 0" HorizontalAlignment="Right" VerticalAlignment="Top" Foreground="{StaticResource HourLabelColor}" FontSize="12"/>
+				<TextBlock Grid.Row="16" Grid.Column="0" Text="16:00" Margin="0, -8, 5, 0" HorizontalAlignment="Right" VerticalAlignment="Top" Foreground="Black" FontWeight="SemiBold" FontSize="12"/>
+				<TextBlock Grid.Row="17" Grid.Column="0" Text="16:30" Margin="0, -8, 5, 0" HorizontalAlignment="Right" VerticalAlignment="Top" Foreground="{StaticResource HourLabelColor}" FontSize="12"/>
+				<TextBlock Grid.Row="18" Grid.Column="0" Text="17:00" Margin="0, -8, 5, 0" HorizontalAlignment="Right" VerticalAlignment="Top" Foreground="Black" FontWeight="SemiBold" FontSize="12"/>
+				<TextBlock Grid.Row="19" Grid.Column="0" Text="17:30" Margin="0, -8, 5, 0" HorizontalAlignment="Right" VerticalAlignment="Top" Foreground="{StaticResource HourLabelColor}" FontSize="12"/>
+				<TextBlock Grid.Row="20" Grid.Column="0" Text="18:00" Margin="0, -8, 5, 0" HorizontalAlignment="Right" VerticalAlignment="Top" Foreground="Black" FontWeight="SemiBold" FontSize="12"/>
+				<TextBlock Grid.Row="21" Grid.Column="0" Text="18:30" Margin="0, -8, 5, 0" HorizontalAlignment="Right" VerticalAlignment="Top" Foreground="{StaticResource HourLabelColor}" FontSize="12"/>
+				<TextBlock Grid.Row="22" Grid.Column="0" Text="19:00" Margin="0, -8, 5, 0" HorizontalAlignment="Right" VerticalAlignment="Top" Foreground="Black" FontWeight="SemiBold" FontSize="12"/>
+				<TextBlock Grid.Row="23" Grid.Column="0" Text="19:30" Margin="0, -8, 5, 0" HorizontalAlignment="Right" VerticalAlignment="Top" Foreground="{StaticResource HourLabelColor}" FontSize="12"/>
+				<TextBlock Grid.Row="24" Grid.Column="0" Text="20:00" Margin="0, -8, 5, 0" HorizontalAlignment="Right" VerticalAlignment="Top" Foreground="Black" FontWeight="SemiBold" FontSize="12"/>
+				<TextBlock Grid.Row="25" Grid.Column="0" Text="20:30" Margin="0, -8, 5, 0" HorizontalAlignment="Right" VerticalAlignment="Top" Foreground="{StaticResource HourLabelColor}" FontSize="12"/>
+				<TextBlock Grid.Row="26" Grid.Column="0" Text="21:00" Margin="0, -8, 5, 0" HorizontalAlignment="Right" VerticalAlignment="Top" Foreground="Black" FontWeight="SemiBold" FontSize="12"/>
+
+				<!-- Rácsvonalak -->
+				<Border Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="7" BorderThickness="0,0,0,1" BorderBrush="{StaticResource DividerColor}"/>
+				<Border Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="7" BorderThickness="0,0,0,1" BorderBrush="{StaticResource HourLabelColor}"/>
+				<Border Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="7" BorderThickness="0,0,0,1" BorderBrush="{StaticResource DividerColor}"/>
+				<Border Grid.Row="3" Grid.Column="1" Grid.ColumnSpan="7" BorderThickness="0,0,0,1" BorderBrush="{StaticResource HourLabelColor}"/>
+				<Border Grid.Row="4" Grid.Column="1" Grid.ColumnSpan="7" BorderThickness="0,0,0,1" BorderBrush="{StaticResource DividerColor}"/>
+				<Border Grid.Row="5" Grid.Column="1" Grid.ColumnSpan="7" BorderThickness="0,0,0,1" BorderBrush="{StaticResource HourLabelColor}"/>
+				<Border Grid.Row="6" Grid.Column="1" Grid.ColumnSpan="7" BorderThickness="0,0,0,1" BorderBrush="{StaticResource DividerColor}"/>
+				<Border Grid.Row="7" Grid.Column="1" Grid.ColumnSpan="7" BorderThickness="0,0,0,1" BorderBrush="{StaticResource HourLabelColor}"/>
+				<Border Grid.Row="8" Grid.Column="1" Grid.ColumnSpan="7" BorderThickness="0,0,0,1" BorderBrush="{StaticResource DividerColor}"/>
+				<Border Grid.Row="9" Grid.Column="1" Grid.ColumnSpan="7" BorderThickness="0,0,0,1" BorderBrush="{StaticResource HourLabelColor}"/>
+				<Border Grid.Row="10" Grid.Column="1" Grid.ColumnSpan="7" BorderThickness="0,0,0,1" BorderBrush="{StaticResource DividerColor}"/>
+				<Border Grid.Row="11" Grid.Column="1" Grid.ColumnSpan="7" BorderThickness="0,0,0,1" BorderBrush="{StaticResource HourLabelColor}"/>
+				<Border Grid.Row="12" Grid.Column="1" Grid.ColumnSpan="7" BorderThickness="0,0,0,1" BorderBrush="{StaticResource DividerColor}"/>
+				<Border Grid.Row="13" Grid.Column="1" Grid.ColumnSpan="7" BorderThickness="0,0,0,1" BorderBrush="{StaticResource HourLabelColor}"/>
+				<Border Grid.Row="14" Grid.Column="1" Grid.ColumnSpan="7" BorderThickness="0,0,0,1" BorderBrush="{StaticResource DividerColor}"/>
+				<Border Grid.Row="15" Grid.Column="1" Grid.ColumnSpan="7" BorderThickness="0,0,0,1" BorderBrush="{StaticResource HourLabelColor}"/>
+				<Border Grid.Row="16" Grid.Column="1" Grid.ColumnSpan="7" BorderThickness="0,0,0,1" BorderBrush="{StaticResource DividerColor}"/>
+				<Border Grid.Row="17" Grid.Column="1" Grid.ColumnSpan="7" BorderThickness="0,0,0,1" BorderBrush="{StaticResource HourLabelColor}"/>
+				<Border Grid.Row="18" Grid.Column="1" Grid.ColumnSpan="7" BorderThickness="0,0,0,1" BorderBrush="{StaticResource DividerColor}"/>
+				<Border Grid.Row="19" Grid.Column="1" Grid.ColumnSpan="7" BorderThickness="0,0,0,1" BorderBrush="{StaticResource HourLabelColor}"/>
+				<Border Grid.Row="20" Grid.Column="1" Grid.ColumnSpan="7" BorderThickness="0,0,0,1" BorderBrush="{StaticResource DividerColor}"/>
+				<Border Grid.Row="21" Grid.Column="1" Grid.ColumnSpan="7" BorderThickness="0,0,0,1" BorderBrush="{StaticResource HourLabelColor}"/>
+				<Border Grid.Row="22" Grid.Column="1" Grid.ColumnSpan="7" BorderThickness="0,0,0,1" BorderBrush="{StaticResource DividerColor}"/>
+				<Border Grid.Row="23" Grid.Column="1" Grid.ColumnSpan="7" BorderThickness="0,0,0,1" BorderBrush="{StaticResource HourLabelColor}"/>
+				<Border Grid.Row="24" Grid.Column="1" Grid.ColumnSpan="7" BorderThickness="0,0,0,1" BorderBrush="{StaticResource DividerColor}"/>
+				<Border Grid.Row="25" Grid.Column="1" Grid.ColumnSpan="7" BorderThickness="0,0,0,1" BorderBrush="{StaticResource HourLabelColor}"/>
+				<Border Grid.Row="26" Grid.Column="1" Grid.ColumnSpan="7" BorderThickness="0,0,0,1" BorderBrush="{StaticResource DividerColor}"/>
+
+				<Border Grid.Column="0" Grid.RowSpan="27" BorderThickness="0,0,1,0" BorderBrush="{StaticResource DividerColor}"/>
+			</Grid>
+		</ScrollViewer>
+	</Grid>
+</UserControl>
