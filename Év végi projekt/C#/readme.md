@@ -7,7 +7,7 @@ Ez a Slick Barber Shop rendszer asztali adminisztrációs felülete. Az alkalmaz
 * Logika: CommunityToolkit.Mvvm (.NET 8)
 
 ## Projekt Mappaszerkezet 
-### 2026-01-29
+### 2026-01-30
 
 ```text
 Év végi projekt/C#/
@@ -23,15 +23,19 @@ Ez a Slick Barber Shop rendszer asztali adminisztrációs felülete. Az alkalmaz
 │   │   ├── ViewLocator.cs
 │   │   ├── ViewModels/
 │   │   │   ├── AppointmentsViewModel.cs
-│   │   │   ├── MainWindowViewModel.cs
 │   │   │   ├── LoginViewModel.cs
+│   │   │   ├── MainWindowViewModel.cs
 │   │   │   ├── TestViewModel.cs
 │   │   │   └── ViewModelBase.cs
 │   │   └── Views/
 │   │       ├── AppointmentsView.axaml
 │   │       ├── AppointmentsView.axaml.cs
+│   │       ├── LoginView.axaml
+│   │       ├── LoginView.axaml.cs
 │   │       ├── MainWindow.axaml
-│   │       └── MainWindow.axaml.cs
+│   │       ├── MainWindow.axaml.cs
+│   │       ├── TestView.axaml
+│   │       └── TestView.axaml.cs
 │   └── BarberManager.sln
 ├── readme.md
 └── txt.txt
