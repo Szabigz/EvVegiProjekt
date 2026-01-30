@@ -15,6 +15,7 @@
     </Design.DataContext>
 
     <Window.Resources>
+        <!-- A stílusokat átraktuk a nézetekbe is, de itt is maradhatnak ha globálisan kellenek -->
         <SolidColorBrush x:Key="DividerColor">#EEEEEE</SolidColorBrush> 
         <SolidColorBrush x:Key="HourLabelColor">#AAAAAA</SolidColorBrush> 
     </Window.Resources>
@@ -47,36 +48,225 @@
                             <TextBlock Text="Home" FontWeight="SemiBold"/>
                         </StackPanel>
                     </Button>
+                <RowDefinition Height="*" />   <!-- Naptár tartalom (Idősávok, Görgethető) -->
+            </Grid.RowDefinitions>
 
-                    <!-- Időpontok Gomb -->
-                    <Button Command="{Binding NavigateToAppointmentsCommand}" 
-                            HorizontalAlignment="Stretch" 
-                            HorizontalContentAlignment="Left"
-                            Margin="0,0,0,5"
-                            Padding="10">
-                        <StackPanel Orientation="Horizontal">
-                            <TextBlock Text="Időpontok" FontWeight="SemiBold"/>
-                        </StackPanel>
-                    </Button>
+            <!-- 1. Fejléc Tartalom (Napok és Navigáció) - Grid.Row="0" -->
+            <Grid Grid.Row="0" Grid.ColumnSpan="10" Background="White">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="60" /> <!-- Idő oszlop helye -->
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                
+                <!-- Elvalaszto a napok miatt -->
+                <Border Grid.ColumnSpan="10" BorderThickness="0,0,0,1" BorderBrush="{StaticResource DividerColor}" VerticalAlignment="Bottom"/>
+                
+                <!-- Hétfő -->
+                <StackPanel Grid.Column="1" HorizontalAlignment="Center" Margin="0,5,0,5">
+                    <TextBlock Text="Hétfő" FontWeight="Bold" FontSize="14" />
+                    <TextBlock Text="{Binding Mon}" FontSize="12" Foreground="#555555" HorizontalAlignment="Center"/>
+                </StackPanel>
+                <RowDefinition Height="*" />   <!-- Naptár tartalom (Idősávok, Görgethető) -->
+            </Grid.RowDefinitions>
+
+            <!-- 1. Fejléc Tartalom (Napok és Navigáció) - Grid.Row="0" -->
+            <Grid Grid.Row="0" Grid.ColumnSpan="10" Background="White">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="60" /> <!-- Idő oszlop helye -->
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                
+                <!-- Elvalaszto a napok miatt -->
+                <Border Grid.ColumnSpan="10" BorderThickness="0,0,0,1" BorderBrush="{StaticResource DividerColor}" VerticalAlignment="Bottom"/>
+                
+                <!-- Hétfő -->
+                <StackPanel Grid.Column="1" HorizontalAlignment="Center" Margin="0,5,0,5">
+                    <TextBlock Text="Hétfő" FontWeight="Bold" FontSize="14" />
+                    <TextBlock Text="{Binding Mon}" FontSize="12" Foreground="#555555" HorizontalAlignment="Center"/>
                 </StackPanel>
 
-                <!-- Kijelentkezés gomb -->
-                <Button Grid.Row="1" 
-                        Command="{Binding LogoutCommand}"
-                        HorizontalAlignment="Stretch"
-                        HorizontalContentAlignment="Center"
-                        Margin="10,0,10,20"
-                        Background="#FFF0F0"
-                        BorderBrush="#FFCCCC"
-                        BorderThickness="1">
-                    <TextBlock Text="Kijelentkezés" Foreground="Red" FontWeight="SemiBold"/>
-                </Button>
-            </Grid>
-        </Border>
+                <!-- Kedd -->
+                <StackPanel Grid.Column="2" HorizontalAlignment="Center" Margin="0,5,0,5">
+                    <TextBlock Text="Kedd" FontWeight="Bold" FontSize="14" />
+                    <TextBlock Text="{Binding Tue}" FontSize="12" Foreground="#555555" HorizontalAlignment="Center"/>
+                </StackPanel>
+                
+                <!-- Szerda -->
+                <StackPanel Grid.Column="3" HorizontalAlignment="Center" Margin="0,5,0,5">
+                    <TextBlock Text="Szerda" FontWeight="Bold" FontSize="14" />
+                    <TextBlock Text="{Binding Wed}" FontSize="12" Foreground="#555555" HorizontalAlignment="Center"/>
+                </StackPanel>
+                
+                <!-- Csütörtök -->
+                <StackPanel Grid.Column="4" HorizontalAlignment="Center" Margin="0,5,0,5">
+                    <TextBlock Text="Csütörtök" FontWeight="Bold" FontSize="14" />
+                    <TextBlock Text="{Binding Thu}" FontSize="12" Foreground="#555555" HorizontalAlignment="Center"/>
+                </StackPanel>
+                
+                <!-- Péntek -->
+                <StackPanel Grid.Column="5" HorizontalAlignment="Center" Margin="0,5,0,5">
+                    <TextBlock Text="Péntek" FontWeight="Bold" FontSize="14" />
+                    <TextBlock Text="{Binding Fri}" FontSize="12" Foreground="#555555" HorizontalAlignment="Center"/>
+                </StackPanel>
 
-        <!-- JOBB OLDALI TARTALOM -->
-        <Grid Grid.Column="1">
-            <ContentControl Content="{Binding CurrentPage}" />
+                <!-- Szombat -->
+                <StackPanel Grid.Column="6" HorizontalAlignment="Center" Margin="0,5,0,5">
+                    <TextBlock Text="Szombat" FontWeight="Bold" FontSize="14" />
+                    <TextBlock Text="{Binding Sat}" FontSize="12" Foreground="#555555" HorizontalAlignment="Center"/>
+                </StackPanel>
+
+                <!-- Vasárnap -->
+                <StackPanel Grid.Column="7" HorizontalAlignment="Center" Margin="0,5,0,5">
+                    <TextBlock Text="Vasárnap" FontWeight="Bold" FontSize="14" />
+                    <TextBlock Text="{Binding Sun}" FontSize="12" Foreground="#555555" HorizontalAlignment="Center"/>
+                </StackPanel>
+
+                <!-- Nextweek PrevWeek buttons -->
+                <Button Grid.Column="8" VerticalAlignment="Center" Command="{Binding PrevWeek}" Content="&lt;" Width="30" Height="30" />
+                <Button Grid.Column="9" VerticalAlignment="Center" Command="{Binding NextWeek}" Content=">" Width="30" Height="30" Margin="5,0,10,0" />
+            </Grid>
+
+            <!-- idosavok -->
+            <ScrollViewer Grid.Row="1" Grid.ColumnSpan="10" VerticalScrollBarVisibility="Auto">
+                <Grid x:Name="CalendarContentGrid">
+                    
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="60" /> <!-- Idő oszlop -->
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+                    
+                    <!-- kutyasok sor  -->
+                    <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" MinHeight="60" /> <!-- 8:00 - 8:30 -->
+                    <RowDefinition Height="Auto" MinHeight="60" /> <!-- 8:30 - 9:00 -->
+                    <RowDefinition Height="Auto" MinHeight="60" /> <!-- 9:00 - 9:30 -->
+                    <RowDefinition Height="Auto" MinHeight="60" /> <!-- 9:30 - 10:00 -->
+                    <RowDefinition Height="Auto" MinHeight="60" /> <!-- 10:00 - 10:30 -->
+                    <RowDefinition Height="Auto" MinHeight="60" /> <!-- 10:30 - 11:00 -->
+                    <RowDefinition Height="Auto" MinHeight="60" /> <!-- 11:00 - 11:30 -->
+                    <RowDefinition Height="Auto" MinHeight="60" /> <!-- 11:30 - 12:00 -->
+                    <RowDefinition Height="Auto" MinHeight="60" /> <!-- 12:00 - 12:30 -->
+                    <RowDefinition Height="Auto" MinHeight="60" /> <!-- 12:30 - 13:00 -->
+                    <RowDefinition Height="Auto" MinHeight="60" /> <!-- 13:00 - 13:30 -->
+                    <RowDefinition Height="Auto" MinHeight="60" /> <!-- 13:30 - 14:00 -->
+                    <RowDefinition Height="Auto" MinHeight="60" /> <!-- 14:00 - 14:30 -->
+                    <RowDefinition Height="Auto" MinHeight="60" /> <!-- 14:30 - 15:00 -->
+                    <RowDefinition Height="Auto" MinHeight="60" /> <!-- 15:00 - 15:30 -->
+                    <RowDefinition Height="Auto" MinHeight="60" /> <!-- 15:30 - 16:00 -->
+                    <RowDefinition Height="Auto" MinHeight="60" /> <!-- 16:00 - 16:30 -->
+                    <RowDefinition Height="Auto" MinHeight="60" /> <!-- 16:30 - 17:00 -->
+                    <RowDefinition Height="Auto" MinHeight="60" /> <!-- 17:00 - 17:30 -->
+                    <RowDefinition Height="Auto" MinHeight="60" /> <!-- 17:30 - 18:00 -->
+                    <RowDefinition Height="Auto" MinHeight="60" /> <!-- 18:00 - 18:30 -->
+                    <RowDefinition Height="Auto" MinHeight="60" /> <!-- 18:30 - 19:00 -->
+                    <RowDefinition Height="Auto" MinHeight="60" /> <!-- 19:00 - 19:30 -->
+                    <RowDefinition Height="Auto" MinHeight="60" /> <!-- 19:30 - 20:00 -->
+                    <RowDefinition Height="Auto" MinHeight="60" /> <!-- 20:00 - 20:30 -->
+                    <RowDefinition Height="Auto" MinHeight="60" /> <!-- 20:30 - 21:00 -->
+                    <RowDefinition Height="Auto" MinHeight="60" /> <!-- extra mert elbasztam -->
+                </Grid.RowDefinitions>
+                    
+                    <!-- Órak -->
+                    
+                    
+                    <TextBlock Grid.Row="0" Grid.Column="0" Text="8:00" Margin="0, 0, 5, 0" HorizontalAlignment="Right" VerticalAlignment="Top" Foreground="Black" FontWeight="SemiBold" FontSize="12"/>
+                    <TextBlock Grid.Row="1" Grid.Column="0" Text="8:30" Margin="0, -8, 5, 0" HorizontalAlignment="Right" VerticalAlignment="Top" Foreground="{StaticResource HourLabelColor}" FontSize="12"/>
+
+                    <TextBlock Grid.Row="2" Grid.Column="0" Text="9:00" Margin="0, -8, 5, 0" HorizontalAlignment="Right" VerticalAlignment="Top" Foreground="Black" FontWeight="SemiBold" FontSize="12"/>
+                    <TextBlock Grid.Row="3" Grid.Column="0" Text="9:30" Margin="0, -8, 5, 0" HorizontalAlignment="Right" VerticalAlignment="Top" Foreground="{StaticResource HourLabelColor}" FontSize="12"/>
+
+                    <TextBlock Grid.Row="4" Grid.Column="0" Text="10:00" Margin="0, -8, 5, 0" HorizontalAlignment="Right" VerticalAlignment="Top" Foreground="Black" FontWeight="SemiBold" FontSize="12"/>
+                    <TextBlock Grid.Row="5" Grid.Column="0" Text="10:30" Margin="0, -8, 5, 0" HorizontalAlignment="Right" VerticalAlignment="Top" Foreground="{StaticResource HourLabelColor}" FontSize="12"/>
+
+                    <TextBlock Grid.Row="6" Grid.Column="0" Text="11:00" Margin="0, -8, 5, 0" HorizontalAlignment="Right" VerticalAlignment="Top" Foreground="Black" FontWeight="SemiBold" FontSize="12"/>
+                    <TextBlock Grid.Row="7" Grid.Column="0" Text="11:30" Margin="0, -8, 5, 0" HorizontalAlignment="Right" VerticalAlignment="Top" Foreground="{StaticResource HourLabelColor}" FontSize="12"/>
+                    
+                    <TextBlock Grid.Row="8" Grid.Column="0" Text="12:00" Margin="0, -8, 5, 0" HorizontalAlignment="Right" VerticalAlignment="Top" Foreground="Black" FontWeight="SemiBold" FontSize="12"/>
+                    <TextBlock Grid.Row="9" Grid.Column="0" Text="12:30" Margin="0, -8, 5, 0" HorizontalAlignment="Right" VerticalAlignment="Top" Foreground="{StaticResource HourLabelColor}" FontSize="12"/>
+
+                    <TextBlock Grid.Row="10" Grid.Column="0" Text="13:00" Margin="0, -8, 5, 0" HorizontalAlignment="Right" VerticalAlignment="Top" Foreground="Black" FontWeight="SemiBold" FontSize="12"/>
+                    <TextBlock Grid.Row="11" Grid.Column="0" Text="13:30" Margin="0, -8, 5, 0" HorizontalAlignment="Right" VerticalAlignment="Top" Foreground="{StaticResource HourLabelColor}" FontSize="12"/>
+                    
+                    <TextBlock Grid.Row="12" Grid.Column="0" Text="14:00" Margin="0, -8, 5, 0" HorizontalAlignment="Right" VerticalAlignment="Top" Foreground="Black" FontWeight="SemiBold" FontSize="12"/>
+                    <TextBlock Grid.Row="13" Grid.Column="0" Text="14:30" Margin="0, -8, 5, 0" HorizontalAlignment="Right" VerticalAlignment="Top" Foreground="{StaticResource HourLabelColor}" FontSize="12"/>
+
+                    <TextBlock Grid.Row="14" Grid.Column="0" Text="15:00" Margin="0, -8, 5, 0" HorizontalAlignment="Right" VerticalAlignment="Top" Foreground="Black" FontWeight="SemiBold" FontSize="12"/>
+                    <TextBlock Grid.Row="15" Grid.Column="0" Text="15:30" Margin="0, -8, 5, 0" HorizontalAlignment="Right" VerticalAlignment="Top" Foreground="{StaticResource HourLabelColor}" FontSize="12"/>
+
+                    <TextBlock Grid.Row="16" Grid.Column="0" Text="16:00" Margin="0, -8, 5, 0" HorizontalAlignment="Right" VerticalAlignment="Top" Foreground="Black" FontWeight="SemiBold" FontSize="12"/>
+                    <TextBlock Grid.Row="17" Grid.Column="0" Text="16:30" Margin="0, -8, 5, 0" HorizontalAlignment="Right" VerticalAlignment="Top" Foreground="{StaticResource HourLabelColor}" FontSize="12"/>
+
+                    <TextBlock Grid.Row="18" Grid.Column="0" Text="17:00" Margin="0, -8, 5, 0" HorizontalAlignment="Right" VerticalAlignment="Top" Foreground="Black" FontWeight="SemiBold" FontSize="12"/>
+                    <TextBlock Grid.Row="19" Grid.Column="0" Text="17:30" Margin="0, -8, 5, 0" HorizontalAlignment="Right" VerticalAlignment="Top" Foreground="{StaticResource HourLabelColor}" FontSize="12"/>
+
+                    <TextBlock Grid.Row="20" Grid.Column="0" Text="18:00" Margin="0, -8, 5, 0" HorizontalAlignment="Right" VerticalAlignment="Top" Foreground="Black" FontWeight="SemiBold" FontSize="12"/>
+                    <TextBlock Grid.Row="21" Grid.Column="0" Text="18:30" Margin="0, -8, 5, 0" HorizontalAlignment="Right" VerticalAlignment="Top" Foreground="{StaticResource HourLabelColor}" FontSize="12"/>
+
+                    <TextBlock Grid.Row="22" Grid.Column="0" Text="19:00" Margin="0, -8, 5, 0" HorizontalAlignment="Right" VerticalAlignment="Top" Foreground="Black" FontWeight="SemiBold" FontSize="12"/>
+                    <TextBlock Grid.Row="23" Grid.Column="0" Text="19:30" Margin="0, -8, 5, 0" HorizontalAlignment="Right" VerticalAlignment="Top" Foreground="{StaticResource HourLabelColor}" FontSize="12"/>
+
+                    <TextBlock Grid.Row="24" Grid.Column="0" Text="20:00" Margin="0, -8, 5, 0" HorizontalAlignment="Right" VerticalAlignment="Top" Foreground="Black" FontWeight="SemiBold" FontSize="12"/>
+                    <TextBlock Grid.Row="25" Grid.Column="0" Text="20:30" Margin="0, -8, 5, 0" HorizontalAlignment="Right" VerticalAlignment="Top" Foreground="{StaticResource HourLabelColor}" FontSize="12"/>
+
+                    <!-- 21:00 -->
+                    <TextBlock Grid.Row="26" Grid.Column="0" Text="21:00" Margin="0, -8, 5, 0" HorizontalAlignment="Right" VerticalAlignment="Top" Foreground="Black" FontWeight="SemiBold" FontSize="12"/>
+                    
+                    <!-- Vízszintes elválasztó vonalak -->
+                    <Border Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="7" BorderThickness="0,0,0,1" BorderBrush="{StaticResource DividerColor}"/>
+                    <Border Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="7" BorderThickness="0,0,0,1" BorderBrush="{StaticResource HourLabelColor}"/> <!-- Félórás vonal (halványabb) -->
+                    <Border Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="7" BorderThickness="0,0,0,1" BorderBrush="{StaticResource DividerColor}"/>
+                    <Border Grid.Row="3" Grid.Column="1" Grid.ColumnSpan="7" BorderThickness="0,0,0,1" BorderBrush="{StaticResource HourLabelColor}"/>
+                    <Border Grid.Row="4" Grid.Column="1" Grid.ColumnSpan="7" BorderThickness="0,0,0,1" BorderBrush="{StaticResource DividerColor}"/>
+                    <Border Grid.Row="5" Grid.Column="1" Grid.ColumnSpan="7" BorderThickness="0,0,0,1" BorderBrush="{StaticResource HourLabelColor}"/>
+                    <Border Grid.Row="6" Grid.Column="1" Grid.ColumnSpan="7" BorderThickness="0,0,0,1" BorderBrush="{StaticResource DividerColor}"/>
+                    <Border Grid.Row="7" Grid.Column="1" Grid.ColumnSpan="7" BorderThickness="0,0,0,1" BorderBrush="{StaticResource HourLabelColor}"/>
+                    <Border Grid.Row="8" Grid.Column="1" Grid.ColumnSpan="7" BorderThickness="0,0,0,1" BorderBrush="{StaticResource DividerColor}"/>
+                    <Border Grid.Row="9" Grid.Column="1" Grid.ColumnSpan="7" BorderThickness="0,0,0,1" BorderBrush="{StaticResource HourLabelColor}"/>
+                    <Border Grid.Row="10" Grid.Column="1" Grid.ColumnSpan="7" BorderThickness="0,0,0,1" BorderBrush="{StaticResource DividerColor}"/>
+                    <Border Grid.Row="11" Grid.Column="1" Grid.ColumnSpan="7" BorderThickness="0,0,0,1" BorderBrush="{StaticResource HourLabelColor}"/>
+                    <Border Grid.Row="12" Grid.Column="1" Grid.ColumnSpan="7" BorderThickness="0,0,0,1" BorderBrush="{StaticResource DividerColor}"/>
+                    <Border Grid.Row="13" Grid.Column="1" Grid.ColumnSpan="7" BorderThickness="0,0,0,1" BorderBrush="{StaticResource HourLabelColor}"/>
+                    <Border Grid.Row="14" Grid.Column="1" Grid.ColumnSpan="7" BorderThickness="0,0,0,1" BorderBrush="{StaticResource DividerColor}"/>
+                    <Border Grid.Row="15" Grid.Column="1" Grid.ColumnSpan="7" BorderThickness="0,0,0,1" BorderBrush="{StaticResource HourLabelColor}"/>
+                    <Border Grid.Row="16" Grid.Column="1" Grid.ColumnSpan="7" BorderThickness="0,0,0,1" BorderBrush="{StaticResource DividerColor}"/>
+                    <Border Grid.Row="17" Grid.Column="1" Grid.ColumnSpan="7" BorderThickness="0,0,0,1" BorderBrush="{StaticResource HourLabelColor}"/>
+                    <Border Grid.Row="18" Grid.Column="1" Grid.ColumnSpan="7" BorderThickness="0,0,0,1" BorderBrush="{StaticResource DividerColor}"/>
+                    <Border Grid.Row="19" Grid.Column="1" Grid.ColumnSpan="7" BorderThickness="0,0,0,1" BorderBrush="{StaticResource HourLabelColor}"/>
+                    <Border Grid.Row="20" Grid.Column="1" Grid.ColumnSpan="7" BorderThickness="0,0,0,1" BorderBrush="{StaticResource DividerColor}"/>
+                    <Border Grid.Row="21" Grid.Column="1" Grid.ColumnSpan="7" BorderThickness="0,0,0,1" BorderBrush="{StaticResource HourLabelColor}"/>
+                    <Border Grid.Row="22" Grid.Column="1" Grid.ColumnSpan="7" BorderThickness="0,0,0,1" BorderBrush="{StaticResource DividerColor}"/>
+                    <Border Grid.Row="23" Grid.Column="1" Grid.ColumnSpan="7" BorderThickness="0,0,0,1" BorderBrush="{StaticResource HourLabelColor}"/>
+                    <Border Grid.Row="24" Grid.Column="1" Grid.ColumnSpan="7" BorderThickness="0,0,0,1" BorderBrush="{StaticResource DividerColor}"/>
+                    <Border Grid.Row="25" Grid.Column="1" Grid.ColumnSpan="7" BorderThickness="0,0,0,1" BorderBrush="{StaticResource HourLabelColor}"/>
+                    <!-- 21:00-es vonal -->
+                    <Border Grid.Row="26" Grid.Column="1" Grid.ColumnSpan="7" BorderThickness="0,0,0,1" BorderBrush="{StaticResource DividerColor}"/> 
+                    
+                    <!-- Függőleges Elválasztó az Idő oszlop és a naptár között -->
+                    <Border Grid.Column="0" Grid.RowSpan="27" BorderThickness="0,0,1,0" BorderBrush="{StaticResource DividerColor}"/>
+                </Grid>
+            </ScrollViewer>
         </Grid>
     </Grid>
 </Window>

@@ -31,11 +31,7 @@ Ez a Slick Barber Shop rendszer asztali adminisztrációs felülete. Az alkalmaz
 │   │       ├── AppointmentsView.axaml
 │   │       ├── AppointmentsView.axaml.cs
 │   │       ├── MainWindow.axaml
-│   │       ├── MainWindow.axaml.cs
-│   │       ├── LoginView.axaml
-│   │       ├── LoginView.axaml.cs
-│   │       ├── TestView.axaml
-│   │       └── TestView.axaml.cs
+│   │       └── MainWindow.axaml.cs
 │   └── BarberManager.sln
 ├── readme.md
 └── txt.txt
