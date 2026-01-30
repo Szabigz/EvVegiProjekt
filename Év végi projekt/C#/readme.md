@@ -22,11 +22,20 @@ Ez a Slick Barber Shop rendszer asztali adminisztrációs felülete. Az alkalmaz
 │   │   ├── Program.cs
 │   │   ├── ViewLocator.cs
 │   │   ├── ViewModels/
+│   │   │   ├── AppointmentsViewModel.cs
 │   │   │   ├── MainWindowViewModel.cs
+│   │   │   ├── LoginViewModel.cs
+│   │   │   ├── TestViewModel.cs
 │   │   │   └── ViewModelBase.cs
 │   │   └── Views/
+│   │       ├── AppointmentsView.axaml
+│   │       ├── AppointmentsView.axaml.cs
 │   │       ├── MainWindow.axaml
-│   │       └── MainWindow.axaml.cs
+│   │       ├── MainWindow.axaml.cs
+│   │       ├── LoginView.axaml
+│   │       ├── LoginView.axaml.cs
+│   │       ├── TestView.axaml
+│   │       └── TestView.axaml.cs
 │   └── BarberManager.sln
 ├── readme.md
 └── txt.txt
