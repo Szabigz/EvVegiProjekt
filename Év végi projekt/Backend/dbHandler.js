@@ -1,183 +1,202 @@
-const { Sequelize, DataTypes } = require("sequelize")
-const dbHandler = new Sequelize("barberShop","root","",{
-    dialect: "mysql",
-    host: "localhost"
-})
+const { Sequelize, DataTypes } = require("sequelize");
 
-const userTable = dbHandler.define('user',{
-    id:{
-        type:DataTypes.INTEGER,
-        autoIncrement:true,
-        allowNull:false,
-        primaryKey:true
-    },
-    name:{
-        type:DataTypes.STRING,
-        allowNull:false
-    },
-    email:{
-        type:DataTypes.STRING,
-        allowNull:false
-    },
-    password:{
-        type:DataTypes.STRING,
-        allowNull:false
-    },
-    phoneNum:{
-      type:DataTypes.INTEGER,
-        allowNull:false
-    }
-    
-
-})
-
-const barberTable = dbHandler.define('barber',{
-    id:{
-        type:DataTypes.INTEGER,
-        autoIncrement:true,
-        allowNull:false,
-        primaryKey:true
-    },
-    name:{
-        type:DataTypes.STRING,
-        allowNull:false
-    },
-    
-    
-})
-
-const appointmentsTable = dbHandler.define('appointments',{
-    id:{
-        type:DataTypes.INTEGER,
-        autoIncrement:true,
-        allowNull:false,
-        primaryKey:true
-    },
-    appointment:{
-        type:DataTypes.DATEONLY,
-        allowNull:false
-    },
-    barberID:{
-        type:DataTypes.INTEGER,
-        allowNull:false
-    },
-    serviceID:{
-        type:DataTypes.INTEGER,
-        allowNull:false
-    },
-    userID:{
-      type:DataTypes.INTEGER,
-        allowNull:false
-    },
-    status: {
-      type: DataTypes.STRING,
-      allowNull: false,
-      defaultValue: "booked"
-    },
-    comment:{
-        type:DataTypes.STRING,
-        allowNull:false
-    }
-    
-
-})
-
-const servicesTable = dbHandler.define('services',{
-    id:{
-        type:DataTypes.INTEGER,
-        autoIncrement:true,
-        allowNull:false,
-        primaryKey:true
-    },
-    name:{
-        type:DataTypes.STRING,
-        allowNull:false
-    },
-    description:{
-        type:DataTypes.STRING,
-        allowNull:false
-    },
-    duration_minutes:{
-        type:DataTypes.INTEGER,
-        allowNull:false
-    },
-    price:{
-        type:DataTypes.INTEGER,
-        allowNull:false
-    },
-    barberID:{
-      type:DataTypes.INTEGER,
-      allowNull:false
-  }
-
-})
-
-
-const workHoursTable = dbHandler.define('workhours',{
-    id:{
-        type:DataTypes.INTEGER,
-        autoIncrement:true,
-        allowNull:false,
-        primaryKey:true
-    },
-    barberID:{
-        type:DataTypes.INTEGER,
-        allowNull:false
-    },
-    dayOfWeek:{
-        type:DataTypes.INTEGER,
-        allowNull:false
-    },
-    start_time:{
-        type:DataTypes.DATEONLY,
-        allowNull:false
-    },
-    end_time:{
-        type:DataTypes.DATEONLY,
-        allowNull:false
-    }
-
-
-
-})
-
-const logTable = dbHandler.define('log',{
-  id: { type: DataTypes.INTEGER, autoIncrement: true, primaryKey: true },
-
-  appointmentID: { type: DataTypes.INTEGER, allowNull: true },
-  userID: { type: DataTypes.INTEGER, allowNull: false },
-  barberID: { type: DataTypes.INTEGER, allowNull: false },
-
-  cancelDate: { type: DataTypes.DATE, allowNull: false },
-  activity: { type: DataTypes.STRING, allowNull: false }
+const dbHandler = new Sequelize("barberShop", "root", "", {
+  dialect: "mysql",
+  host: "localhost"
 });
 
+/* USERS */
+const userTable = dbHandler.define("users", {
+  id: {
+    type: DataTypes.INTEGER,
+    autoIncrement: true,
+    primaryKey: true
+  },
+  name: {
+    type: DataTypes.STRING,
+    allowNull: false
+  },
+  email: {
+    type: DataTypes.STRING,
+    allowNull: false
+  },
+  password: {
+    type: DataTypes.STRING,
+    allowNull: false
+  },
+  phoneNum: {
+    type: DataTypes.STRING,
+    allowNull: false
+  }
+});
 
+/* BARBERS */
+const barberTable = dbHandler.define("barbers", {
+  id: {
+    type: DataTypes.INTEGER,
+    autoIncrement: true,
+    primaryKey: true
+  },
+  name: {
+    type: DataTypes.STRING,
+    allowNull: false
+  }
+});
 
-userTable.hasMany(appointmentsTable, {foreignKey:"userID", sourceKey:"id"})
-appointmentsTable.belongsTo(userTable, {foreignKey:"userID", targetKey:"id"})
+/* SERVICES */
+const servicesTable = dbHandler.define("services", {
+  id: {
+    type: DataTypes.INTEGER,
+    autoIncrement: true,
+    primaryKey: true
+  },
+  barberID: {
+    type: DataTypes.INTEGER,
+    allowNull: false
+  },
+  name: {
+    type: DataTypes.STRING,
+    allowNull: false
+  },
+  description: {
+    type: DataTypes.STRING,
+    allowNull: false
+  },
+  duration_minutes: {
+    type: DataTypes.INTEGER,
+    allowNull: false
+  },
+  price: {
+    type: DataTypes.INTEGER,
+    allowNull: false
+  }
+});
 
-barberTable.hasMany(appointmentsTable, {foreignKey:"barberID", sourceKey:"id"})
-appointmentsTable.belongsTo(barberTable, {foreignKey:"barberID", targetKey:"id"})
+/* WORKHOURS */
+const workHoursTable = dbHandler.define("workhours", {
+  id: {
+    type: DataTypes.INTEGER,
+    autoIncrement: true,
+    primaryKey: true
+  },
+  barberID: {
+    type: DataTypes.INTEGER,
+    allowNull: false
+  },
+  dayOfWeek: {
+    type: DataTypes.INTEGER,
+    allowNull: false
+  },
+  start_time: {
+    type: DataTypes.TIME,
+    allowNull: false
+  },
+  end_time: {
+    type: DataTypes.TIME,
+    allowNull: false
+  }
+});
 
-barberTable.hasMany(servicesTable, {foreignKey:"barberID", sourceKey:"id"})
-servicesTable.belongsTo(barberTable, {foreignKey:"barberID", targetKey:"id"})
+/* APPOINTMENTS */
+const appointmentsTable = dbHandler.define("appointments", {
+  id: {
+    type: DataTypes.INTEGER,
+    autoIncrement: true,
+    primaryKey: true
+  },
+  userID: {
+    type: DataTypes.INTEGER,
+    allowNull: false
+  },
+  barberID: {
+    type: DataTypes.INTEGER,
+    allowNull: false
+  },
+  serviceID: {
+    type: DataTypes.INTEGER,
+    allowNull: false
+  },
+  start_time: {
+    type: DataTypes.DATE,
+    allowNull: false
+  },
+  end_time: {
+    type: DataTypes.DATE,
+    allowNull: false
+  },
+  status: {
+    type: DataTypes.STRING,
+    allowNull: false
+  },
+  comment: {
+    type: DataTypes.STRING,
+    allowNull: true
+  }
+});
 
-barberTable.hasMany(workHoursTable, {foreignKey:"barberID", sourceKey:"id"})
-workHoursTable.belongsTo(barberTable, {foreignKey:"barberID", targetKey:"id"})
+/* LOGS */
+const logTable = dbHandler.define("logs", {
+  id: {
+    type: DataTypes.INTEGER,
+    autoIncrement: true,
+    primaryKey: true
+  },
+  appointmentID: {
+    type: DataTypes.INTEGER,
+    allowNull: true
+  },
+  userID: {
+    type: DataTypes.INTEGER,
+    allowNull: false
+  },
+  barberID: {
+    type: DataTypes.INTEGER,
+    allowNull: false
+  },
+  createdAt: {
+    type: DataTypes.DATE,
+    allowNull: false
+  },
+  activity: {
+    type: DataTypes.STRING,
+    allowNull: false
+  }
+});
+userTable.hasMany(appointmentsTable, { foreignKey: "userID" });
+appointmentsTable.belongsTo(userTable, { foreignKey: "userID" });
 
-barberTable.hasMany(servicesTable, {foreignKey:"barberID", sourceKey:"id"})
-servicesTable.belongsTo(barberTable, {foreignKey:"barberID", targetKey:"id"})
+barberTable.hasMany(appointmentsTable, { foreignKey: "barberID" });
+appointmentsTable.belongsTo(barberTable, { foreignKey: "barberID" });
+
+barberTable.hasMany(servicesTable, { foreignKey: "barberID" });
+servicesTable.belongsTo(barberTable, { foreignKey: "barberID" });
+
+barberTable.hasMany(workHoursTable, { foreignKey: "barberID" });
+workHoursTable.belongsTo(barberTable, { foreignKey: "barberID" });
 
 servicesTable.hasMany(appointmentsTable, { foreignKey: "serviceID" });
 appointmentsTable.belongsTo(servicesTable, { foreignKey: "serviceID" });
 
+/* USERS ↔ LOGS */
+userTable.hasMany(logTable, { foreignKey: "userID" });
+logTable.belongsTo(userTable, { foreignKey: "userID" });
+
+/* BARBERS ↔ LOGS */
+barberTable.hasMany(logTable, { foreignKey: "barberID" });
+logTable.belongsTo(barberTable, { foreignKey: "barberID" });
+
+/* APPOINTMENTS ↔ LOGS */
+appointmentsTable.hasMany(logTable, { foreignKey: "appointmentID" });
+logTable.belongsTo(appointmentsTable, { foreignKey: "appointmentID" });
 
 
-exports.user = userTable
-exports.barber = barberTable
-exports.appointments = appointmentsTable
-exports.services = servicesTable
-exports.workhours = workHoursTable
-exports.log = logTable
-
+module.exports = {
+    user: userTable,
+    barber: barberTable,
+    services: servicesTable,
+    workhours: workHoursTable,
+    appointments: appointmentsTable,
+    log: logTable,
+    db: dbHandler
+  };
+  
