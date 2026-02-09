@@ -19,6 +19,7 @@ router.get("/user",Auth(), async(req,res)=>{
 
 
 router.post("/reg", async(req,res)=>{
+    console.log(req.body)
     const {email, name, password, phoneNum} = req.body
     const oneUser = await dbHandler.user.findOne({
         where:{
@@ -33,10 +34,10 @@ router.post("/reg", async(req,res)=>{
     await dbHandler.user.create({
         name:name,
         email:email,
-        password:password,
+        password: password,
         phoneNum:phoneNum
     })
-    user.password = await bcrypt.hash(password,9)
+    dbHandler.user.password = await bcrypt.hash(password,9)
     res.status(200).json({message: 'sikeres regisztracio'}).end()
 
 })
