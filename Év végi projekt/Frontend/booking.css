@@ -1,13 +1,10 @@
 body {
-    background-image: url('images/hatter.jpg');
-    background-repeat: no-repeat;
-    background-size: cover;
-    background-position: center;
+    /*background-image: url('images/hatter.jpg');*/
+    background-color: #121212;
     font-family: Georgia, 'Times New Roman', Times, serif;
-    position: relative;
 }
 
-body::before {
+/*body::before {
     content: "";
     position: fixed;    
     top: 0;
@@ -18,7 +15,7 @@ body::before {
     pointer-events: none; 
     z-index: -1;
 }
-
+*/
 .container {
     position: relative;
     z-index: 1; 

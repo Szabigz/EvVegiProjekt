@@ -1,17 +1,13 @@
 html {
     scroll-behavior: smooth;
 }
-
 body {
-    background-image: url('images/hatter.jpg');
-    background-repeat: no-repeat;
-    background-size: cover;
-    background-position: center;
+    /*background-image: url('images/hatter.jpg');*/
+    background-color: #121212;
     font-family: Georgia, 'Times New Roman', Times, serif;
-    position: relative;
 }
 
-body::before {
+/*body::before {
     content: "";
     position: fixed;    
     top: 0;
@@ -21,7 +17,7 @@ body::before {
     background-color: rgba(0,0,0,0.6); 
     pointer-events: none; 
     z-index: -1;
-}
+}*/
 
 .container, .works h2, #info-box {
     position: relative;
@@ -104,11 +100,9 @@ body::before {
     object-fit: contain;
     border-radius: 8px;
     transition: transform 0.3s ease;
+    background: rgb(255, 255, 255);
 }
 
-.menu-img:hover {
-    transform: scale(1.05);
-}
 
 /*Információ*/
 #info-box {
@@ -169,7 +163,6 @@ body::before {
 
 .contact-box{
     position: fixed;
-    margin-left: 1250px;
     border: 2px solid black;
     color: black;
     background: rgba(255, 255, 255, 0.8);
@@ -201,7 +194,7 @@ body::before {
     background-color: rgba(255, 255, 255, 0.15);
     font-weight: bold;
     border-radius: 20px;
-    color: #d4af37; 
+    color: #ffffff; 
     box-shadow: 0 12px 28px rgba(0,0,0,0.35);
     border: 1px solid rgba(255,255,255,0.25);
     padding: 10px 20px;
@@ -234,7 +227,7 @@ body::before {
     background-color: rgba(255, 255, 255, 0.15);
     font-weight: bold;
     border-radius: 20px;
-    color: #d4af37; 
+    color: #ffffff; 
     box-shadow: 0 12px 28px rgba(0,0,0,0.35);
     border: 1px solid rgba(255,255,255,0.25);
     padding: 10px 20px;
