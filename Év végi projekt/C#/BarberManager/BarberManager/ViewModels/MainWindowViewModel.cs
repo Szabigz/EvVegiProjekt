@@ -1,10 +1,14 @@
-﻿using CommunityToolkit.Mvvm.ComponentModel;
+﻿using BarberManager.Services;
+using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 
 namespace BarberManager.ViewModels;
 
 public partial class MainWindowViewModel : ViewModelBase
 {
+    // public for now, kesobb lehet konstruktorban tovabb adni tobbi vmnek
+    public ApiService Api { get; } = new ApiService();
+
     // jelenlegi oldal
     [ObservableProperty]
     private ViewModelBase _currentPage;
