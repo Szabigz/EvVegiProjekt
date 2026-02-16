@@ -44,100 +44,70 @@ body::before {
     color: white;
 }
 
-
+/*Navigacio*/
 
 .navbar ul {
     display: flex;
     justify-content: center;
-    gap: 20px;
-    padding: 0;
-    margin: 20px 0;
-    list-style-type: none;
     align-items: center;
+    gap: 50px;
+    list-style: none;
+    padding: 0;
+    margin: 40px 0;
 }
 
-
 .navbar .menu-item {
+    flex: 1;
+    text-align: center;
+}
+
+.menu-link {
     position: relative;
     display: inline-block;
-    border-radius: 12px;
-    overflow: hidden;
-    cursor: pointer;
-    transition: transform 0.25s ease, box-shadow 0.25s ease;
+    text-decoration: none;
+    color: white;
+    font-weight: 600;
+    font-size: 0.95rem;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    padding: 8px 0;
+    transition: all 0.3s ease;
+}
+
+.menu-link:hover {
+    color: #d4af37; 
+}
+
+.menu-link::after {
+    content: "";
+    position: absolute;
+    left: 50%;
+    bottom: -6px;
+    width: 0%;
+    height: 2px;
+    background: linear-gradient(90deg, #d4af37, #ffffff);
+    transition: all 0.3s ease;
+    transform: translateX(-50%);
+}
+
+.menu-link:hover::after {
+    width: 100%;
 }
 
 .navbar .menu-item:first-child {
-    flex: 1 1 auto;
-    border: none;
+    flex: 0 0 auto;
 }
-
-.navbar .menu-item:not(:first-child) {
-    padding: 12px 28px;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
-    background: rgba(255,255,255,0.15);
-    border: 1px solid rgba(255,255,255,0.3);
-    backdrop-filter: blur(4px);
-    position: relative;
-}
-
-.navbar .menu-item:not(:first-child)::before {
-    content: "";
-    position: absolute;
-    top: 0;
-    left: 0;
-    height: 35%;
-    width: 100%;
-    background: rgba(255,255,255,0.1);
-    border-radius: inherit;
-    pointer-events: none;
-}
-
-.menu-text h2 {
-    font-size: 1.05rem;
-    letter-spacing: 0.5px;
-    text-transform: uppercase;
-    margin: 0;
-    font-weight: 700;
-}
-
-
-.navbar .menu-item:not(:first-child):hover {
-    background-image: url('images/scissors_invert.jpg');
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
-    transform: scale(1.08);
-    box-shadow: 0 4px 15px rgba(0,0,0,0.35);
-}
-
-.navbar .menu-item:not(:first-child):hover::after {
-    content: "";
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0,0,0,0.55);
-    border-radius: 12px;
-    z-index: 1;
-}
-
-.navbar .menu-item:not(:first-child):hover .menu-text {
-    color: white;
-    position: relative;
-    z-index: 2;
-}
-
 
 .menu-img {
-    display: block;
-    width: 100%;
-    height: 140px;
-    object-fit: cover;
-    border-radius: 12px;
-    background-color: rgba(255, 255, 255, 0.2);
-    border: 1px solid rgba(255,255,255,0.3);
+    height: 90px;
+    width: auto;
+    object-fit: contain;
+    border-radius: 8px;
+    transition: transform 0.3s ease;
+}
 
+.menu-img:hover {
+    transform: scale(1.05);
 }
 
 /*Információ*/
@@ -196,11 +166,7 @@ body::before {
 .contact-box h2{
     font-size: 20px;
 }
-.contact-img{
-    width: 60px;
-    height: 35px;
-    margin: 0;
-}
+
 .contact-box{
     position: fixed;
     margin-left: 1250px;
@@ -234,8 +200,8 @@ body::before {
     font-style: italic;
     background-color: rgba(255, 255, 255, 0.15);
     font-weight: bold;
-    border-radius: 50%;
-    color: white;
+    border-radius: 20px;
+    color: #d4af37; 
     box-shadow: 0 12px 28px rgba(0,0,0,0.35);
     border: 1px solid rgba(255,255,255,0.25);
     padding: 10px 20px;
@@ -260,15 +226,15 @@ body::before {
 
 /*Áraink*/
 .prices{
-    margin-top: 20px;
+    margin-top: 40px;
 }
 .prices h2{
     text-align: center;
     font-style: italic;
     background-color: rgba(255, 255, 255, 0.15);
     font-weight: bold;
-    border-radius: 50%;
-    color: white;
+    border-radius: 20px;
+    color: #d4af37; 
     box-shadow: 0 12px 28px rgba(0,0,0,0.35);
     border: 1px solid rgba(255,255,255,0.25);
     padding: 10px 20px;
@@ -300,9 +266,8 @@ body::before {
 .booking-btn:hover {
     background: rgba(0, 0, 0, 0.8);
     border-color: rgba(255, 255, 255, 0.6);
-    transform: translateY(-3px);
     box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
-    color: white;
+    color: #d4af37; 
 }
 
 .price-tabs {
@@ -329,13 +294,12 @@ body::before {
 .price-tab-btn:hover {
     background: rgba(255, 255, 255, 0.2);
     border-color: rgba(255, 255, 255, 0.5);
-    transform: translateY(-2px);
 }
 
 .price-tab-btn.active {
     background: rgba(57, 59, 65, 0.699);
     border-color: #2c2e30;
-    color: white;
+    color: #d4af37; 
     box-shadow: 0 0 20px rgb(0, 0, 0);
 }
 
@@ -384,10 +348,10 @@ body::before {
 }
 
 .price-card:hover {
-    transform: translateY(-8px);
     background: linear-gradient(135deg, rgba(255, 255, 255, 0.15), rgba(255, 255, 255, 0.05));
     border-color: rgba(255, 255, 255, 0.4);
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+
 }
 
 .price-card h3 {
@@ -500,8 +464,7 @@ body::before {
 
 
 .team-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+    box-shadow: 0 10px 25px rgba(255, 255, 255, 0.384);
 }
 
 .team-img {
