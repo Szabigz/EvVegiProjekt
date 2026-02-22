@@ -106,14 +106,18 @@ body {
 
 /*Információ*/
 #info-box {
-    background: linear-gradient(135deg, #ffffffdd, #f5f5f5dd);
-    border-left: 5px solid #000;
+    background: rgba(255, 255, 255, 0.15);
+    border-left: 5px solid rgba(255, 255, 255, 0.25);
+    border-top: 1px solid rgba(255, 255, 255, 0.25);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.25);
+    border-right: 1px solid rgba(255, 255, 255, 0.25);
     border-radius: 12px;
     padding: 25px 35px;
     box-shadow: 0 8px 22px rgba(0,0,0,0.25);
     backdrop-filter: blur(4px);
     transition: transform 0.3s ease, box-shadow 0.3s ease;
     margin: 0 auto;
+    color: white;
 }
 
 #info-box:hover {
@@ -125,30 +129,22 @@ body {
     font-size: 2rem;
     font-weight: 700;
     margin-bottom: 15px;
-    border-bottom: 2px solid black;
     display: inline-block;
     padding-bottom: 6px;
 }
 .scissor-list {
-    list-style: none;
+    list-style:circle;
     padding-left: 0;
-    margin-left: 0;
+    margin-left: 20px;
 }
 
 .scissor-list li {
     font-size: 1.1rem;
     margin-bottom: 8px;
-    padding-left: 28px;
     position: relative;
+
 }
 
-.scissor-list li::before {
-    content: "✂️";
-    position: absolute;
-    left: 0;
-    top: 0;
-    font-size: 1.2rem;
-}
 
 #info-box p {
     font-size: 1.1rem;
@@ -163,9 +159,9 @@ body {
 
 .contact-box{
     position: fixed;
-    border: 2px solid black;
-    color: black;
-    background: rgba(255, 255, 255, 0.8);
+    border: 2px solid rgba(255, 255, 255, 0.25);
+    color: white;
+    background: rgba(255, 255, 255, 0.15);
     border-radius: 10px;
     cursor: pointer;
     z-index: 1;
@@ -181,6 +177,9 @@ body {
 }
 .contact-box.open .contact-content {
     max-height: 500px;
+}
+.contact-box a{
+    color: #d4af37;
 }
 
 /*Munkak*/
