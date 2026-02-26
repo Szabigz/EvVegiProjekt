@@ -1,5 +1,4 @@
 const { Sequelize, DataTypes } = require("sequelize");
-const { toDefaultValue } = require("sequelize/types/utils");
 
 const dbHandler = new Sequelize("barberShop", "root", "", {
   dialect: "mysql",

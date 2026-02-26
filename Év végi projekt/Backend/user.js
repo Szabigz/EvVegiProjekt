@@ -16,7 +16,7 @@ const EI=process.env.EXPIRES_IN
 
 
 router.get("/user",Auth(), async(req,res)=>{
-    res.json(await dbHandler.user.findOne({where:{id:req.uid}}))
+    return res.json(await dbHandler.user.findOne({where:{id:req.uid}}))
 })
 
 
@@ -64,7 +64,7 @@ router.post('/login', async(req,res)=>{
             res.json({"message":"Hibas jelszo"})
         }
         if(oneUser.name == name && bcrypt.compare(password, oneUser.password)){
-             const token=JWT.sign({uid:oneUser.id},{SECRET_KEY: SK},{expiresIn: EI})
+             const token=JWT.sign({uid:oneUser.id},SK,{expiresIn: EI})
             return res.status(201).json({"message": "Sikeres bejelentkezes",token:token}).end()
         }
         
@@ -76,6 +76,82 @@ router.post('/login', async(req,res)=>{
 })
 
 
+router.delete("/userDelete/:id", Auth(), async (req, res) => {
+    try {
+        const id = req.uid;
+        const oneUser = await dbHandler.user.findOne({ where: { id } });
+
+        if (!oneUser) {
+            return res.status(400).json({ message: "Nincs ilyen felhasználó" });
+        }
+
+        await dbHandler.user.destroy({ where: { id } });
+        return res.status(200).json({ message: "Sikeres törlés" });
+
+    } catch (err) {
+        console.log(err);
+        return res.status(500).json({ message: "Szerverhiba" });
+    }
+});
+router.put('/userUpdate/:id', Auth(), async(req,res) =>{
+
+    try {
+        const id = req.uid
+        const oneUser = await dbHandler.user.findOne({ where: { id } });
+
+        if (!oneUser) {
+            return res.status(400).json({ message: "Nincs ilyen felhasználó" });
+        }
+        if(!id){
+        return res.status(400).json({'message': 'Hiányzó Tool ID'})
+    }
+
+    if(req.body.name){
+        await dbHandler.user.update({
+            name:req.body.name
+        },{
+            where:{
+                id:id
+            }
+        })
+    }
+
+    if(req.body.email){
+        await dbHandler.user.update({
+            email:req.body.email
+        },{
+            where:{
+                id:id
+            }
+        })
+    }
+
+    if(req.body.password){
+        await dbHandler.user.update({
+            password:req.body.password
+        },{
+            where:{
+                id:id
+            }
+        })
+    }
+    if(req.body.phoneNum){
+        await dbHandler.user.update({
+            phoneNum:req.body.phoneNum
+        },{
+            where:{
+                id:id
+            }
+        })
+    }
+    res.json({'message':'sikeres módosítás'})
+    } catch (error) {
+        console.log(error);
+    return res.status(500).json({ message: 'Szerverhiba' });
+    }
+    
+
+})
 
 
 
