@@ -1,0 +1,711 @@
+html {
+    scroll-behavior: smooth;
+}
+body {
+    /*background-image: url('images/hatter.jpg');*/
+    background-color: #121212;
+    font-family: Georgia, 'Times New Roman', Times, serif;
+}
+#dark-overlay {
+    position: relative; /* vagy fixed? */
+    z-index: 1;
+}
+/*body::before {
+    content: "";
+    position: fixed;    
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.6); 
+    pointer-events: none; 
+    z-index: -1;
+}*/
+
+.container, .works h2, #info-box {
+    position: relative;
+    z-index: 1; 
+}
+
+.footer-style {
+    padding: 20px;
+    background: #111;
+}
+
+.footer-style a {
+    color: #bbb;
+    text-decoration: none;
+    font-weight: 500;
+    transition: color 0.3s;
+}
+
+.footer-style a:hover {
+    color: white;
+}
+
+/*Navigacio*/
+
+.navbar ul {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 50px;
+    list-style: none;
+    padding: 0;
+    margin: 40px 0;
+}
+
+.navbar .menu-item {
+    flex: 1;
+    text-align: center;
+}
+
+.menu-link {
+    position: relative;
+    display: inline-block;
+    text-decoration: none;
+    color: white;
+    font-weight: 600;
+    font-size: 0.95rem;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    padding: 8px 0;
+    transition: all 0.3s ease;
+}
+
+.menu-link:hover {
+    color: #d4af37; 
+}
+
+.menu-link::after {
+    content: "";
+    position: absolute;
+    left: 50%;
+    bottom: -6px;
+    width: 0%;
+    height: 2px;
+    background: linear-gradient(90deg, #d4af37, #ffffff);
+    transition: all 0.3s ease;
+    transform: translateX(-50%);
+}
+
+.menu-link:hover::after {
+    width: 100%;
+}
+
+.navbar .menu-item:first-child {
+    flex: 0 0 auto;
+}
+
+.menu-img {
+    height: 90px;
+    width: auto;
+    object-fit: contain;
+    border-radius: 8px;
+    transition: transform 0.3s ease;
+    background: rgb(255, 255, 255);
+}
+
+
+/*Információ*/
+#info-box {
+    background: rgba(255, 255, 255, 0.15);
+    border-left: 5px solid rgba(255, 255, 255, 0.25);
+    border-top: 1px solid rgba(255, 255, 255, 0.25);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.25);
+    border-right: 1px solid rgba(255, 255, 255, 0.25);
+    border-radius: 12px;
+    padding: 25px 35px;
+    box-shadow: 0 8px 22px rgba(0,0,0,0.25);
+    backdrop-filter: blur(4px);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    margin: 0 auto;
+    color: white;
+}
+
+#info-box:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 12px 28px rgba(0,0,0,0.35);
+}
+
+.info-title {
+    font-size: 2rem;
+    font-weight: 700;
+    margin-bottom: 15px;
+    display: inline-block;
+    padding-bottom: 6px;
+}
+.scissor-list {
+    list-style:circle;
+    padding-left: 0;
+    margin-left: 20px;
+}
+
+.scissor-list li {
+    font-size: 1.1rem;
+    margin-bottom: 8px;
+    position: relative;
+
+}
+
+
+#info-box p {
+    font-size: 1.1rem;
+    line-height: 1.6;
+}
+
+/*Kapcsolatok*/
+
+.contact-box h2{
+    font-size: 20px;
+}
+
+.contact-box{
+    position: fixed;
+    border: 2px solid rgba(255, 255, 255, 0.25);
+    color: white;
+    background: rgba(255, 255, 255, 0.15);
+    border-radius: 10px;
+    cursor: pointer;
+    z-index: 1;
+    right: 20px;
+    bottom: 20px;
+    width: 260px;
+    
+}
+.contact-content {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.4s ease;
+}
+.contact-box.open .contact-content {
+    max-height: 500px;
+}
+.contact-box a{
+    color: #d4af37;
+}
+
+/*Munkak*/
+
+.works-team{
+    margin-top: 20px;
+}
+.works-team h2{
+    text-align: center;
+    font-style: italic;
+    background-color: rgba(255, 255, 255, 0.15);
+    font-weight: bold;
+    border-radius: 20px;
+    color: #ffffff; 
+    box-shadow: 0 12px 28px rgba(0,0,0,0.35);
+    border: 1px solid rgba(255,255,255,0.25);
+    padding: 10px 20px;
+
+}
+.img-circle-hover {
+    filter: grayscale(100%);
+    transition: filter 0.4s ease, transform 0.4s ease, box-shadow 0.3s ease;
+    width: 250px;
+    height: 250px;
+    margin: 40px auto 0;
+    border-radius: 50%;
+    object-fit: cover;
+    display: block;
+}
+
+.img-circle-hover:hover {
+    transform: scale(1.05);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.4);
+    filter: grayscale(0);
+}
+
+/*Áraink*/
+.prices{
+    margin-top: 40px;
+}
+.prices h2{
+    text-align: center;
+    font-style: italic;
+    background-color: rgba(255, 255, 255, 0.15);
+    font-weight: bold;
+    border-radius: 20px;
+    color: #ffffff; 
+    box-shadow: 0 12px 28px rgba(0,0,0,0.35);
+    border: 1px solid rgba(255,255,255,0.25);
+    padding: 10px 20px;
+
+}
+
+/*Árak - Tab System*/
+
+.prices-container {
+    width: 100%;
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.booking-btn {
+    background: rgba(0, 0, 0, 0.6);
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    color: white;
+    padding: 15px 50px;
+    font-size: 1.1rem;
+    font-weight: 700;
+    border-radius: 30px;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    display: inline-block;
+}
+
+.booking-btn:hover {
+    background: rgba(0, 0, 0, 0.8);
+    border-color: rgba(255, 255, 255, 0.6);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+    color: #d4af37; 
+}
+
+.price-tabs {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 30px;
+    flex-wrap: wrap;
+}
+
+.price-tab-btn {
+    padding: 12px 24px;
+    font-size: 1rem;
+    font-weight: 600;
+    background: rgba(255, 255, 255, 0.1);
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    border-radius: 25px;
+    color: white;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    backdrop-filter: blur(4px);
+}
+
+.price-tab-btn:hover {
+    background: rgba(255, 255, 255, 0.2);
+    border-color: rgba(255, 255, 255, 0.5);
+}
+
+.price-tab-btn.active {
+    background: rgba(57, 59, 65, 0.699);
+    border-color: #2c2e30;
+    color: #d4af37; 
+    box-shadow: 0 0 20px rgb(0, 0, 0);
+}
+
+.price-content {
+    position: relative;
+    min-height: auto;
+}
+
+.price-tab-content {
+    display: none;
+    opacity: 0;
+    animation: fadeIn 0.4s ease;
+}
+
+.price-tab-content.active {
+    display: block;
+    opacity: 1;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.price-cards-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 25px;
+    padding: 20px 0;
+}
+
+.price-card {
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.02));
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 15px;
+    padding: 25px;
+    text-align: center;
+    transition: all 0.3s ease;
+    color: white;
+}
+
+.price-card:hover {
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.15), rgba(255, 255, 255, 0.05));
+    border-color: rgba(255, 255, 255, 0.4);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+
+}
+
+.price-card h3 {
+    font-size: 1.3rem;
+    font-weight: 700;
+    margin-bottom: 15px;
+    color: #ffffff;
+}
+
+.price-value {
+    font-size: 2.2rem;
+    font-weight: 800;
+    color: #ffffff;
+    margin: 15px 0;
+    text-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+}
+
+.price-desc {
+    font-size: 0.95rem;
+    color: rgba(255, 255, 255, 0.8);
+    font-style: italic;
+    margin: 0;
+}
+
+/*Árak - Reszponzivitas*/
+
+@media (max-width: 768px) {
+    .price-tab-btn {
+        padding: 10px 16px;
+        font-size: 0.9rem;
+    }
+
+    .price-cards-grid {
+        grid-template-columns: 1fr;
+        gap: 15px;
+    }
+
+    .price-card {
+        padding: 20px;
+    }
+
+    .price-value {
+        font-size: 1.8rem;
+    }
+}
+
+@media (max-width: 576px) {
+    .prices-container {
+        padding: 10px;
+    }
+
+    .price-tabs {
+        gap: 8px;
+    }
+
+    .price-tab-btn {
+        padding: 8px 12px;
+        font-size: 0.8rem;
+    }
+
+    .price-card {
+        padding: 15px;
+    }
+
+    .price-card h3 {
+        font-size: 1.1rem;
+    }
+
+    .price-value {
+        font-size: 1.6rem;
+    }
+
+    .price-desc {
+        font-size: 0.85rem;
+    }
+
+    .price-content {
+        min-height: auto;
+    }
+}
+
+/*Csapat*/
+
+#team-div {
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+    flex-wrap: wrap;
+    padding: 40px 0;
+}
+
+.team-card {
+    background: rgba(255, 255, 255, 0.1); 
+    backdrop-filter: blur(6px);          
+    border-radius: 15px;
+    padding: 20px;
+    width: 250px;
+    text-align: center;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+}
+.team-card p{
+    color: white;
+    font-style: italic;
+}
+.team-card ul{
+    color: white;
+    list-style-type: none;
+}
+
+
+.team-card:hover {
+    box-shadow: 0 10px 25px rgba(255, 255, 255, 0.384);
+}
+
+.team-img {
+    width: 140px;
+    height: 140px;
+    object-fit: cover;
+    border-radius: 50%;   
+    margin-bottom: 15px;
+    border: 4px solid white;
+}
+
+.team-name {
+    color: white;
+    font-weight: 600;
+    font-size: 1.2rem;
+    margin-top: 10px;
+}
+
+/* Modal */
+
+.custom-modal {
+    background: rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(8px);
+    border: 1px solid rgba(255,255,255,0.3);
+    color: white;
+    border-radius: 12px;
+}
+
+.custom-modal input {
+    background: rgba(255, 255, 255, 0.2);
+    border: 1px solid rgba(255,255,255,0.4);
+    color: white;
+    position: relative; 
+    z-index: 2100;     
+}
+
+.custom-modal input::placeholder {
+    color: rgba(255,255,255,0.7);
+}
+
+.modal-backdrop {
+    display: none !important;
+}
+.modal, .modal-backdrop {
+    z-index: 2000 !important;
+}
+.modal *:focus {
+    outline: none !important;
+    box-shadow: none !important;
+    border: none;
+}
+#switchToRegister{
+    color: #d4af37;
+}
+
+/* Reszponzivitas */
+
+@media (min-width: 751px) and (max-width: 999px) {
+    .works-team {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .img-circle-hover {
+        width: 200px;
+        height: 200px;
+        margin: 20px auto;
+        display: block;
+    }
+}
+
+@media (max-width: 576px) {
+    .navbar .menu-item:not(:first-child) {
+        padding: 8px 12px;
+    }
+
+    .menu-text h2 {
+        font-size: 0.75rem;
+    }
+
+    .menu-img {
+        height: 100px;
+    }
+
+    #info-box {
+        padding: 15px 20px;
+    }
+
+    .info-title {
+        font-size: 1.5rem;
+    }
+
+    #info-box p {
+        font-size: 0.95rem;
+    }
+
+    .scissor-list li {
+        font-size: 0.95rem;
+    }
+
+    .contact-box {
+        width: 85%;
+        right: 50%;
+        transform: translateX(50%);
+        margin-left: 0 !important;
+    }
+
+    .img-circle-hover {
+        width: 120px;
+        height: 120px;
+        margin-top: 20px;
+    }
+
+    .card {
+        width: 150px;
+        height: auto;
+    }
+
+    .card-img-top {
+        height: 100px;
+        width: 100px;
+    }
+
+    .team-card {
+        width: 95%;
+        max-width: 280px;
+        padding: 15px;
+    }
+
+    .team-img {
+        width: 100px;
+        height: 100px;
+    }
+
+    .team-name {
+        font-size: 1rem;
+    }
+
+    .booking-card {
+        padding: 10px;
+        min-height: 150px;
+    }
+
+    #location-div {
+        height: 250px !important;
+    }
+}
+@media (max-width: 768px) {
+
+    .container {
+        padding-left: 10px;
+        padding-right: 10px;
+    }
+
+    .navbar ul {
+        gap: 10px;
+    }
+
+    .navbar .menu-item:not(:first-child) {
+        padding: 10px 18px;
+    }
+
+    .menu-text h2 {
+        font-size: 0.85rem;
+    }
+
+    #info-box {
+        padding: 20px 25px;
+    }
+
+    .info-title {
+        font-size: 1.7rem;
+    }
+
+    #info-box p {
+        font-size: 1rem;
+    }
+
+    .img-circle-hover {
+        width: 170px;
+        height: 170px;
+        margin: 15px auto;
+        display: block;
+    }
+
+    .card-img-top {
+        height: 120px;
+        width: 120px;
+    }
+
+    #team-div {
+        flex-direction: column;
+        align-items: center;
+        gap: 20px;
+    }
+
+    .team-card {
+        width: 85%;
+        max-width: 350px;
+    }
+
+    #location-div {
+        height: 300px !important;
+    }
+}
+@media (max-width: 992px) {
+
+    .navbar ul {
+        flex-direction: column;
+        padding: 0;
+    }
+
+    .navbar .menu-item:not(:first-child) {
+        width: 100%;
+        padding: 10px 15px;
+        margin: 5px 0;
+    }
+
+    .menu-text h2 {
+        font-size: 1rem;
+    }
+
+    .menu-img {
+        height: 80px;
+    }
+
+    .contact-box {
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        margin-left: 0;
+        width: 260px;
+        z-index: 2000;
+    }
+
+    #book-appointment-div {
+        flex-direction: column;
+        align-items: center !important;
+    }
+
+    #book-appointment-div .col-lg-6,
+    #book-appointment-div .col-lg-4,
+    #book-appointment-div .col-lg-2 {
+        width: 100%;
+        max-width: 500px;
+        margin-bottom: 20px;
+    }
+}
