@@ -6,7 +6,10 @@ body {
     background-color: #121212;
     font-family: Georgia, 'Times New Roman', Times, serif;
 }
-
+#dark-overlay {
+    position: relative; /* vagy fixed? */
+    z-index: 1;
+}
 /*body::before {
     content: "";
     position: fixed;    
@@ -475,6 +478,45 @@ body {
     margin-top: 10px;
 }
 
+/* Modal */
+
+.custom-modal {
+    background: rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(8px);
+    border: 1px solid rgba(255,255,255,0.3);
+    color: white;
+    border-radius: 12px;
+}
+
+.custom-modal input {
+    background: rgba(255, 255, 255, 0.2);
+    border: 1px solid rgba(255,255,255,0.4);
+    color: white;
+    position: relative; 
+    z-index: 2100;     
+}
+
+.custom-modal input::placeholder {
+    color: rgba(255,255,255,0.7);
+}
+
+.modal-backdrop {
+    display: none !important;
+}
+.modal, .modal-backdrop {
+    z-index: 2000 !important;
+}
+.modal *:focus {
+    outline: none !important;
+    box-shadow: none !important;
+    border: none;
+}
+#switchToRegister{
+    color: #d4af37;
+}
+
+/* Reszponzivitas */
+
 @media (min-width: 751px) and (max-width: 999px) {
     .works-team {
         display: flex;
@@ -490,7 +532,6 @@ body {
     }
 }
 
-/*Reszponzivitas*/
 @media (max-width: 576px) {
     .navbar .menu-item:not(:first-child) {
         padding: 8px 12px;

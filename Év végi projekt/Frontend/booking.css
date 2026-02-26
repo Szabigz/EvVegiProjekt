@@ -70,8 +70,14 @@ body {
 .booking-step:hover {
     background: linear-gradient(135deg, rgba(255, 255, 255, 0.12), rgba(255, 255, 255, 0.05));
     border-color: rgba(255, 255, 255, 0.4);
+    
 }
-
+#barbers{
+    max-width: 600px;
+    width: 100%;
+    margin: 0 auto;
+    gap:25px;
+}
 .step-title {
     color: white;
     font-weight: 700;
@@ -85,6 +91,9 @@ body {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
     gap: 20px;
+    width: 100%;
+    max-width: 500px;
+    margin: 0 auto;
 }
 
 .barber-card {
@@ -279,7 +288,52 @@ body {
 
 /* Reszponzivitas */
 
+/*Tablet*/
+
+@media (max-width: 992px) {
+
+    .booking-wrapper {
+        padding: 30px 20px;
+    }
+
+    .booking-wrapper h1 {
+        font-size: 2rem;
+    }
+
+    .booking-steps {
+        gap: 30px;
+    }
+
+    .booking-step {
+        padding: 25px;
+    }
+
+    /* Fodrász rész */
+    #barbers {
+        max-width: 500px;
+    }
+
+    .barber-selection {
+        width: 100%;
+        max-width: 450px;
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    /* Szolgáltatások */
+    .service-selection {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    /* Időpont */
+    .time-slot-wrapper {
+        grid-template-columns: repeat(auto-fill, minmax(90px, 1fr));
+    }
+}
+
+/* Mobil */
+
 @media (max-width: 768px) {
+
     .booking-wrapper {
         padding: 20px 15px;
     }
@@ -290,57 +344,44 @@ body {
 
     .booking-step {
         padding: 20px;
+        border-radius: 15px;
     }
 
     .step-title {
         font-size: 1.2rem;
     }
 
+    /* Fodrász */
+    #barbers {
+        max-width: 100%;
+    }
+
+    .barber-selection {
+        width: 100%;
+        max-width: 100%;
+        grid-template-columns: 1fr;
+        gap: 15px;
+    }
+
     .barber-card img {
-        width: 100px;
-        height: 100px;
+        width: 90px;
+        height: 90px;
     }
 
-    .barber-selection,
-    .service-selection {
-        grid-template-columns: repeat(2, 1fr);
-    }
-
-    .time-slot-wrapper {
-        grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
-    }
-}
-
-@media (max-width: 576px) {
-    .booking-wrapper {
-        padding: 15px 10px;
-    }
-
-    .booking-wrapper h1 {
-        font-size: 1.5rem;
-        margin-bottom: 30px;
-    }
-
-    .booking-step {
-        padding: 15px;
-    }
-
-    .step-title {
-        font-size: 1.1rem;
-    }
-
-    .barber-selection,
+    /* Szolgáltatás */
     .service-selection {
         grid-template-columns: 1fr;
     }
 
     .service-btn {
-        padding: 12px 15px;
-        font-size: 0.9rem;
+        min-height: 80px;
+        font-size: 0.95rem;
+        padding: 12px;
     }
 
+    /* Időpont */
     .time-slot-wrapper {
-        grid-template-columns: repeat(auto-fill, minmax(70px, 1fr));
+        grid-template-columns: repeat(auto-fill, minmax(75px, 1fr));
         gap: 8px;
     }
 
@@ -350,7 +391,42 @@ body {
     }
 
     .booking-btn {
-        padding: 12px 30px;
+        padding: 12px 35px;
         font-size: 1rem;
+    }
+}
+
+
+/*Kis mobil*/
+
+@media (max-width: 480px) {
+
+    .booking-wrapper h1 {
+        font-size: 1.5rem;
+    }
+
+    .booking-step {
+        padding: 15px;
+    }
+
+    .step-title {
+        font-size: 1rem;
+    }
+
+    .barber-card {
+        padding: 15px;
+    }
+
+    .barber-card img {
+        width: 75px;
+        height: 75px;
+    }
+
+    .service-btn {
+        font-size: 0.85rem;
+    }
+
+    .booking-btn {
+        width: 100%;
     }
 }

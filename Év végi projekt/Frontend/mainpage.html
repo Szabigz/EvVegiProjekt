@@ -4,10 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
     <link rel="stylesheet" href="style.css">
     <title>Slick Barber Shop</title>
 </head>
-<body  id="dark-overlay">
+<body>
     <div class="container">
         <header>
             <nav class="navbar">
@@ -137,7 +138,7 @@
                              Hajak
                         </button>
                         <button class="price-tab-btn" data-tab="beard">
-                             Szakál
+                             Szakáll
                         </button>
                         <button class="price-tab-btn" data-tab="extra">
                              Extra
@@ -206,9 +207,38 @@
                         </div>
                     </div>
                 </div>
-                <div class="text-center mt-2">
-                    <a href="booking.html" class="btn btn-dark btn-lg booking-btn">Foglalj Időpontot</a>
-                </div>
+                    <div class="text-center mt-5">
+                        <a href="#" id="bookingRedirectBtn" class="btn btn-dark btn-lg booking-btn">
+                            Foglalj Időpontot
+                        </a>                    
+                    </div>
+                    <!-- Bejelentkezes -->
+
+                    <div class="modal fade" id="loginModal" tabindex="-1" aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered">
+                          <div class="modal-content custom-modal p-4">
+                            <div class="modal-header border-0">
+                              <h5 class="modal-title">Bejelentkezés</h5>
+                              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Bezár"></button>
+                            </div>
+                            <div class="modal-body">
+                              <form id="loginForm">
+                                <div class="mb-3">
+                                  <label for="emailInput" class="form-label">Email</label>
+                                  <input type="email" class="form-control" id="emailInput" placeholder="Email címed" required>
+                                </div>
+                                <div class="mb-3">
+                                  <label for="passwordInput" class="form-label">Jelszó</label>
+                                  <input type="password" class="form-control" id="passwordInput" placeholder="Jelszó" required>
+                                </div>
+                                <button type="submit" class="btn btn-dark w-100" id="modalSubmitBtn">Bejelentkezés</button>                              </form>
+                              <div class="text-center mt-3">
+                                <small><span  id="switch">Még nincs fiókod?</span> <a href="#" id="switchToRegister">Regisztrálj!</a></small>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
             </div>
             <script src="prices.js"></script>
 
@@ -244,9 +274,12 @@
             </div>
 
         </main>
+        
     </div>
         <footer class="text-center footer-style">
             <a href="" target="_blank">Adatvédelmi feltételek</a>
         </footer>
+        <script src="bookingButton.js"></script>
+    
 </body>
 </html>
