@@ -16,9 +16,8 @@ dbHandler.workhours.sync()
 dbHandler.appointments.sync()
 dbHandler.services.sync()
 dbHandler.log.sync()
-
 require('dotenv').config()
-const PORT = process.env.PORT
+const PORT = 3000
 
 
 server.use("/", user)

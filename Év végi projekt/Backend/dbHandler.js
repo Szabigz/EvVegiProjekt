@@ -1,4 +1,5 @@
 const { Sequelize, DataTypes } = require("sequelize");
+const { toDefaultValue } = require("sequelize/types/utils");
 
 const dbHandler = new Sequelize("barberShop", "root", "", {
   dialect: "mysql",
@@ -40,7 +41,25 @@ const barberTable = dbHandler.define("barbers", {
   name: {
     type: DataTypes.STRING,
     allowNull: false
+  },
+  phoneNum:{
+    type: DataTypes.INTEGER,
+    allowNull:false,
+  },
+  email:{
+    type:DataTypes.STRING,
+    allowNull:false
+  },
+  password:{
+    type:DataTypes.STRING,
+    allowNull:false
+  },
+  isAdmin:{
+    type:DataTypes.BOOLEAN,
+    allowNull:false,
+    DefaultValue:false
   }
+
 });
 
 /* SERVICES */
