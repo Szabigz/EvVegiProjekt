@@ -16,6 +16,7 @@ document.addEventListener("DOMContentLoaded", () => {
     switchLink.addEventListener("click", (e) => {
         e.preventDefault();
         const nameField = document.getElementById("nameField");
+        const phoneField = document.getElementById("phoneField");
     
         if (modalTitle.textContent == "Bejelentkezés") {
             modalTitle.textContent = "Regisztráció";
@@ -23,14 +24,19 @@ document.addEventListener("DOMContentLoaded", () => {
             switchLink.textContent = "Bejelentkezés";
             switchText.textContent = "";
             nameField.classList.remove("d-none"); // Név mező látható
+            phoneField.classList.remove("d-none"); // Phone mező látható
             document.getElementById("nameInput").setAttribute("required", true);
+            document.getElementById("phoneNumInput").setAttribute("required", true);
         } else {
             modalTitle.textContent = "Bejelentkezés";
             modalSubmitBtn.textContent = "Bejelentkezés";
             switchLink.textContent = "Regisztrálj!"; 
             switchText.textContent = "Még nincs fiókod? ";
             nameField.classList.add("d-none"); // Név mező rejtve
+            phoneField.classList.add("d-none"); // Phone mező rejtve
             document.getElementById("nameInput").removeAttribute("required");
+            document.getElementById("phoneNumInput").removeAttribute("required");
+
         }
     });
 
@@ -51,9 +57,10 @@ document.addEventListener("DOMContentLoaded", () => {
         } else {
             const name = document.getElementById("nameInput").value;
             const email = document.getElementById("emailInput").value;
+            const phone = document.getElementById("phoneNumInput").value;
             const password = document.getElementById("passwordInput").value;
 
-            if(name && email && password){
+            if(name && email && phone && password){
                 alert("Sikeres regisztráció!");
                 loginModal.hide();
             } else {

@@ -115,22 +115,23 @@
             </div>
             
             <!--Munkaink-->
-            <div class="row works-team" id="works-div">
-              <h2>Munkáink </h2>
-              <div class="col-lg-4">
-                <img src="images/work1.jpg" alt="" class="bw-img img-fluid img-circle-hover">
-              </div>
-              <div class="col-lg-4">
-                <img src="images/work2.jpg" alt="" class="bw-img img-fluid img-circle-hover">
-              </div>
-              <div class="col-lg-4">
-                <img src="images/work3.jpg" alt="" class="bw-img img-fluid img-circle-hover">
-              </div>
+            <div class="works" id="works-div">
+                <h2 class="text-center mb-2">Munkáink</h2>
+                <div class="row">
+                  <div class="col-lg-4 text-center">
+                    <img src="images/work1.jpg" class="img-fluid img-circle-hover">
+                  </div>
+                  <div class="col-lg-4 text-center">
+                    <img src="images/work2.jpg" class="img-fluid img-circle-hover">
+                  </div>
+                  <div class="col-lg-4 text-center">
+                    <img src="images/work3.jpg" class="img-fluid img-circle-hover">
+                  </div>
+                </div>
             </div>
-
             <!--Áraink-->
             <div class="row prices" id="prices-div">
-                <h2 class="text-center mb-5">Áraink</h2>
+                <h2 class="text-center mb-3 mt-2">Áraink</h2>
 
                 <div class="prices-container">
                     <div class="price-tabs">
@@ -207,7 +208,7 @@
                         </div>
                     </div>
                 </div>
-                    <div class="text-center mt-5">
+                    <div class="text-center mt-2 mb-2">
                         <a href="#" id="bookingRedirectBtn" class="btn btn-dark btn-lg booking-btn">
                             Foglalj Időpontot
                         </a>                    
@@ -228,15 +229,22 @@
                                 <label for="nameInput" class="form-label">Név</label>
                                 <input type="text" class="form-control" id="nameInput" placeholder="Név">
                                 </div>
-
+                                
                                 <div class="mb-3">
                                 <label for="emailInput" class="form-label">Email</label>
                                 <input type="email" class="form-control" id="emailInput" placeholder="Email címed" required>
                                 </div>
+                                
+                                <div class="mb-3 d-none" id="phoneField">
+                                <label for="phoneNumInput" class="form-label">Telefonszám</label>
+                                <input type="text" class="form-control" id="phoneNumInput" placeholder="Telefonszám">
+                                </div>
+
                                 <div class="mb-3">
                                 <label for="passwordInput" class="form-label">Jelszó</label>
                                 <input type="password" class="form-control" id="passwordInput" placeholder="Jelszó" required>
                                 </div>
+
                                 <button type="submit" class="btn btn-dark w-100" id="modalSubmitBtn">Bejelentkezés</button>
                             </form>
                             <div class="text-center mt-3">
@@ -250,8 +258,8 @@
             <script src="prices.js"></script>
 
             <!--Fodraszok-->
-            <div class="row works-team g-4" id="team-div">
-                <h2 class="text-center mb-4">Csapat</h2>
+            <div class="row g-4" id="team-div">
+                <h2 class="text-center mb-3">Csapat</h2>
             
                 <div class="team-card col">
                     <img src="images/barber.jpg" class="team-img" alt="Fodrász">
@@ -276,8 +284,8 @@
             </div>
 
             <!--Terkep-->
-            <div id="location-div" style="width:100%; height:400px;">
-                <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2696.1483147336903!2d19.05998284116719!3d47.48702399634662!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x4741dc5a77effd55%3A0x2cc66bdf92ae39e6!2sBudapest%2C%20Erkel%20u.%2014%2Fa%2C%201092!5e0!3m2!1shu!2shu!4v1765437272344!5m2!1shu!2shu" width="1290" height="400" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+            <div id="location-div" >
+                <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2696.1483147336903!2d19.05998284116719!3d47.48702399634662!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x4741dc5a77effd55%3A0x2cc66bdf92ae39e6!2sBudapest%2C%20Erkel%20u.%2014%2Fa%2C%201092!5e0!3m2!1shu!2shu!4v1765437272344!5m2!1shu!2shu" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
             </div>
 
         </main>

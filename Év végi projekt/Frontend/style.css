@@ -44,10 +44,15 @@ body {
 }
 
 .navbar .menu-item {
-    flex: 1;
+    flex: 0 0 auto;
+    width: auto;
     text-align: center;
+    margin: 10px 0;
 }
-
+.menu-item:first-child {
+    flex: 0 0 auto;
+    margin-right: 40px;
+}
 .menu-link {
     position: relative;
     display: inline-block;
@@ -83,10 +88,13 @@ body {
 
 .navbar .menu-item:first-child {
     flex: 0 0 auto;
+    margin-bottom: 20px;
+    text-align: center;
 }
 
 .menu-img {
-    height: 90px;
+    display: block;
+    height: 80px;
     width: auto;
     object-fit: contain;
     border-radius: 8px;
@@ -175,10 +183,10 @@ body {
 
 /*Munkak*/
 
-.works-team{
+.works{
     margin-top: 20px;
 }
-.works-team h2{
+.works h2{
     text-align: center;
     font-style: italic;
     background-color: rgba(255, 255, 255, 0.15);
@@ -188,6 +196,7 @@ body {
     box-shadow: 0 12px 28px rgba(0,0,0,0.35);
     border: 1px solid rgba(255,255,255,0.25);
     padding: 10px 20px;
+    margin-bottom: 20px;
 
 }
 .img-circle-hover {
@@ -221,7 +230,6 @@ body {
     box-shadow: 0 12px 28px rgba(0,0,0,0.35);
     border: 1px solid rgba(255,255,255,0.25);
     padding: 10px 20px;
-
 }
 
 /*Árak - Tab System*/
@@ -257,7 +265,7 @@ body {
     display: flex;
     justify-content: center;
     gap: 10px;
-    margin-bottom: 30px;
+    margin-bottom: 10px;
     flex-wrap: wrap;
 }
 
@@ -359,62 +367,6 @@ body {
     margin: 0;
 }
 
-/*Árak - Reszponzivitas*/
-
-@media (max-width: 768px) {
-    .price-tab-btn {
-        padding: 10px 16px;
-        font-size: 0.9rem;
-    }
-
-    .price-cards-grid {
-        grid-template-columns: 1fr;
-        gap: 15px;
-    }
-
-    .price-card {
-        padding: 20px;
-    }
-
-    .price-value {
-        font-size: 1.8rem;
-    }
-}
-
-@media (max-width: 576px) {
-    .prices-container {
-        padding: 10px;
-    }
-
-    .price-tabs {
-        gap: 8px;
-    }
-
-    .price-tab-btn {
-        padding: 8px 12px;
-        font-size: 0.8rem;
-    }
-
-    .price-card {
-        padding: 15px;
-    }
-
-    .price-card h3 {
-        font-size: 1.1rem;
-    }
-
-    .price-value {
-        font-size: 1.6rem;
-    }
-
-    .price-desc {
-        font-size: 0.85rem;
-    }
-
-    .price-content {
-        min-height: auto;
-    }
-}
 
 /*Csapat*/
 
@@ -424,6 +376,18 @@ body {
     gap: 30px;
     flex-wrap: wrap;
     padding: 40px 0;
+}
+#team-div h2{
+    text-align: center;
+    font-style: italic;
+    background-color: rgba(255, 255, 255, 0.15);
+    font-weight: bold;
+    border-radius: 20px;
+    color: #ffffff; 
+    box-shadow: 0 12px 28px rgba(0,0,0,0.35);
+    border: 1px solid rgba(255,255,255,0.25);
+    padding: 10px 20px;
+    margin-bottom: 20px;
 }
 
 .team-card {
@@ -466,6 +430,17 @@ body {
     margin-top: 10px;
 }
 
+/* Terkep */
+
+#location-div {
+    width: 100%;
+}
+
+#location-div iframe {
+    width: 100%;
+    height: 400px;
+    border: 0;
+}
 /* Modal */
 
 .custom-modal {
@@ -503,15 +478,80 @@ body {
     color: #d4af37;
 }
 
+/*Árak - Reszponzivitas*/
+
+@media (max-width: 768px) {
+    
+    .price-tab-btn {
+        padding: 10px 16px;
+        font-size: 0.9rem;
+    }
+
+    .price-cards-grid {
+        grid-template-columns: 1fr;
+        gap: 15px;
+    }
+
+    .price-card {
+        padding: 20px;
+    }
+
+    .price-value {
+        font-size: 1.8rem;
+    }
+}
+
+@media (max-width: 576px) {
+    .navbar ul {
+        gap: 15px;
+    }
+
+    .menu-img {
+        height: 60px;
+    }
+
+    .menu-link {
+        font-size: 0.85rem;
+        letter-spacing: 1px;
+    }
+    .prices-container {
+        padding: 10px;
+    }
+
+    .price-tabs {
+        gap: 8px;
+    }
+
+    .price-tab-btn {
+        padding: 8px 12px;
+        font-size: 0.8rem;
+    }
+
+    .price-card {
+        padding: 15px;
+    }
+
+    .price-card h3 {
+        font-size: 1.1rem;
+    }
+
+    .price-value {
+        font-size: 1.6rem;
+    }
+
+    .price-desc {
+        font-size: 0.85rem;
+    }
+
+    .price-content {
+        min-height: auto;
+    }
+}
+
+
 /* Reszponzivitas */
 
 @media (min-width: 751px) and (max-width: 999px) {
-    .works-team {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-    }
-
     .img-circle-hover {
         width: 200px;
         height: 200px;
@@ -521,13 +561,6 @@ body {
 }
 
 @media (max-width: 576px) {
-    .navbar .menu-item:not(:first-child) {
-        padding: 8px 12px;
-    }
-
-    .menu-text h2 {
-        font-size: 0.75rem;
-    }
 
     .menu-img {
         height: 100px;
@@ -592,27 +625,42 @@ body {
         min-height: 150px;
     }
 
-    #location-div {
-        height: 250px !important;
+    #location-div iframe {
+        height: 250px;
     }
 }
 @media (max-width: 768px) {
+    .navbar ul {
+        flex-direction: column;   
+        align-items: center;      
+        gap: 15px;                
+        margin: 30px auto;         
+        max-width: 300px;
+        padding: 0;      
+    }
 
+    .menu-item:not(:first-child) {
+        width: auto; 
+        padding: 8px 0;
+        margin: 0 auto;  
+        text-align: center;        
+    }
+
+    .menu-img {
+        height: 70px;             
+        margin-bottom: 10px;
+        display: block;
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    .menu-link {
+        font-size: 0.9rem;       
+        letter-spacing: 1px;
+    }
     .container {
         padding-left: 10px;
         padding-right: 10px;
-    }
-
-    .navbar ul {
-        gap: 10px;
-    }
-
-    .navbar .menu-item:not(:first-child) {
-        padding: 10px 18px;
-    }
-
-    .menu-text h2 {
-        font-size: 0.85rem;
     }
 
     #info-box {
@@ -650,29 +698,41 @@ body {
         max-width: 350px;
     }
 
-    #location-div {
-        height: 300px !important;
+    #location-div iframe {
+        height: 300px;
     }
 }
 @media (max-width: 992px) {
 
     .navbar ul {
-        flex-direction: column;
+        display: flex;
+        flex-direction: column;  
+        align-items: center;     
+        gap: 15px;               
         padding: 0;
+        margin: 30px 0;
     }
 
-    .navbar .menu-item:not(:first-child) {
-        width: 100%;
-        padding: 10px 15px;
-        margin: 5px 0;
+    .navbar .menu-item {
+        flex: 0 0 auto;         
+        width: auto;             
+        text-align: center;      
     }
 
-    .menu-text h2 {
-        font-size: 1rem;
+    .navbar .menu-item:first-child {
+        margin-bottom: 10px;     
     }
 
     .menu-img {
+        display: block;
+        margin: 0 auto;         
         height: 80px;
+        width: auto;
+    }
+
+    .menu-link {
+        font-size: 0.95rem;
+        letter-spacing: 1px;
     }
 
     .contact-box {
