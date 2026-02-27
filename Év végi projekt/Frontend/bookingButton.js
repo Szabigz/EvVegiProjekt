@@ -15,17 +15,22 @@ document.addEventListener("DOMContentLoaded", () => {
 
     switchLink.addEventListener("click", (e) => {
         e.preventDefault();
+        const nameField = document.getElementById("nameField");
     
         if (modalTitle.textContent == "Bejelentkezés") {
             modalTitle.textContent = "Regisztráció";
             modalSubmitBtn.textContent = "Regisztrálás";
             switchLink.textContent = "Bejelentkezés";
-            switchText.textContent=""
+            switchText.textContent = "";
+            nameField.classList.remove("d-none"); // Név mező látható
+            document.getElementById("nameInput").setAttribute("required", true);
         } else {
             modalTitle.textContent = "Bejelentkezés";
             modalSubmitBtn.textContent = "Bejelentkezés";
             switchLink.textContent = "Regisztrálj!"; 
-            switchText.textContent="Még nincs fiókod? "
+            switchText.textContent = "Még nincs fiókod? ";
+            nameField.classList.add("d-none"); // Név mező rejtve
+            document.getElementById("nameInput").removeAttribute("required");
         }
     });
 
