@@ -2,6 +2,7 @@ const { Sequelize, DataTypes } = require("sequelize");
 
 const dbHandler = new Sequelize("barberShop", "root", "", {
   dialect: "mysql",
+  port:3307,
   host: "localhost"
 });
 
@@ -180,11 +181,11 @@ const logTable = dbHandler.define("logs", {
     allowNull: false
   }
 });
-userTable.hasMany(appointmentsTable, { foreignKey: "userID" });
 appointmentsTable.belongsTo(userTable, { foreignKey: "userID" });
+userTable.hasMany(appointmentsTable, { foreignKey: "userID" });
 
-barberTable.hasMany(appointmentsTable, { foreignKey: "barberID" });
 appointmentsTable.belongsTo(barberTable, { foreignKey: "barberID" });
+barberTable.hasMany(appointmentsTable, { foreignKey: "barberID" });
 
 barberTable.hasMany(servicesTable, { foreignKey: "barberID" });
 servicesTable.belongsTo(barberTable, { foreignKey: "barberID" });

@@ -17,7 +17,7 @@ function Auth() {
             req.uid = decodedToken.uid;
             next();
         } catch (error) {
-            console.log("JWT verify failed:", err.message);
+            console.log("JWT verify failed:", error.message);
             res.status(401).json({ message: "Invalid token" });
         }
     };

@@ -15,12 +15,12 @@ const SK=process.env.SECRET_KEY
 const EI=process.env.EXPIRES_IN 
 
 
-router.get("/user",Auth(), async(req,res)=>{
+router.get("/userGet",Auth(), async(req,res)=>{
     return res.json(await dbHandler.user.findOne({where:{id:req.uid}}))
 })
 
 
-router.post("/reg", async(req,res)=>{
+router.post("/userReg", async(req,res)=>{
     console.log(req.body)
     const {email, name, password, phoneNum} = req.body
     const oneUser = await dbHandler.user.findOne({
@@ -44,7 +44,7 @@ router.post("/reg", async(req,res)=>{
 
 })
 
-router.post('/login', async(req,res)=>{
+router.post('/userLogin', async(req,res)=>{
     try{
         const {email,name, password}=req.body
 
