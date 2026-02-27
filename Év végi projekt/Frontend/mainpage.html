@@ -212,33 +212,40 @@
                             Foglalj Időpontot
                         </a>                    
                     </div>
-                    <!-- Bejelentkezes -->
 
+                    <!-- Bejelentkezes -->
                     <div class="modal fade" id="loginModal" tabindex="-1" aria-hidden="true">
                         <div class="modal-dialog modal-dialog-centered">
-                          <div class="modal-content custom-modal p-4">
+                        <div class="modal-content custom-modal p-4">
                             <div class="modal-header border-0">
-                              <h5 class="modal-title">Bejelentkezés</h5>
-                              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Bezár"></button>
+                            <h5 class="modal-title">Bejelentkezés</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Bezár"></button>
                             </div>
                             <div class="modal-body">
-                              <form id="loginForm">
+                            <form id="loginForm">
+                                <!-- Név mező (alapból rejtve) -->
+                                <div class="mb-3 d-none" id="nameField">
+                                <label for="nameInput" class="form-label">Név</label>
+                                <input type="text" class="form-control" id="nameInput" placeholder="Név">
+                                </div>
+
                                 <div class="mb-3">
-                                  <label for="emailInput" class="form-label">Email</label>
-                                  <input type="email" class="form-control" id="emailInput" placeholder="Email címed" required>
+                                <label for="emailInput" class="form-label">Email</label>
+                                <input type="email" class="form-control" id="emailInput" placeholder="Email címed" required>
                                 </div>
                                 <div class="mb-3">
-                                  <label for="passwordInput" class="form-label">Jelszó</label>
-                                  <input type="password" class="form-control" id="passwordInput" placeholder="Jelszó" required>
+                                <label for="passwordInput" class="form-label">Jelszó</label>
+                                <input type="password" class="form-control" id="passwordInput" placeholder="Jelszó" required>
                                 </div>
-                                <button type="submit" class="btn btn-dark w-100" id="modalSubmitBtn">Bejelentkezés</button>                              </form>
-                              <div class="text-center mt-3">
+                                <button type="submit" class="btn btn-dark w-100" id="modalSubmitBtn">Bejelentkezés</button>
+                            </form>
+                            <div class="text-center mt-3">
                                 <small><span  id="switch">Még nincs fiókod?</span> <a href="#" id="switchToRegister">Regisztrálj!</a></small>
-                              </div>
                             </div>
-                          </div>
+                            </div>
                         </div>
-                      </div>
+                        </div>
+                    </div>
             </div>
             <script src="prices.js"></script>
 
