@@ -1,4 +1,5 @@
-﻿using BarberManager.Services;
+﻿using BarberManager.Models;
+using BarberManager.Services;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 
@@ -10,6 +11,8 @@ public partial class MainWindowViewModel : ViewModelBase
 
     [ObservableProperty]
     private ViewModelBase _currentPage;
+    [ObservableProperty]
+    private Barber? _currentBarber;
 
     [ObservableProperty]
     private bool _isLoggedIn;
@@ -24,8 +27,11 @@ public partial class MainWindowViewModel : ViewModelBase
     {
         var loginVm = new LoginViewModel(Api);
 
-        loginVm.OnLoginSuccess = () =>
+        loginVm.OnLoginSuccess = async () => 
         {
+            
+            CurrentBarber = await Api.GetBarberInfoAsync();
+
             IsLoggedIn = true;
             CurrentPage = new AppointmentsViewModel();
         };
