@@ -59,18 +59,28 @@
                     </Button>
                 </StackPanel>
 
-                <!-- Kijelentkezes gomb -->
-                <Button Grid.Row="1" 
-                        Command="{Binding LogoutCommand}"
-                        HorizontalAlignment="Stretch"
-                        HorizontalContentAlignment="Center"
-                        Margin="10,0,10,20"
-                        Background="#FFF0F0"
-                        BorderBrush="#FFCCCC"
-                        BorderThickness="1">
-                    <TextBlock Text="Kijelentkezés" Foreground="Red" FontWeight="SemiBold"/>
-                </Button>
-            </Grid>
+                <!-- Bal also resz -->
+                <StackPanel Grid.Row="1" Margin="10,0,10,20">
+    
+                    <!-- Bejelentkezett ember neve -->
+                    <TextBlock Text="{Binding CurrentBarber.Name}" 
+                               HorizontalAlignment="Center"
+                               FontWeight="Bold"
+                               Foreground="#333333"
+                               Margin="0,0,0,10"
+                               IsVisible="{Binding CurrentBarber, Converter={x:Static ObjectConverters.IsNotNull}}"/>
+
+                    <!-- Kijelentkezes gomb -->
+                    <Button Command="{Binding LogoutCommand}"
+                            HorizontalAlignment="Stretch"
+                            HorizontalContentAlignment="Center"
+                            Background="#FFF0F0"
+                            BorderBrush="#FFCCCC"
+                            BorderThickness="1">
+                        <TextBlock Text="Kijelentkezés" Foreground="Red" FontWeight="SemiBold"/>
+                    </Button>
+                </StackPanel>
+        </Grid>
         </Border>
 
         <!-- jobb panel -->
