@@ -1,4 +1,7 @@
-﻿using System;
+﻿using BarberManager.Models;
+using System;
+using System.ComponentModel;
+using System.Diagnostics;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
@@ -86,6 +89,25 @@ namespace BarberManager.Services
         {
             _jwtToken = string.Empty;
             _httpClient.DefaultRequestHeaders.Authorization = null;
+        }
+
+        // --- Barber Lekeres ---
+        public async Task<Barber?> GetBarberInfoAsync()
+        {
+            try
+            {
+                var response = await _httpClient.GetAsync("/barberGet");
+                if (response.IsSuccessStatusCode)
+                {
+                    return await response.Content.ReadFromJsonAsync<Barber>();
+                }
+                return null;
+            }
+            catch(Exception ex)
+            {
+                Debug.WriteLine($"Hiba a fodrász adatainak lekérésekor: {ex.Message}");
+                return null;
+            }
         }
 
         private class LoginResponse
