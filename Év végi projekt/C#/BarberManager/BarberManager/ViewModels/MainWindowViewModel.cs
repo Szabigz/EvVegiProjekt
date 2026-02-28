@@ -6,10 +6,8 @@ namespace BarberManager.ViewModels;
 
 public partial class MainWindowViewModel : ViewModelBase
 {
-    // public for now, kesobb lehet konstruktorban tovabb adni tobbi vmnek
     public ApiService Api { get; } = new ApiService();
 
-    // jelenlegi oldal
     [ObservableProperty]
     private ViewModelBase _currentPage;
 
@@ -18,16 +16,14 @@ public partial class MainWindowViewModel : ViewModelBase
 
     public MainWindowViewModel()
     {
-        // Kijelentkezve indul
         IsLoggedIn = false;
         ShowLoginScreen();
     }
 
     private void ShowLoginScreen()
     {
-        var loginVm = new LoginViewModel();
+        var loginVm = new LoginViewModel(Api);
 
-        // ha sikeres login
         loginVm.OnLoginSuccess = () =>
         {
             IsLoggedIn = true;
@@ -41,6 +37,7 @@ public partial class MainWindowViewModel : ViewModelBase
     public void Logout()
     {
         IsLoggedIn = false;
+        Api.Logout();
         ShowLoginScreen();
     }
 
