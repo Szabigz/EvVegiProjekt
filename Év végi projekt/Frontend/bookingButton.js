@@ -42,27 +42,9 @@ document.addEventListener("DOMContentLoaded", () => {
         e.preventDefault();
 
         if (modalTitle.textContent == "Bejelentkezés") {
-            const name=document.getElementById("nameInput").value
-            const email = document.getElementById("emailInput").value;
-            const password = document.getElementById("passwordInput").value;
-            if(name && email && password){
-                sessionStorage.setItem("loggedIn", "true");
-                window.location.href = "booking.html";
-            } else {
-                alert("Kérlek tölts ki minden mezőt!");
-            }
+            userLogin()
         } else {
-            const name = document.getElementById("nameInput").value;
-            const email = document.getElementById("emailInput").value;
-            const phone = document.getElementById("phoneNumInput").value;
-            const password = document.getElementById("passwordInput").value;
-
-            if(name && email && phone && password){
-                alert("Sikeres regisztráció!");
-                loginModal.hide();
-            } else {
-                alert("Kérlek töltsd ki az összes mezőt!");
-            }
+           userRegister()
         }
     });
 });

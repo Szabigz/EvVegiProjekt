@@ -1,7 +1,7 @@
 function userRegister(){
     const request = new XMLHttpRequest()
     request.open("POST","/userReg")
-    request.setRequestHeader("Content-type","Application/json")
+    request.setRequestHeader("Content-type","application/json")
     request.send(JSON.stringify({
         name: nameInput.value,
         email: emailInput.value,
@@ -19,7 +19,7 @@ function userRegister(){
 function userLogin(){
     const request = new XMLHttpRequest()
     request.open("POST","/userLogin")
-    request.setRequestHeader("Content-type","Application/json")
+    request.setRequestHeader("Content-type","application/json")
     request.send(JSON.stringify({
         name: nameInput.value,
         email: emailInput.value,
