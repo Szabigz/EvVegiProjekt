@@ -6,10 +6,11 @@ const barber = require('./barber.js')
 const appointments = require("./appointments.js")
 const services = require("./services.js")
 const workhours = require("./workHours.js")
+const path = require("path")
 
 const server = express();
 server.use(express.json());
-server.use(express.static("Frontend"));
+server.use(express.static(path.join(__dirname, "../Frontend")));
 dbHandler.user.sync()
 dbHandler.barber.sync()
 dbHandler.services.sync()
@@ -17,6 +18,10 @@ dbHandler.workhours.sync()
 dbHandler.appointments.sync()
 dbHandler.log.sync()
 require('dotenv').config()
+
+server.get("/", (req,res)=>{
+    res.sendFile (path.join(__dirname, "../Frontend/mainpage.html"))
+})
 const PORT = process.env.PORT
 
 

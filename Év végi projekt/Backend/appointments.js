@@ -8,16 +8,18 @@ const dbHandler=require('./dbHandler')
 const JWT= require('jsonwebtoken')
 
 
-router.get("/appointment",Auth(), async(req,res)=>{
-    res.json(await dbHandler.appointments.findAll({where:{id:req.uid}}))
+
+router.get("/appointmentGet",Auth(), async(req,res)=>{
+    return res.json(await dbHandler.appointments.findAll())
 })
 
 
-router.post("/appointment", Auth(), async(req,res)=>{
-    const { appointment, barberID, serviceID, userID, status, comment} = req.body
+
+router.post("/appointmentPost", Auth(), async(req,res)=>{
+    const { barberID, serviceID, userID, status, comment, start_time, end_time} = req.body
     const oneBarber = await dbHandler.appointments.findOne({
         where:{
-            appointment:appointment
+            status:status
         }
         
     })
@@ -30,6 +32,8 @@ router.post("/appointment", Auth(), async(req,res)=>{
         serviceID:serviceID,
         userID:userID,
         status:status,
+        start_time:start_time,
+        end_time:end_time,
         comment:comment
         
     })
