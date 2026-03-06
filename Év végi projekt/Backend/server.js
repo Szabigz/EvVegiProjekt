@@ -9,15 +9,15 @@ const workhours = require("./workHours.js")
 
 const server = express();
 server.use(express.json());
-server.use(express.static("public"));
+server.use(express.static("Frontend"));
 dbHandler.user.sync()
 dbHandler.barber.sync()
+dbHandler.services.sync()
 dbHandler.workhours.sync()
 dbHandler.appointments.sync()
-dbHandler.services.sync()
 dbHandler.log.sync()
 require('dotenv').config()
-const PORT = 3000
+const PORT = process.env.PORT
 
 
 server.use("/", user)

@@ -13,7 +13,7 @@ const EI=process.env.EXPIRES_IN
 
 
 router.get("/barberGet",Auth(), async(req,res)=>{
-    return res.json(await dbHandler.barber.findOne({where:{id:req.uid}}))
+    return res.json(await dbHandler.barber.findAll({where:{id:req.uid}}))
 })
 
 

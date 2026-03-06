@@ -16,7 +16,7 @@ const EI=process.env.EXPIRES_IN
 
 
 router.get("/userGet",Auth(), async(req,res)=>{
-    return res.json(await dbHandler.user.findOne({where:{id:req.uid}}))
+    return res.json(await dbHandler.user.findAll({where:{id:req.uid}}))
 })
 
 

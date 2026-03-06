@@ -181,11 +181,11 @@ const logTable = dbHandler.define("logs", {
     allowNull: false
   }
 });
-appointmentsTable.belongsTo(userTable, { foreignKey: "userID" });
 userTable.hasMany(appointmentsTable, { foreignKey: "userID" });
+appointmentsTable.belongsTo(userTable, { foreignKey: "userID" });
 
-appointmentsTable.belongsTo(barberTable, { foreignKey: "barberID" });
 barberTable.hasMany(appointmentsTable, { foreignKey: "barberID" });
+appointmentsTable.belongsTo(barberTable, { foreignKey: "barberID" });
 
 barberTable.hasMany(servicesTable, { foreignKey: "barberID" });
 servicesTable.belongsTo(barberTable, { foreignKey: "barberID" });
