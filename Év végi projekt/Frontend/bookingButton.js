@@ -15,22 +15,25 @@ document.addEventListener("DOMContentLoaded", () => {
 
     switchLink.addEventListener("click", (e) => {
         e.preventDefault();
-        const nameField = document.getElementById("nameField");
+        const phoneField = document.getElementById("phoneField");
     
         if (modalTitle.textContent == "Bejelentkezés") {
             modalTitle.textContent = "Regisztráció";
             modalSubmitBtn.textContent = "Regisztrálás";
             switchLink.textContent = "Bejelentkezés";
             switchText.textContent = "";
-            nameField.classList.remove("d-none"); // Név mező látható
+            phoneField.classList.remove("d-none"); // Phone mező látható
             document.getElementById("nameInput").setAttribute("required", true);
+            document.getElementById("phoneNumInput").setAttribute("required", true);
         } else {
             modalTitle.textContent = "Bejelentkezés";
             modalSubmitBtn.textContent = "Bejelentkezés";
             switchLink.textContent = "Regisztrálj!"; 
             switchText.textContent = "Még nincs fiókod? ";
-            nameField.classList.add("d-none"); // Név mező rejtve
+            phoneField.classList.add("d-none"); // Phone mező rejtve
             document.getElementById("nameInput").removeAttribute("required");
+            document.getElementById("phoneNumInput").removeAttribute("required");
+
         }
     });
 
@@ -39,26 +42,9 @@ document.addEventListener("DOMContentLoaded", () => {
         e.preventDefault();
 
         if (modalTitle.textContent == "Bejelentkezés") {
-            const email = document.getElementById("emailInput").value;
-            const password = document.getElementById("passwordInput").value;
-
-            if(email && password){
-                sessionStorage.setItem("loggedIn", "true");
-                window.location.href = "booking.html";
-            } else {
-                alert("Kérlek töltsd ki mindkét mezőt!");
-            }
+            userLogin()
         } else {
-            const name = document.getElementById("nameInput").value;
-            const email = document.getElementById("emailInput").value;
-            const password = document.getElementById("passwordInput").value;
-
-            if(name && email && password){
-                alert("Sikeres regisztráció!");
-                loginModal.hide();
-            } else {
-                alert("Kérlek töltsd ki az összes mezőt!");
-            }
+           userRegister()
         }
     });
 });
