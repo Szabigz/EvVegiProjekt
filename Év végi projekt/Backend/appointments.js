@@ -1,6 +1,6 @@
 const express = require('express')
 const router=express.Router()
-
+const { Op } = require("sequelize");
 const Auth=require('./Auth')
 const Log = require('./log') 
 
@@ -18,13 +18,17 @@ router.get("/appointmentGet",Auth(), async(req,res)=>{
 router.post("/appointmentPost", Auth(), async(req,res)=>{
     const { barberID, serviceID, userID, status, comment, start_time, end_time} = req.body
     const oneBarber = await dbHandler.appointments.findOne({
-        where:{
-            status:status
+        here: {
+            [Op.or]: [
+                { barberID: barberID },
+                { start_time: { [Op.lt]: end_time } },   // létező start < új end
+                { end_time: { [Op.gt]: start_time } }
+            ]
         }
         
     })
     if(oneBarber){
-        return res.status(400).json({message:"Mar van ilyen"})
+        return res.status(400).json({ message: "Ez a barber már foglalt az adott időintervallumban" });
     }
     
     await dbHandler.appointments.create({
@@ -42,7 +46,7 @@ router.post("/appointmentPost", Auth(), async(req,res)=>{
 })
 
 
-router.delete("/appointment/:id", Auth(), Log(), async (req, res) => {
+router.delete("/appointmentDelete/:id", Auth(), Log(), async (req, res) => {
     await dbHandler.appointments.update(
         { status: "canceled" },
         { where: { id: req.params.id } }

@@ -63,7 +63,7 @@ router.post('/userLogin', async(req,res)=>{
         else if(oneUser.password!=password){
             res.json({"message":"Hibas jelszo"})
         }
-        if(oneUser.name == name && bcrypt.compare(password, oneUser.password)){
+        if(oneUser.name == name && await bcrypt.hash(password, 9)){
              const token=JWT.sign({uid:oneUser.id},SK,{expiresIn: EI})
             return res.status(201).json({"message": "Sikeres bejelentkezes",token:token}).end()
         }

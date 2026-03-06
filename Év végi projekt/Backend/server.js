@@ -1,6 +1,6 @@
 const express = require("express");
 const dbHandler = require("./dbHandler");
-
+const { Op } = require('sequelize'); // <-- ez kell
 const user = require("./user.js")
 const barber = require('./barber.js')
 const appointments = require("./appointments.js")
