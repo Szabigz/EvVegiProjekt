@@ -2,7 +2,6 @@ const { Sequelize, DataTypes } = require("sequelize");
 
 const dbHandler = new Sequelize("barberShop", "root", "", {
   dialect: "mysql",
-  port:3307,
   host: "localhost"
 });
 
