@@ -6,30 +6,28 @@ namespace BarberManager.ViewModels;
 
 public partial class MainWindowViewModel : ViewModelBase
 {
-    // public for now, kesobb lehet konstruktorban tovabb adni tobbi vmnek
-    public ApiService Api { get; } = new ApiService();
-
-    // jelenlegi oldal
-    [ObservableProperty]
-    private ViewModelBase _currentPage;
+    public ApiService Api { get; } = new ApiService(); [ObservableProperty]
+    private ViewModelBase _currentPage = null!;
 
     [ObservableProperty]
     private bool _isLoggedIn;
 
+    [ObservableProperty]
+    private Models.Barber? _currentBarber;
+
     public MainWindowViewModel()
     {
-        // Kijelentkezve indul
         IsLoggedIn = false;
         ShowLoginScreen();
     }
 
     private void ShowLoginScreen()
     {
-        var loginVm = new LoginViewModel();
+        var loginVm = new LoginViewModel(Api);
 
-        // ha sikeres login
-        loginVm.OnLoginSuccess = () =>
+        loginVm.OnLoginSuccess = async () =>
         {
+            CurrentBarber = await Api.GetBarberInfoAsync();
             IsLoggedIn = true;
             CurrentPage = new AppointmentsViewModel();
         };
@@ -41,6 +39,8 @@ public partial class MainWindowViewModel : ViewModelBase
     public void Logout()
     {
         IsLoggedIn = false;
+        CurrentBarber = null;
+        Api.Logout();
         ShowLoginScreen();
     }
 
@@ -51,8 +51,8 @@ public partial class MainWindowViewModel : ViewModelBase
     }
 
     [RelayCommand]
-    public void NavigateToTest()
+    public void NavigateToServices()
     {
-        CurrentPage = new TestViewModel();
+        CurrentPage = new ServicesViewModel(Api);
     }
 }

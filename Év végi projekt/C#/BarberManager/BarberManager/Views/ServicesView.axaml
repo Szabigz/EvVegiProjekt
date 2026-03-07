@@ -1,0 +1,52 @@
+﻿<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:BarberManager.ViewModels"
+             x:DataType="vm:ServicesViewModel"
+             x:Class="BarberManager.Views.ServicesView">
+    
+    <Grid Margin="20" RowDefinitions="Auto, Auto, *">
+        
+        <!-- Cim -->
+        <TextBlock Grid.Row="0" Text="Szolgáltatások" FontSize="24" FontWeight="Bold" Margin="0,0,0,10"/>
+        
+        <!-- Frissites gomb -->
+        <StackPanel Grid.Row="1" Orientation="Horizontal" Margin="0,0,0,20">
+            <Button Command="{Binding LoadServicesCommand}" 
+                    Content="Lista frissítése" 
+                    Padding="10,5"
+                    Background="Black" 
+                    Foreground="White"/>
+            
+            <ProgressBar IsIndeterminate="True" 
+                         VerticalAlignment="Center" 
+                         Margin="15,0,0,0"
+                         Width="100"
+                         IsVisible="{Binding IsLoading}"/>
+        </StackPanel>
+
+        <!-- lista -->
+        <ScrollViewer Grid.Row="2">
+            <ItemsControl ItemsSource="{Binding Services}">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <Border Background="#F9F9F9" BorderBrush="#EEEEEE" BorderThickness="1" 
+                                CornerRadius="8" Margin="0,0,0,10" Padding="15">
+                            <Grid ColumnDefinitions="*, Auto">
+                                <StackPanel Grid.Column="0">
+                                    <TextBlock Text="{Binding Name}" FontWeight="Bold" FontSize="16"/>
+                                    <TextBlock Text="{Binding Description}" Foreground="#666666" FontSize="12" TextWrapping="Wrap"/>
+                                </StackPanel>
+                                <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                                    <TextBlock Text="{Binding Price, StringFormat='{}{0} Ft'}" 
+                                               FontWeight="Bold" HorizontalAlignment="Right"/>
+                                    <TextBlock Text="{Binding DurationMinutes, StringFormat='{}{0} perc'}" 
+                                               FontSize="12" Foreground="#888888" HorizontalAlignment="Right"/>
+                                </StackPanel>
+                            </Grid>
+                        </Border>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </ScrollViewer>
+    </Grid>
+</UserControl>
