@@ -24,7 +24,7 @@
             <ColumnDefinition Width="*" />   <!-- jobb panel -->
         </Grid.ColumnDefinitions>
 
-        <!-- Bal oldali panel -->
+        <!-- bal panel -->
         <Border Grid.Column="0" 
                 IsVisible="{Binding IsLoggedIn}"
                 Width="200"
@@ -35,17 +35,6 @@
             <Grid RowDefinitions="*, Auto">
                 <StackPanel Grid.Row="0" Margin="10, 20">
                     <TextBlock Text="MENÜ" FontWeight="Bold" Foreground="#888888" Margin="10,0,0,10"/>
-                    
-                    <!-- Home gomb -->
-                    <Button Command="{Binding NavigateToTestCommand}" 
-                            HorizontalAlignment="Stretch" 
-                            HorizontalContentAlignment="Left"
-                            Margin="0,0,0,5"
-                            Padding="10">
-                        <StackPanel Orientation="Horizontal">
-                            <TextBlock Text="Home" FontWeight="SemiBold"/>
-                        </StackPanel>
-                    </Button>
 
                     <!-- Idopontok gomb -->
                     <Button Command="{Binding NavigateToAppointmentsCommand}" 
@@ -57,12 +46,22 @@
                             <TextBlock Text="Időpontok" FontWeight="SemiBold"/>
                         </StackPanel>
                     </Button>
+                    
+                    <!-- Szolgaltatasok gomb -->
+                    <Button Command="{Binding NavigateToServicesCommand}" 
+                            HorizontalAlignment="Stretch" 
+                            HorizontalContentAlignment="Left"
+                            Margin="0,0,0,5"
+                            Padding="10">
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="Szolgáltatások" FontWeight="SemiBold"/>
+                        </StackPanel>
+                    </Button>
                 </StackPanel>
 
-                <!-- Bal also resz -->
+                <!-- Kijelentkezes & Barber Neve -->
                 <StackPanel Grid.Row="1" Margin="10,0,10,20">
-    
-                    <!-- Bejelentkezett ember neve -->
+                    
                     <TextBlock Text="{Binding CurrentBarber.Name}" 
                                HorizontalAlignment="Center"
                                FontWeight="Bold"
@@ -70,7 +69,6 @@
                                Margin="0,0,0,10"
                                IsVisible="{Binding CurrentBarber, Converter={x:Static ObjectConverters.IsNotNull}}"/>
 
-                    <!-- Kijelentkezes gomb -->
                     <Button Command="{Binding LogoutCommand}"
                             HorizontalAlignment="Stretch"
                             HorizontalContentAlignment="Center"
@@ -80,7 +78,7 @@
                         <TextBlock Text="Kijelentkezés" Foreground="Red" FontWeight="SemiBold"/>
                     </Button>
                 </StackPanel>
-        </Grid>
+            </Grid>
         </Border>
 
         <!-- jobb panel -->

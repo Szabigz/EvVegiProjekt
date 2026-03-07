@@ -1,9 +1,8 @@
-﻿using BarberManager.Services;
-using CommunityToolkit.Mvvm.ComponentModel;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using System;
 using System.Threading.Tasks;
-using System.Xml.Linq;
+using BarberManager.Services;
 
 namespace BarberManager.ViewModels
 {
@@ -18,14 +17,22 @@ namespace BarberManager.ViewModels
             IsRegisterMode = false;
         }
 
-        [ObservableProperty] private string _name = string.Empty;
-        [ObservableProperty] private string _email = string.Empty;
-        [ObservableProperty] private string _password = string.Empty;
-        [ObservableProperty] private string _phoneNum = string.Empty;
-        [ObservableProperty] private string _errorMessage = string.Empty;
-        [ObservableProperty] private bool _isRegisterMode;
+        [ObservableProperty]
+        private string _name = string.Empty; [ObservableProperty]
+        private string _email = string.Empty;
 
-        // Dinamikus szoveg (szebb es rovidebb)
+        [ObservableProperty]
+        private string _password = string.Empty;
+
+        [ObservableProperty]
+        private string _phoneNum = string.Empty;
+
+        [ObservableProperty]
+        private string _errorMessage = string.Empty;
+
+        [ObservableProperty]
+        private bool _isRegisterMode;
+
         public string TitleText => IsRegisterMode ? "Fodrász Regisztráció" : "Fodrász Bejelentkezés";
         public string SubmitButtonText => IsRegisterMode ? "Regisztráció" : "Bejelentkezés";
         public string SwitchModeText => IsRegisterMode ? "Már van fiókod? Lépj be!" : "Még nincs fiókod? Regisztrálj!";
@@ -55,12 +62,16 @@ namespace BarberManager.ViewModels
                 }
 
                 var (isSuccess, message) = await _api.RegisterBarberAsync(Email, Name, Password, PhoneNum);
+
                 if (isSuccess)
                 {
                     ToggleMode();
-                    ErrorMessage = "Sikeres regisztráció! Jelentkezz be.";
+                    ErrorMessage = "Sikeres regisztráció! Most már bejelentkezhetsz.";
                 }
-                else ErrorMessage = message;
+                else
+                {
+                    ErrorMessage = message;
+                }
             }
             else
             {
@@ -71,8 +82,15 @@ namespace BarberManager.ViewModels
                 }
 
                 var (isSuccess, message) = await _api.LoginBarberAsync(Email, Name, Password);
-                if (isSuccess) OnLoginSuccess?.Invoke();
-                else ErrorMessage = message;
+
+                if (isSuccess)
+                {
+                    OnLoginSuccess?.Invoke();
+                }
+                else
+                {
+                    ErrorMessage = message;
+                }
             }
         }
     }

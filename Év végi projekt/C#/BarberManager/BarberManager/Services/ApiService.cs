@@ -1,12 +1,12 @@
-﻿using BarberManager.Models;
-using System;
-using System.ComponentModel;
-using System.Diagnostics;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
+using BarberManager.Models;
 
 namespace BarberManager.Services
 {
@@ -31,38 +31,23 @@ namespace BarberManager.Services
                 _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", _jwtToken);
             }
         }
-
-        // --- Regisztracio ---
+        // --- register --- 
         public async Task<(bool IsSuccess, string Message)> RegisterBarberAsync(string email, string name, string password, string phoneNum)
         {
-            var registerData = new
-            {
-                email = email,
-                name = name,
-                password = password,
-                phoneNum = phoneNum,
-                isAdmin = true
-            };
-
+            var registerData = new { email, name, password, phoneNum, isAdmin = true };
             try
             {
                 var response = await _httpClient.PostAsJsonAsync("/barberReg", registerData);
-                if (response.IsSuccessStatusCode)
-                    return (true, "Sikeres regisztráció!");
-
-                var errorMsg = await response.Content.ReadAsStringAsync();
-                return (false, "Hiba: Már létezik ilyen felhasználó vagy rossz adatok.");
+                if (response.IsSuccessStatusCode) return (true, "Sikeres regisztráció!");
+                return (false, "Hiba: Már létezik ilyen felhasználó vagy hibás adatok.");
             }
-            catch (Exception ex)
-            {
-                return (false, $"Szerver hiba: {ex.Message}");
-            }
+            catch (Exception ex) { return (false, $"Szerver hiba: {ex.Message}"); }
         }
 
-        // --- Bejelentkezes ---
+        // --- login ---
         public async Task<(bool IsSuccess, string Message)> LoginBarberAsync(string email, string name, string password)
         {
-            var loginData = new { email = email, name = name, password = password };
+            var loginData = new { email, name, password };
             try
             {
                 var response = await _httpClient.PostAsJsonAsync("/barberLogin", loginData);
@@ -78,20 +63,10 @@ namespace BarberManager.Services
                 }
                 return (false, "Hibás név, email vagy jelszó!");
             }
-            catch (Exception ex)
-            {
-                return (false, $"Hálózati hiba: {ex.Message}");
-            }
+            catch (Exception ex) { return (false, $"Hálózati hiba: {ex.Message}"); }
         }
 
-        // --- Kijelentkezes ---
-        public void Logout()
-        {
-            _jwtToken = string.Empty;
-            _httpClient.DefaultRequestHeaders.Authorization = null;
-        }
-
-        // --- Barber Lekeres ---
+        // --- barber lekeres ---
         public async Task<Barber?> GetBarberInfoAsync()
         {
             try
@@ -99,24 +74,43 @@ namespace BarberManager.Services
                 var response = await _httpClient.GetAsync("/barberGet");
                 if (response.IsSuccessStatusCode)
                 {
-                    return await response.Content.ReadFromJsonAsync<Barber>();
+                    var list = await response.Content.ReadFromJsonAsync<List<Barber>>();
+                    return list?.FirstOrDefault();
                 }
                 return null;
             }
-            catch(Exception ex)
+            catch { return null; }
+        }
+
+        // --- Szolgaltatasok lekeres ---
+        public async Task<List<Service>> GetServicesAsync()
+        {
+            try
             {
-                Debug.WriteLine($"Hiba a fodrász adatainak lekérésekor: {ex.Message}");
-                return null;
+                var response = await _httpClient.GetAsync("/servicesGet");
+                if (response.IsSuccessStatusCode)
+                {
+                    var services = await response.Content.ReadFromJsonAsync<List<Service>>();
+                    return services ?? new List<Service>();
+                }
+                return new List<Service>();
             }
+            catch
+            {
+                return new List<Service>();
+            }
+        }
+
+        public void Logout()
+        {
+            _jwtToken = string.Empty;
+            _httpClient.DefaultRequestHeaders.Authorization = null;
         }
 
         private class LoginResponse
         {
-            [JsonPropertyName("message")]
-            public string Message { get; set; } = string.Empty;
-
-            [JsonPropertyName("token")]
-            public string Token { get; set; } = string.Empty;
+            [JsonPropertyName("message")] public string Message { get; set; } = string.Empty;
+            [JsonPropertyName("token")] public string Token { get; set; } = string.Empty;
         }
     }
 }
