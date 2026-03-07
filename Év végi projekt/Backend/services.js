@@ -12,7 +12,7 @@ router.get("/servicesGet",Auth(), async(req,res)=>{
 })
 
 
-router.post("/services", async(req,res)=>{
+router.post("/servicesPost", async(req,res)=>{
     const {description, name, duration_minutes,price,barberID} = req.body
     const oneService = await dbHandler.services.findOne({
         where:{

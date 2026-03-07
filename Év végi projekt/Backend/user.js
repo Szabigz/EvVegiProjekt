@@ -78,14 +78,15 @@ router.post('/userLogin', async(req,res)=>{
 
 router.delete("/userDelete/:id", Auth(), async (req, res) => {
     try {
+        const Id = req.params.id
         const id = req.uid;
-        const oneUser = await dbHandler.user.findOne({ where: { id } });
+        const oneUser = await dbHandler.user.findOne({ where: { id:Id } });
 
         if (!oneUser) {
             return res.status(400).json({ message: "Nincs ilyen felhasználó" });
         }
 
-        await dbHandler.user.destroy({ where: { id } });
+        await dbHandler.user.destroy({ where: { id:Id } });
         return res.status(200).json({ message: "Sikeres törlés" });
 
     } catch (err) {
@@ -96,8 +97,9 @@ router.delete("/userDelete/:id", Auth(), async (req, res) => {
 router.put('/userUpdate/:id', Auth(), async(req,res) =>{
 
     try {
+        const Id = req.params.id
         const id = req.uid
-        const oneUser = await dbHandler.user.findOne({ where: { id } });
+        const oneUser = await dbHandler.user.findOne({ where: { id:Id } });
 
         if (!oneUser) {
             return res.status(400).json({ message: "Nincs ilyen felhasználó" });
@@ -111,7 +113,7 @@ router.put('/userUpdate/:id', Auth(), async(req,res) =>{
             name:req.body.name
         },{
             where:{
-                id:id
+                id:Id
             }
         })
     }
@@ -121,7 +123,7 @@ router.put('/userUpdate/:id', Auth(), async(req,res) =>{
             email:req.body.email
         },{
             where:{
-                id:id
+                id:Id
             }
         })
     }
@@ -131,7 +133,7 @@ router.put('/userUpdate/:id', Auth(), async(req,res) =>{
             password:req.body.password
         },{
             where:{
-                id:id
+                id:Id
             }
         })
     }
@@ -140,7 +142,7 @@ router.put('/userUpdate/:id', Auth(), async(req,res) =>{
             phoneNum:req.body.phoneNum
         },{
             where:{
-                id:id
+                id:Id
             }
         })
     }

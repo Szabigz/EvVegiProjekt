@@ -18,14 +18,11 @@ router.get("/appointmentGet",Auth(), async(req,res)=>{
 router.post("/appointmentPost", Auth(), async(req,res)=>{
     const { barberID, serviceID, userID, status, comment, start_time, end_time} = req.body
     const oneBarber = await dbHandler.appointments.findOne({
-        here: {
-            [Op.or]: [
-                { barberID: barberID },
-                { start_time: { [Op.lt]: end_time } },   // létező start < új end
-                { end_time: { [Op.gt]: start_time } }
-            ]
-        }
-        
+        where: {
+                barberID: barberID,
+                start_time: { [Op.lt]: end_time },
+                end_time: { [Op.gt]: start_time }
+            }
     })
     if(oneBarber){
         return res.status(400).json({ message: "Ez a barber már foglalt az adott időintervallumban" });
@@ -55,23 +52,82 @@ router.delete("/appointmentDelete/:id", Auth(), Log(), async (req, res) => {
   });
 
 
-  router.put('/appointments', Auth(), async (req,res) =>{
-    if(!req.body.name){
-        return res.status(400).json({'message':'nem jo'})
+router.put('/appointmentUpdate/:id', Auth(), async(req,res) =>{
+
+    try {
+        const Id = req.params.id
+        const id = req.uid
+        const oneAppointment = await dbHandler.appointments.findOne({ where: { id:Id } });
+
+        if (!oneAppointment) {
+            return res.status(400).json({ message: "Nincs ilyen felhasználó" });
+        }
+        if(!id){
+        return res.status(400).json({'message': 'Hiányzó Tool ID'})
     }
 
-    if(req.body.uid){
+    if(req.body.userID){
         await dbHandler.appointments.update({
-            appointment:req.body.appointment
+            userID:req.body.userID
         },{
             where:{
-                id:req.body.uid
+                id:Id
             }
         })
     }
 
+    if(req.body.barberID){
+        await dbHandler.appointments.update({
+            barberID:req.body.barberID
+        },{
+            where:{
+                id:Id
+            }
+        })
+    }
 
+    if(req.body.start_time){
+        await dbHandler.appointments.update({
+            start_time:req.body.start_time
+        },{
+            where:{
+                id:Id
+            }
+        })
+    }
+    if(req.body.end_time){
+        await dbHandler.appointments.update({
+            end_time:req.body.end_time
+        },{
+            where:{
+                id:Id
+            }
+        })
+    }
+    if(req.body.status){
+        await dbHandler.appointments.update({
+            status:req.body.status
+        },{
+            where:{
+                id:Id
+            }
+        })
+    }
+    if(req.body.comment){
+        await dbHandler.appointments.update({
+            comment:req.body.comment
+        },{
+            where:{
+                id:Id
+            }
+        })
+    }
     res.json({'message':'sikeres módosítás'})
+    } catch (error) {
+        console.log(error);
+    return res.status(500).json({ message: 'Szerverhiba' });
+    }
+    
 
 })
 

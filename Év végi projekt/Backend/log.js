@@ -23,7 +23,7 @@ function Log() {
       
           await dbHandler.log.create({
             appointmentID: appointment.id,
-            userID: req.uid,                  // Auth middleware által beállított felhasználó ID
+            userID: appointment.userID,                  // Auth middleware által beállított felhasználó ID
             barberID: appointment.barberID,
             cancelDate: new Date(),
             activity: "Időpont lemondva"     // ide kerül a szöveges jelzés
