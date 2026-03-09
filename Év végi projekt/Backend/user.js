@@ -32,18 +32,60 @@ router.post("/userReg", async(req,res)=>{
     if(oneUser){
         return res.status(400).json({message:"Mar van ilyen"})
     }
-    
+    const hashedPassword = await bcrypt.hash(password,9)
+
     await dbHandler.user.create({
+        name:name,
+        email:email,
+        password: hashedPassword,
+        phoneNum:phoneNum
+    })
+    /*await dbHandler.user.create({
         name:name,
         email:email,
         password: password,
         phoneNum:phoneNum
-    })
+    })*/
     dbHandler.user.password = await bcrypt.hash(password,9)
     res.status(200).json({message: 'sikeres regisztracio'}).end()
 
 })
+router.post('/userLogin', async(req,res)=>{
+    try{
+        const {email, name, password}=req.body
 
+        const oneUser=await dbHandler.user.findOne({
+            where:{ email:email }
+        })
+
+        if(!oneUser){
+            return res.status(401).json({message:"Nem létezik ilyen felhasználó"})
+        }
+
+        if(oneUser.name !== name){
+            return res.status(401).json({message:"Hibás név"})
+        }
+
+        const validPassword = await bcrypt.compare(password, oneUser.password)
+
+        if(!validPassword){
+            return res.status(401).json({message:"Hibás jelszó"})
+        }
+
+        const token = JWT.sign({uid:oneUser.id}, SK, {expiresIn: EI})
+
+        return res.status(200).json({
+            message: "Sikeres bejelentkezés",
+            token: token
+        })
+
+    }
+    catch(err){
+        console.log(err)
+        res.status(500).json({message:"Szerver hiba"})
+    }
+})
+/*
 router.post('/userLogin', async(req,res)=>{
     try{
         const {email,name, password}=req.body
@@ -74,7 +116,7 @@ router.post('/userLogin', async(req,res)=>{
         console.log(err)
     }
 })
-
+*/
 
 router.delete("/userDelete/:id", Auth(), async (req, res) => {
     try {
