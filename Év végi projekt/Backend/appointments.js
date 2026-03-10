@@ -1,6 +1,6 @@
 const express = require('express')
 const router=express.Router()
-const { Op } = require("sequelize");
+const { Op, where } = require("sequelize");
 const Auth=require('./Auth')
 const Log = require('./log') 
 
@@ -16,7 +16,7 @@ router.get("/appointmentGet",Auth(), async(req,res)=>{
 
 
 router.post("/appointmentPost", Auth(), async(req,res)=>{
-    const { barberID, serviceID, userID, status, comment, start_time, end_time} = req.body
+    const { barberID, serviceID, userID, comment, start_time, end_time} = req.body
     const oneBarber = await dbHandler.appointments.findOne({
         where: {
                 barberID: barberID,
@@ -32,7 +32,6 @@ router.post("/appointmentPost", Auth(), async(req,res)=>{
         barberID:barberID,
         serviceID:serviceID,
         userID:userID,
-        status:status,
         start_time:start_time,
         end_time:end_time,
         comment:comment
@@ -44,12 +43,53 @@ router.post("/appointmentPost", Auth(), async(req,res)=>{
 
 
 router.delete("/appointmentDelete/:id", Auth(), Log(), async (req, res) => {
+    const Id = req.params.id;
+
+    try {
+        // Megkeressük az időpontot
+        const appointment = await dbHandler.appointments.findOne({ where: { id: Id } });
+
+        if (!appointment) {
+            return res.status(404).send("Időpont nem található");
+        }
+        // Időpont státusz visszaállítása available-re
+        await dbHandler.appointments.update(
+            { status: "available", }, // userID null, így újra foglalható
+            { where: { id: Id } }
+        );
+
+        return res.status(200).send("Időpont lemondva, de elérhető másoknak");
+    } catch (err) {
+        console.error("Hiba a lemondás közben:", err);
+        return res.status(500).send("Hiba történt a lemondás során");
+    }
+});
+
+router.put("/appointmentBook/:id", Auth(), async (req, res) => {
+
+    const Id = req.params.id
+
+    const appointment = await dbHandler.appointments.findOne({
+        where: { id: Id }
+    })
+
+    if (!appointment) {
+        return res.status(404).send("Időpont nem található")
+    }
+
+    if (appointment.status !== "available") {
+        return res.status(400).send("Az időpont már foglalt")
+    }
+
     await dbHandler.appointments.update(
-        { status: "canceled" },
-        { where: { id: req.params.id } }
-    );
-    res.send("Időpont lemondva");
-  });
+        { 
+            status: "booked"
+        },
+        { where: { id: Id } }
+    )
+
+    res.status(200).send("Időpont sikeresen lefoglalva")
+})
 
 
 router.put('/appointmentUpdate/:id', Auth(), async(req,res) =>{
@@ -63,7 +103,7 @@ router.put('/appointmentUpdate/:id', Auth(), async(req,res) =>{
             return res.status(400).json({ message: "Nincs ilyen felhasználó" });
         }
         if(!id){
-        return res.status(400).json({'message': 'Hiányzó Tool ID'})
+        return res.status(400).json({'message': 'Hiányzó  ID'})
     }
 
     if(req.body.userID){

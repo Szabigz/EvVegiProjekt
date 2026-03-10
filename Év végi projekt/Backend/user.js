@@ -40,12 +40,7 @@ router.post("/userReg", async(req,res)=>{
         password: hashedPassword,
         phoneNum:phoneNum
     })
-    /*await dbHandler.user.create({
-        name:name,
-        email:email,
-        password: password,
-        phoneNum:phoneNum
-    })*/
+    
     dbHandler.user.password = await bcrypt.hash(password,9)
     res.status(200).json({message: 'sikeres regisztracio'}).end()
 
@@ -85,38 +80,7 @@ router.post('/userLogin', async(req,res)=>{
         res.status(500).json({message:"Szerver hiba"})
     }
 })
-/*
-router.post('/userLogin', async(req,res)=>{
-    try{
-        const {email,name, password}=req.body
 
-        
-        const oneUser=await dbHandler.user.findOne({
-            where:{
-                email:email
-            }
-        })
-        if(!oneUser){
-            return res.status(401).json({"message":"Nem letezik ilyen felhasznalo"})
-        }
-        else if(oneUser.name!=name){
-            return res.json({"message":"Hibas nev"})
-        }
-        else if(oneUser.password!=password){
-            res.json({"message":"Hibas jelszo"})
-        }
-        if(oneUser.name == name && await bcrypt.hash(password, 9)){
-             const token=JWT.sign({uid:oneUser.id},SK,{expiresIn: EI})
-            return res.status(201).json({"message": "Sikeres bejelentkezes",token:token}).end()
-        }
-        
-        
-    }
-    catch(err){
-        console.log(err)
-    }
-})
-*/
 
 router.delete("/userDelete/:id", Auth(), async (req, res) => {
     try {

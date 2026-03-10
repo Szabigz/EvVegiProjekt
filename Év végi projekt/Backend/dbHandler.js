@@ -56,7 +56,7 @@ const barberTable = dbHandler.define("barbers", {
   isAdmin:{
     type:DataTypes.BOOLEAN,
     allowNull:false,
-    DefaultValue:false
+    defaultValue:false
   }
 
 });
@@ -144,7 +144,8 @@ const appointmentsTable = dbHandler.define("appointments", {
   },
   status: {
     type: DataTypes.STRING,
-    allowNull: false
+    allowNull: false,
+    defaultValue:"available"
   },
   comment: {
     type: DataTypes.STRING,
@@ -173,7 +174,8 @@ const logTable = dbHandler.define("logs", {
   },
   createdAt: {
     type: DataTypes.DATE,
-    allowNull: false
+    allowNull: false,
+    defaultValue: dbHandler.Sequelize.NOW
   },
   activity: {
     type: DataTypes.STRING,
