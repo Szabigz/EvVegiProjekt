@@ -55,4 +55,19 @@ public partial class MainWindowViewModel : ViewModelBase
     {
         CurrentPage = new ServicesViewModel(Api);
     }
+
+    //vaz
+    [RelayCommand]
+    public void NavigateToWorkHours()
+    {
+        
+        CurrentPage = new WorkHoursViewModel(Api);
+    }
+
+    [RelayCommand]
+    public void NavigateToProfile()
+    {
+        
+        CurrentPage = new ProfileViewModel(Api);
+    }
 }
