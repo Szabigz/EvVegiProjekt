@@ -9,5 +9,11 @@ namespace BarberManager.Models
 
         [JsonPropertyName("name")]
         public string Name { get; set; } = string.Empty;
+
+        [JsonPropertyName("email")]
+        public string Email { get; set; } = string.Empty;
+
+        [JsonPropertyName("phoneNum")]
+        public int PhoneNum { get; set; }
     }
 }
