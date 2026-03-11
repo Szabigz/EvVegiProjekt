@@ -5,19 +5,34 @@ const Auth=require('./Auth')
  
 const dbHandler=require('./dbHandler')
 const JWT= require('jsonwebtoken')
-const e = require('express')
+const { Op, where } = require("sequelize");
 
 
 router.get("/workhoursGet",Auth(), async(req,res)=>{
     return res.json(await dbHandler.workhours.findAll())
 })
 
+router.get("/workhoursMy", Auth(), async (req, res) => {
+    try {
+        const workhours = await dbHandler.workhours.findAll({
+            where: {
+                barberID: req.uid
+            }
+        });
+        res.json(workhours);
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({ message: "Szerverhiba" });
+    }
+});
 
 router.post("/workhoursPost", Auth(), async(req,res)=>{
-    const {barberID, dayOfWeek, start_time, end_time} = req.body
+    const { dayOfWeek, start_time, end_time} = req.body
     const onewhour = await dbHandler.workhours.findOne({
         where:{
-            start_time:start_time
+            barberID:req.uid,
+            start_time: { [Op.lt]: end_time },
+            end_time: { [Op.gt]: start_time }
         }
         
     })
@@ -26,7 +41,7 @@ router.post("/workhoursPost", Auth(), async(req,res)=>{
     }
     
     await dbHandler.workhours.create({
-        barberID:barberID,
+        barberID:req.uid,
         dayOfWeek:dayOfWeek,
         start_time:start_time,
         end_time:end_time
@@ -39,14 +54,14 @@ router.post("/workhoursPost", Auth(), async(req,res)=>{
 router.delete("/workhoursDelete/:id", Auth(), async (req, res) => {
     try {
         const Id = req.params.id
-        const id = req.uid;
-        const oneWorkhour = await dbHandler.workhours.findOne({ where: { id:Id } });
+        const barberID = req.uid;
+        const oneWorkhour = await dbHandler.workhours.findOne({ where: { id:Id, barberID} });
 
         if (!oneWorkhour) {
             return res.status(400).json({ message: "Nincs ilyen felhasználó" });
         }
 
-        await dbHandler.workhours.destroy({ where: { id:Id } });
+        await dbHandler.workhours.destroy({ where: { id:Id, barberID } });
         return res.status(200).json({ message: "Sikeres törlés" });
 
     }  catch(error) { 
@@ -75,7 +90,7 @@ router.put('/workhoursUpdate/:id', Auth(), async(req,res) =>{
             barberID:req.body.barberID
         },{
             where:{
-                id:Id
+                id:Id, barberID 
             }
         })
     }
@@ -85,7 +100,7 @@ router.put('/workhoursUpdate/:id', Auth(), async(req,res) =>{
             dayOfWeek:req.body.dayOfWeek
         },{
             where:{
-                id:Id
+                id:Id, barberID 
             }
         })
     }
@@ -94,7 +109,7 @@ router.put('/workhoursUpdate/:id', Auth(), async(req,res) =>{
             start_time:req.body.start_time
         },{
             where:{
-                id:Id
+                id:Id, barberID 
             }
         })
     }
@@ -103,7 +118,7 @@ router.put('/workhoursUpdate/:id', Auth(), async(req,res) =>{
             end_time:req.body.end_time
         },{
             where:{
-                id:Id
+                id:Id, barberID 
             }
         })
     }

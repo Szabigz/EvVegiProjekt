@@ -11,12 +11,31 @@ router.get("/servicesGet",Auth(), async(req,res)=>{
     return res.json(await dbHandler.services.findAll())
 })
 
+router.get("/servicesMy", Auth(), async (req, res) => {
+    try {
 
-router.post("/servicesPost", async(req,res)=>{
-    const {description, name, duration_minutes,price,barberID} = req.body
+        const id = req.uid
+
+        const services = await dbHandler.services.findAll({
+            where: {
+                barberID: id
+            }
+        })
+
+        return res.json(services)
+
+    } catch (error) {
+        console.log(error)
+        res.status(500).json({ message: "Szerverhiba" })
+    }
+})
+
+router.post("/servicesPost", Auth(), async(req,res)=>{
+    const {description, name, duration_minutes,price} = req.body
     const oneService = await dbHandler.services.findOne({
         where:{
             name:name,
+            barberID: req.uid
         }
         
     })
@@ -29,7 +48,7 @@ router.post("/servicesPost", async(req,res)=>{
         description:description,
         duration_minutes:duration_minutes,
         price:price,
-        barberID:barberID
+        barberID:req.uid
     })
     res.status(200).json({message: 'sikeres regisztracio'}).end()
 
@@ -38,14 +57,14 @@ router.post("/servicesPost", async(req,res)=>{
 router.delete("/servicesDelete/:id", Auth(), async (req, res) => {
     try {
         const Id = req.params.id
-        const id = req.uid;
-        const oneService = await dbHandler.services.findOne({ where: { id:Id } });
+        const barberID = req.uid;
+        const oneService = await dbHandler.services.findOne({ where: { id:Id, barberID } });
 
         if (!oneService) {
             return res.status(400).json({ message: "Nincs ilyen felhasználó" });
         }
 
-        await dbHandler.services.destroy({ where: { id:Id } });
+        await dbHandler.services.destroy({ where: { id:Id, barberID } });
         return res.status(200).json({ message: "Sikeres törlés" });
 
     }  catch(error) { 
@@ -58,22 +77,20 @@ router.put('/servicesUpdate/:id', Auth(), async(req,res) =>{
 
     try {
         const Id = req.params.id
-        const id = req.uid
-        const oneService = await dbHandler.services.findOne({ where: { id:Id } });
+        const barberID = req.uid
+        const oneService = await dbHandler.services.findOne({ where: { id:Id, barberID } });
 
         if (!oneService) {
             return res.status(400).json({ message: "Nincs ilyen felhasználó" });
         }
-        if(!id){
-        return res.status(400).json({'message': 'Hiányzó Tool ID'})
-    }
+        
 
     if(req.body.name){
         await dbHandler.services.update({
             name:req.body.name
         },{
             where:{
-                id:Id
+                id:Id, barberID
             }
         })
     }
@@ -83,7 +100,7 @@ router.put('/servicesUpdate/:id', Auth(), async(req,res) =>{
             barberID:req.body.barberID
         },{
             where:{
-                id:Id
+                id:Id, barberID
             }
         })
     }
@@ -93,7 +110,7 @@ router.put('/servicesUpdate/:id', Auth(), async(req,res) =>{
             description:req.body.description
         },{
             where:{
-                id:Id
+                id:Id, barberID
             }
         })
     }
@@ -102,7 +119,7 @@ router.put('/servicesUpdate/:id', Auth(), async(req,res) =>{
             duration_minutes:req.body.duration_minutes
         },{
             where:{
-                id:Id
+                id:Id, barberID
             }
         })
     }
@@ -111,7 +128,7 @@ router.put('/servicesUpdate/:id', Auth(), async(req,res) =>{
             price:req.body.price
         },{
             where:{
-                id:Id
+                id:Id, barberID
             }
         })
     }

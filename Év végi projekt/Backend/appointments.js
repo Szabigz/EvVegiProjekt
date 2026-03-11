@@ -13,13 +13,25 @@ router.get("/appointmentGet",Auth(), async(req,res)=>{
     return res.json(await dbHandler.appointments.findAll())
 })
 
-
+router.get("/appointmentMy", Auth(), async (req, res) => {
+    try {
+        const appointments = await dbHandler.appointments.findAll({
+            where: {
+                barberID: req.uid
+            }
+        });
+        res.json(appointments);
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({ message: "Szerverhiba" });
+    }
+});
 
 router.post("/appointmentPost", Auth(), async(req,res)=>{
-    const { barberID, serviceID, userID, comment, start_time, end_time} = req.body
+    const {serviceID, userID, comment, start_time, end_time} = req.body
     const oneBarber = await dbHandler.appointments.findOne({
         where: {
-                barberID: barberID,
+                barberID: req.uid,
                 start_time: { [Op.lt]: end_time },
                 end_time: { [Op.gt]: start_time }
             }
@@ -29,7 +41,7 @@ router.post("/appointmentPost", Auth(), async(req,res)=>{
     }
     
     await dbHandler.appointments.create({
-        barberID:barberID,
+        barberID:req.uid,
         serviceID:serviceID,
         userID:userID,
         start_time:start_time,
@@ -44,21 +56,26 @@ router.post("/appointmentPost", Auth(), async(req,res)=>{
 
 router.delete("/appointmentDelete/:id", Auth(), Log(), async (req, res) => {
     const Id = req.params.id;
-
+    const uid = req.uid;
     try {
-        // Megkeressük az időpontot
-        const appointment = await dbHandler.appointments.findOne({ where: { id: Id } });
+        const appointment = await dbHandler.appointments.findOne({ where: { id: Id} });
 
         if (!appointment) {
             return res.status(404).send("Időpont nem található");
         }
-        // Időpont státusz visszaállítása available-re
-        await dbHandler.appointments.update(
-            { status: "available", }, // userID null, így újra foglalható
+         if (appointment.barberID === uid) {
+            await dbHandler.appointments.destroy({ where: { id: Id } });
+            return res.status(200).send("Időpont teljesen törölve a barber által");
+        }else{
+            await dbHandler.appointments.update(
+            { status: "available", }, 
             { where: { id: Id } }
         );
-
         return res.status(200).send("Időpont lemondva, de elérhető másoknak");
+    }
+        
+
+        
     } catch (err) {
         console.error("Hiba a lemondás közben:", err);
         return res.status(500).send("Hiba történt a lemondás során");
@@ -96,22 +113,20 @@ router.put('/appointmentUpdate/:id', Auth(), async(req,res) =>{
 
     try {
         const Id = req.params.id
-        const id = req.uid
-        const oneAppointment = await dbHandler.appointments.findOne({ where: { id:Id } });
+        const barberID = req.uid
+        const oneAppointment = await dbHandler.appointments.findOne({ where: { id:Id, barberID  } });
 
         if (!oneAppointment) {
             return res.status(400).json({ message: "Nincs ilyen felhasználó" });
         }
-        if(!id){
-        return res.status(400).json({'message': 'Hiányzó  ID'})
-    }
+       
 
     if(req.body.userID){
         await dbHandler.appointments.update({
             userID:req.body.userID
         },{
             where:{
-                id:Id
+                id:Id, barberID
             }
         })
     }
@@ -121,7 +136,7 @@ router.put('/appointmentUpdate/:id', Auth(), async(req,res) =>{
             barberID:req.body.barberID
         },{
             where:{
-                id:Id
+                id:Id, barberID
             }
         })
     }
@@ -131,7 +146,7 @@ router.put('/appointmentUpdate/:id', Auth(), async(req,res) =>{
             start_time:req.body.start_time
         },{
             where:{
-                id:Id
+                id:Id, barberID
             }
         })
     }
@@ -140,7 +155,7 @@ router.put('/appointmentUpdate/:id', Auth(), async(req,res) =>{
             end_time:req.body.end_time
         },{
             where:{
-                id:Id
+                id:Id, barberID
             }
         })
     }
@@ -149,7 +164,7 @@ router.put('/appointmentUpdate/:id', Auth(), async(req,res) =>{
             status:req.body.status
         },{
             where:{
-                id:Id
+                id:Id, barberID
             }
         })
     }
@@ -158,7 +173,7 @@ router.put('/appointmentUpdate/:id', Auth(), async(req,res) =>{
             comment:req.body.comment
         },{
             where:{
-                id:Id
+                id:Id, barberID
             }
         })
     }

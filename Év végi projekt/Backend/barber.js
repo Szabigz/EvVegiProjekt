@@ -29,12 +29,13 @@ router.post("/barberReg", async(req,res)=>{
     if(oneBarber){
         return res.status(400).json({message:"Mar van ilyen"})
     }
+    const hashedPassword = await bcrypt.hash(password,9)
     
     
     await dbHandler.barber.create({
         name:name,
         email:email,
-        password: password,
+        password: hashedPassword,
         phoneNum:phoneNum,
         isAdmin: isAdmin
     })
@@ -59,13 +60,16 @@ router.post('/barberLogin', async(req,res)=>{
         else if(oneBarber.name!=name){
             return res.status(400).json({"message":"Hibas nev"})
         }
-        else if(oneBarber.password!=password){
-            res.status(400).json({"message":"Hibas jelszo"})
+        const validPassword = await bcrypt.compare(password, oneBarber.password)
+        
+
+        if(!validPassword){
+            return res.status(401).json({message:"Hibás jelszó"})
         }
-        if(oneBarber.name == name && bcrypt.compare(password, oneBarber.password)){
-             const token=JWT.sign({uid:oneBarber.id},SK,{expiresIn: EI})
-            return res.status(201).json({"message": "Sikeres bejelentkezes",token:token}).end()
-        }
+        const token=JWT.sign({uid:oneBarber.id},SK,{expiresIn: EI})
+            
+        return res.status(201).json({"message": "Sikeres bejelentkezes",token:token}).end()
+        
         
         
     }

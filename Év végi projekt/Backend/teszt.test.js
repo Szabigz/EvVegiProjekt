@@ -124,7 +124,7 @@ test('should return 200 status code', async () => {
 describe('testing /appointmentPost post route', () => {
     test('should return 200 status code', async () => {
         const response = await request(server).post('/appointmentPost')
-        .send({barberID : 1, serviceID : 2, userID : 3, status : "van hely", start_time:"2026-03-10 11:00",end_time:"2026-03-10 12:00",comment:"asd"})
+        .send({ serviceID : 2, userID : 3, status : "van hely", start_time:"2026-03-10 11:00",end_time:"2026-03-10 12:00",comment:"asd"})
         .set("Authorization", "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOjEsImlhdCI6MTc3MzE0NTYyOCwiZXhwIjoxNzczMTQ5MjI4fQ.8lRe_g5c35VUdr2EU1pDMOgdXrVIo2RMA8GsDycChWs")
         expect(response.statusCode).toBe(200)
     })
@@ -135,6 +135,14 @@ describe("testing /appointmentGet get route", () =>{
         const response = await request(server).get('/appointmentGet').set("Authorization", "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOjEsImlhdCI6MTc3MzE0NTYyOCwiZXhwIjoxNzczMTQ5MjI4fQ.8lRe_g5c35VUdr2EU1pDMOgdXrVIo2RMA8GsDycChWs")
         expect(response.statusCode).toBe(200)
 
+    })
+})
+
+describe("testing /appointmentMy get route", () =>{
+    test("should return 200 status code", async()=>{
+        const response = await request(server).get('/appointmentMy').set("Authorization", "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOjYsImlhdCI6MTc3MzI0MzM2OCwiZXhwIjoxNzczMjQ2OTY4fQ.tAcMgsAzIHjcTpA2Tbm-9GSq736QsGZ7gDA5L27yJo0")
+        expect(response.statusCode).toBe(200)
+        
     })
 })
 
@@ -167,11 +175,21 @@ test('should return 200 status code', async () => {
 describe('testing /servicesPost post route', () => {
     test('should return 200 status code', async () => {
         const response = await request(server).post('/servicesPost')
-        .send({barberID : 1, name : "asd", description : "asdasd", duration_minutes : 10, price:5000})
+        .send({ name : "asd", description : "asdasd", duration_minutes : 10, price:5000})
         .set("Authorization", "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOjEsImlhdCI6MTc3MzIzNzUxMiwiZXhwIjoxNzczMjQxMTEyfQ.wM5W9IdboYAiGwmQRr-Gd22sLrJv1I7evNnUcO6qyeM")
         expect(response.statusCode).toBe(200)
     })
 })
+
+
+describe("testing /servicesMy get route", () =>{
+    test("should return 200 status code", async()=>{
+        const response = await request(server).get('/servicesMy').set("Authorization", "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOjEsImlhdCI6MTc3MzIzODk5OCwiZXhwIjoxNzczMjQyNTk4fQ.8X1H9f1WbtexPBfymG4NVMNy-f_bXZZa4z_tJP_cJcU")
+        expect(response.statusCode).toBe(200)
+        
+    })
+})
+
 
 describe("testing /servicesGet get route", () =>{
     test("should return 200 status code", async()=>{
@@ -205,7 +223,7 @@ test('should return 200 status code', async () => {
 
 
 
-//Sercices Testek vége
+//Services Testek vége
 
 
 //Workhours Testek
@@ -213,7 +231,7 @@ test('should return 200 status code', async () => {
 describe('testing /workhoursPost post route', () => {
     test('should return 200 status code', async () => {
         const response = await request(server).post('/workhoursPost')
-        .send({barberID : 1, dayOfWeek : 3, start_time :"10:00", end_time : "16:00"})
+        .send({ dayOfWeek : 3, start_time :"10:00", end_time : "16:00"})
         .set("Authorization", "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOjEsImlhdCI6MTc3MzIzNzUxMiwiZXhwIjoxNzczMjQxMTEyfQ.wM5W9IdboYAiGwmQRr-Gd22sLrJv1I7evNnUcO6qyeM")
         expect(response.statusCode).toBe(200)
     })
@@ -222,6 +240,14 @@ describe('testing /workhoursPost post route', () => {
 describe("testing /workhoursGet get route", () =>{
     test("should return 200 status code", async()=>{
         const response = await request(server).get('/workhoursGet').set("Authorization", "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOjEsImlhdCI6MTc3MzIzNzUxMiwiZXhwIjoxNzczMjQxMTEyfQ.wM5W9IdboYAiGwmQRr-Gd22sLrJv1I7evNnUcO6qyeM")
+        expect(response.statusCode).toBe(200)
+        
+    })
+})
+
+describe("testing /workhoursMy get route", () =>{
+    test("should return 200 status code", async()=>{
+        const response = await request(server).get('/workhoursMy').set("Authorization", "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOjYsImlhdCI6MTc3MzI0MzM2OCwiZXhwIjoxNzczMjQ2OTY4fQ.tAcMgsAzIHjcTpA2Tbm-9GSq736QsGZ7gDA5L27yJo0")
         expect(response.statusCode).toBe(200)
         
     })
