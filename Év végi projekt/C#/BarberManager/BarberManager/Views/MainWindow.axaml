@@ -8,7 +8,8 @@
         x:DataType="vm:MainWindowViewModel"
         Icon="/Assets/avalonia-logo.ico"
         Title="BarberManager"
-        WindowStartupLocation="CenterScreen">
+        WindowStartupLocation="CenterScreen"
+        WindowState="Maximized">
 
     <Design.DataContext>
         <vm:MainWindowViewModel/>
@@ -37,24 +38,41 @@
                     <TextBlock Text="MENÜ" FontWeight="Bold" Foreground="#888888" Margin="10,0,0,10"/>
 
                     <!-- Idopontok gomb -->
-                    <Button Command="{Binding NavigateToAppointmentsCommand}" 
-                            HorizontalAlignment="Stretch" 
-                            HorizontalContentAlignment="Left"
-                            Margin="0,0,0,5"
-                            Padding="10">
-                        <StackPanel Orientation="Horizontal">
-                            <TextBlock Text="Időpontok" FontWeight="SemiBold"/>
+                    <Button Command="{Binding NavigateToAppointmentsCommand}" HorizontalAlignment="Stretch" Margin="0,0,0,5" Padding="10">
+                        <StackPanel Orientation="Horizontal" Spacing="10">
+                            <Path Fill="#555555" Stretch="Uniform" Width="20" Height="20" Data="M17 2C17 1.44772 16.5523 1 16 1C15.4477 1 15 1.44772 15 2V3H9V2C9 1.44772 8.55228 1 8 1C7.44772 1 7 1.44772 7 2V3H5C3.34315 3 2 4.34315 2 6V20C2 21.6569 3.34315 23 5 23H19C20.6569 23 22 21.6569 22 20V6C22 4.34315 20.6569 3 19 3H17V2ZM20 9V6C20 5.44772 19.5523 5 19 5H17V6C17 6.55228 16.5523 7 16 7C15.4477 7 15 6.55228 15 6V5H9V6C9 6.55228 8.55228 7 8 7C7.44772 7 7 6.55228 7 6V5H5C4.44772 5 4 5.44772 4 6V9H20ZM4 11H20V20C20 20.5523 19.5523 21 19 21H5C4.44772 21 4 20.5523 4 20V11Z"/>
+                            <TextBlock Text="Időpontok" FontWeight="SemiBold" VerticalAlignment="Center"/>
                         </StackPanel>
                     </Button>
                     
                     <!-- Szolgaltatasok gomb -->
-                    <Button Command="{Binding NavigateToServicesCommand}" 
-                            HorizontalAlignment="Stretch" 
-                            HorizontalContentAlignment="Left"
-                            Margin="0,0,0,5"
-                            Padding="10">
-                        <StackPanel Orientation="Horizontal">
-                            <TextBlock Text="Szolgáltatások" FontWeight="SemiBold"/>
+                    <Button Command="{Binding NavigateToServicesCommand}" HorizontalAlignment="Stretch" Margin="0,0,0,5" Padding="10">
+                        <StackPanel Orientation="Horizontal" Spacing="10">
+                            <Path Fill="#555555" Stretch="Uniform" Width="20" Height="20" 
+      Data="M9.44623 8.03189C9.79809 7.43639 10 6.74178 10 6C10 3.79086 8.20914 2 6 2C3.79086 2 2 3.79086 2 6C2 8.20914 3.79086 10 6 10C6.74184 10 7.43651 9.79805 8.03204 9.44614L10.5859 12L8.03204 14.5539C7.43651 14.2019 6.74184 14 6 14C3.79086 14 2 15.7909 2 18C2 20.2091 3.79086 22 6 22C8.20914 22 10 20.2091 10 18C10 17.2582 9.79809 16.5636 9.44622 15.9681L20.7072 4.70711C21.0977 4.31658 21.0977 3.68342 20.7072 3.29289C20.3167 2.90237 19.6835 2.90237 19.293 3.29289L12.0001 10.5858L9.44623 8.03189ZM6 4C4.89543 4 4 4.89543 4 6C4 7.10457 4.89543 8 6 8C6.53462 8 7.02025 7.79023 7.37907 7.44851C7.39004 7.43643 7.40135 7.42455 7.41301 7.41289C7.42466 7.40124 7.43652 7.38994 7.44859 7.37899C7.79026 7.02018 8 6.53458 8 6C8 4.89543 7.10457 4 6 4ZM6 16C4.89543 16 4 16.8954 4 18C4 19.1046 4.89543 20 6 20C7.10457 20 8 19.1046 8 18C8 17.4654 7.79025 16.9798 7.44855 16.621C7.4365 16.61 7.42465 16.5987 7.41301 16.5871C7.40136 16.5755 7.39006 16.5636 7.3791 16.5515C7.02028 16.2098 6.53464 16 6 16Z M14.2929 14.2929C14.6834 13.9024 15.3166 13.9024 15.7071 14.2929L20.7071 19.2929C21.0976 19.6834 21.0976 20.3166 20.7071 20.7071C20.3166 21.0976 19.6834 21.0976 19.2929 20.7071L14.2929 15.7071C13.9024 15.3166 13.9024 14.6834 14.2929 14.2929Z" />
+                            <TextBlock Text="Szolgáltatások" FontWeight="SemiBold" VerticalAlignment="Center"/>
+                        </StackPanel>
+                    </Button>
+
+                    <!-- Munkaido gomb -->
+                    <Button Command="{Binding NavigateToWorkHoursCommand}" 
+                            HorizontalAlignment="Stretch" HorizontalContentAlignment="Left" Margin="0,0,0,5" Padding="10">
+                        <StackPanel Orientation="Horizontal" Spacing="10">
+							<Path Fill="#555555" Stretch="Uniform" Width="20" Height="20" 
+      Data="M12.0002 8C9.79111 8 8.00024 9.79086 8.00024 12C8.00024 14.2091 9.79111 16 12.0002 16C14.2094 16 16.0002 14.2091 16.0002 12C16.0002 9.79086 14.2094 8 12.0002 8ZM10.0002 12C10.0002 10.8954 10.8957 10 12.0002 10C13.1048 10 14.0002 10.8954 14.0002 12C14.0002 13.1046 13.1048 14 12.0002 14C10.8957 14 10.0002 13.1046 10.0002 12Z M11.2867 0.5C9.88583 0.5 8.6461 1.46745 8.37171 2.85605L8.29264 3.25622C8.10489 4.20638 7.06195 4.83059 6.04511 4.48813L5.64825 4.35447C4.32246 3.90796 2.83873 4.42968 2.11836 5.63933L1.40492 6.83735C0.67773 8.05846 0.954349 9.60487 2.03927 10.5142L2.35714 10.7806C3.12939 11.4279 3.12939 12.5721 2.35714 13.2194L2.03927 13.4858C0.954349 14.3951 0.67773 15.9415 1.40492 17.1626L2.11833 18.3606C2.83872 19.5703 4.3225 20.092 5.64831 19.6455L6.04506 19.5118C7.06191 19.1693 8.1049 19.7935 8.29264 20.7437L8.37172 21.1439C8.6461 22.5325 9.88584 23.5 11.2867 23.5H12.7136C14.1146 23.5 15.3543 22.5325 15.6287 21.1438L15.7077 20.7438C15.8954 19.7936 16.9384 19.1693 17.9553 19.5118L18.3521 19.6455C19.6779 20.092 21.1617 19.5703 21.8821 18.3606L22.5955 17.1627C23.3227 15.9416 23.046 14.3951 21.9611 13.4858L21.6432 13.2194C20.8709 12.5722 20.8709 11.4278 21.6432 10.7806L21.9611 10.5142C23.046 9.60489 23.3227 8.05845 22.5955 6.83732L21.8821 5.63932C21.1617 4.42968 19.678 3.90795 18.3522 4.35444L17.9552 4.48814C16.9384 4.83059 15.8954 4.20634 15.7077 3.25617L15.6287 2.85616C15.3543 1.46751 14.1146 0.5 12.7136 0.5H11.2867ZM10.3338 3.24375C10.4149 2.83334 10.7983 2.5 11.2867 2.5H12.7136C13.2021 2.5 13.5855 2.83336 13.6666 3.24378L13.7456 3.64379C14.1791 5.83811 16.4909 7.09167 18.5935 6.38353L18.9905 6.24984C19.4495 6.09527 19.9394 6.28595 20.1637 6.66264L20.8771 7.86064C21.0946 8.22587 21.0208 8.69271 20.6764 8.98135L20.3586 9.24773C18.6325 10.6943 18.6325 13.3057 20.3586 14.7523L20.6764 15.0186C21.0208 15.3073 21.0946 15.7741 20.8771 16.1394L20.1637 17.3373C19.9394 17.714 19.4495 17.9047 18.9905 17.7501L18.5936 17.6164C16.4909 16.9082 14.1791 18.1618 13.7456 20.3562L13.6666 20.7562C13.5855 21.1666 13.2021 21.5 12.7136 21.5H11.2867C10.7983 21.5 10.4149 21.1667 10.3338 20.7562L10.2547 20.356C9.82113 18.1617 7.50931 16.9082 5.40665 17.6165L5.0099 17.7501C4.55092 17.9047 4.06104 17.714 3.83671 17.3373L3.1233 16.1393C2.9058 15.7741 2.97959 15.3073 3.32398 15.0186L3.64185 14.7522C5.36782 13.3056 5.36781 10.6944 3.64185 9.24779L3.32398 8.98137C2.97959 8.69273 2.9058 8.2259 3.1233 7.86067L3.83674 6.66266C4.06106 6.28596 4.55093 6.09528 5.0099 6.24986L5.40676 6.38352C7.50938 7.09166 9.82112 5.83819 10.2547 3.64392L10.3338 3.24375Z" />
+                        <TextBlock Text="Munkaidő" FontWeight="SemiBold" VerticalAlignment="Center"/>
+                        </StackPanel>
+                        
+                        
+                    </Button>
+
+                    <!-- Bejelentkezett profil -->
+                    <Button Command="{Binding NavigateToProfileCommand}" 
+                            HorizontalAlignment="Stretch" HorizontalContentAlignment="Left" Margin="0,0,0,5" Padding="10">
+                        <StackPanel Orientation="Horizontal" Spacing="10">
+                        <Path Fill="#555555" Stretch="Uniform" Width="20" Height="20" 
+      Data="M12 1C8.96243 1 6.5 3.46243 6.5 6.5C6.5 9.53757 8.96243 12 12 12C15.0376 12 17.5 9.53757 17.5 6.5C17.5 3.46243 15.0376 1 12 1ZM8.5 6.5C8.5 4.567 10.067 3 12 3C13.933 3 15.5 4.567 15.5 6.5C15.5 8.433 13.933 10 12 10C10.067 10 8.5 8.433 8.5 6.5Z M8 14C4.68629 14 2 16.6863 2 20V22C2 22.5523 2.44772 23 3 23C3.55228 23 4 22.5523 4 22V20C4 17.7909 5.79086 16 8 16H16C18.2091 16 20 17.7909 20 20V22C20 22.5523 20.4477 23 21 23C21.5523 23 22 22.5523 22 22V20C22 16.6863 19.3137 14 16 14H8Z" />
+                        <TextBlock Text="Profilom" FontWeight="SemiBold"/>
                         </StackPanel>
                     </Button>
                 </StackPanel>
@@ -75,7 +93,16 @@
                             Background="#FFF0F0"
                             BorderBrush="#FFCCCC"
                             BorderThickness="1">
-                        <TextBlock Text="Kijelentkezés" Foreground="Red" FontWeight="SemiBold"/>
+    
+                        <StackPanel Orientation="Horizontal" Spacing="8" HorizontalAlignment="Center">
+                                  <Path Fill="Red" 
+                                  Stretch="Uniform" 
+                                  Width="18" 
+                                  Height="18" 
+                                  Data="M7 4C7.55228 4 8 3.55228 8 3C8 2.44772 7.55228 2 7 2H4C2.89543 2 2 2.89543 2 4V20C2 21.1046 2.89543 22 4 22H7C7.55228 22 8 21.5523 8 21C8 20.4477 7.55228 20 7 20H4V4H7Z M21.7071 12.7071L16.7071 17.7071C16.3166 18.0976 15.6834 18.0976 15.2929 17.7071C14.9024 17.3166 14.9024 16.6834 15.2929 16.2929L18.5858 13H8C7.44771 13 7 12.5523 7 12C7 11.4477 7.44771 11 8 11H18.5858L15.2929 7.70711C14.9024 7.31658 14.9024 6.68342 15.2929 6.29289C15.6834 5.90237 16.3166 5.90237 16.7071 6.29289L21.7071 11.2929C22.0976 11.6834 22.0976 12.3166 21.7071 12.7071Z" />
+        
+                            <TextBlock Text="Kijelentkezés" Foreground="Red" FontWeight="SemiBold" VerticalAlignment="Center"/>
+                        </StackPanel>
                     </Button>
                 </StackPanel>
             </Grid>
