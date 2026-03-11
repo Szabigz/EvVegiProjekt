@@ -1,0 +1,41 @@
+﻿<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:BarberManager.ViewModels"
+             x:DataType="vm:ProfileViewModel"
+             x:Class="BarberManager.Views.ProfileView">
+    
+    <Grid Margin="40">
+        <Border Background="White" CornerRadius="15" BoxShadow="0 4 20 0 #11000000" Padding="30" VerticalAlignment="Top" MaxWidth="500">
+            <StackPanel Spacing="20">
+                <StackPanel Orientation="Horizontal" Spacing="15" HorizontalAlignment="Center" Margin="0,0,0,10">
+                    <Path Fill="Black" Stretch="Uniform" Width="30" Height="30" 
+                          Data="M12 1C8.96243 1 6.5 3.46243 6.5 6.5C6.5 9.53757 8.96243 12 12 12C15.0376 12 17.5 9.53757 17.5 6.5C17.5 3.46243 15.0376 1 12 1ZM8.5 6.5C8.5 4.567 10.067 3 12 3C13.933 3 15.5 4.567 15.5 6.5C15.5 8.433 13.933 10 12 10C10.067 10 8.5 8.433 8.5 6.5Z M8 14C4.68629 14 2 16.6863 2 20V22C2 22.5523 2.44772 23 3 23C3.55228 23 4 22.5523 4 22V20C4 17.7909 5.79086 16 8 16H16C18.2091 16 20 17.7909 20 20V22C20 22.5523 20.4477 23 21 23C21.5523 23 22 22.5523 22 22V20C22 16.6863 19.3137 14 16 14H8Z" />
+                    <TextBlock Text="Profilom Szerkesztése" FontSize="22" FontWeight="Bold" VerticalAlignment="Center"/>
+                </StackPanel>
+
+                <StackPanel Spacing="5">
+                    <TextBlock Text="Teljes név" FontWeight="SemiBold" Foreground="Gray"/>
+                    <TextBox Text="{Binding BarberName}"/>
+                </StackPanel>
+
+                <StackPanel Spacing="5">
+                    <TextBlock Text="Email cím" FontWeight="SemiBold" Foreground="Gray"/>
+                    <TextBox Text="{Binding BarberEmail}" IsEnabled="False"/> <!-- Email disabled -->
+                </StackPanel>
+
+                <StackPanel Spacing="5">
+                    <TextBlock Text="Telefonszám" FontWeight="SemiBold" Foreground="Gray"/>
+                    <TextBox Text="{Binding BarberPhone}"/>
+                </StackPanel>
+
+                <Button Command="{Binding SaveProfileCommand}" Background="Black" Foreground="White" Padding="20,10" HorizontalAlignment="Right" Margin="0,10,0,0">
+                    <StackPanel Orientation="Horizontal" Spacing="10">
+                        <Path Fill="White" Stretch="Uniform" Width="16" Height="16" 
+                              Data="M5 2C4.20435 2 3.44129 2.31607 2.87868 2.87868C2.31607 3.44129 2 4.20435 2 5V19C2 19.7957 2.31607 20.5587 2.87868 21.1213C3.44129 21.6839 4.20435 22 5 22H19C19.7957 22 20.5587 21.6839 21.1213 21.1213C21.6839 20.5587 22 19.7957 22 19V8C22 7.73478 21.8946 7.48043 21.7071 7.29289L16.7071 2.29289C16.5196 2.10536 16.2652 2 16 2H5ZM5 4C4.73478 4 4.48043 4.10536 4.29289 4.29289C4.10536 4.48043 4 4.73478 4 5V19C4 19.2652 4.10536 19.5196 4.29289 19.7071C4.48043 19.8946 4.73478 20 5 20H6V13C6 12.4477 6.44772 12 7 12H17C17.5523 12 18 12.4477 18 13V20H19C19.2652 20 19.5196 19.8946 19.7071 19.7071C19.8946 19.5196 20 19.2652 20 19V8.41421L15.5858 4H9V7H16C16.5523 7 17 7.44772 17 8C17 8.55228 16.5523 9 16 9H8C7.44772 9 7 8.55228 7 8V4H5ZM8 14V20H16V14H8Z"/>
+                        <TextBlock Text="Módosítások Mentése"/>
+                    </StackPanel>
+                </Button>
+            </StackPanel>
+        </Border>
+    </Grid>
+</UserControl>
