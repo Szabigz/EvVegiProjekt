@@ -147,7 +147,6 @@ test('should return 200 status code', async () => {
     expect(response.statusCode).toBe(200)
     })
 })
-*/
 
 describe('testing /appointmentDelete/:id delete route', () => {
 test('should return 200 status code', async () => {
@@ -160,3 +159,95 @@ test('should return 200 status code', async () => {
     })
 })
 
+//Appoinment Testek vége
+
+
+//Services Testek
+
+describe('testing /servicesPost post route', () => {
+    test('should return 200 status code', async () => {
+        const response = await request(server).post('/servicesPost')
+        .send({barberID : 1, name : "asd", description : "asdasd", duration_minutes : 10, price:5000})
+        .set("Authorization", "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOjEsImlhdCI6MTc3MzIzNzUxMiwiZXhwIjoxNzczMjQxMTEyfQ.wM5W9IdboYAiGwmQRr-Gd22sLrJv1I7evNnUcO6qyeM")
+        expect(response.statusCode).toBe(200)
+    })
+})
+
+describe("testing /servicesGet get route", () =>{
+    test("should return 200 status code", async()=>{
+        const response = await request(server).get('/servicesGet').set("Authorization", "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOjEsImlhdCI6MTc3MzIzNzUxMiwiZXhwIjoxNzczMjQxMTEyfQ.wM5W9IdboYAiGwmQRr-Gd22sLrJv1I7evNnUcO6qyeM")
+        expect(response.statusCode).toBe(200)
+        
+    })
+})
+
+
+describe('testing /servicesUpdate/:id put route', () => {
+test('should return 200 status code', async () => {
+    const response = await request(server)
+    .put('/servicesUpdate/5')
+    .send({name:"asdasdasd",  price:5500})
+    .set("Authorization", "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOjEsImlhdCI6MTc3MzIzNzUxMiwiZXhwIjoxNzczMjQxMTEyfQ.wM5W9IdboYAiGwmQRr-Gd22sLrJv1I7evNnUcO6qyeM")
+    expect(response.statusCode).toBe(200)
+    })
+})
+
+describe('testing /servicesDelete/:id delete route', () => {
+test('should return 200 status code', async () => {
+    const response = await request(server)
+    .delete('/servicesDelete/2')
+    .set("Authorization", "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOjEsImlhdCI6MTc3MzIzNzUxMiwiZXhwIjoxNzczMjQxMTEyfQ.wM5W9IdboYAiGwmQRr-Gd22sLrJv1I7evNnUcO6qyeM")
+    expect(response.statusCode).toBe(200)
+
+    
+    })
+})
+
+
+
+//Sercices Testek vége
+
+
+//Workhours Testek
+
+describe('testing /workhoursPost post route', () => {
+    test('should return 200 status code', async () => {
+        const response = await request(server).post('/workhoursPost')
+        .send({barberID : 1, dayOfWeek : 3, start_time :"10:00", end_time : "16:00"})
+        .set("Authorization", "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOjEsImlhdCI6MTc3MzIzNzUxMiwiZXhwIjoxNzczMjQxMTEyfQ.wM5W9IdboYAiGwmQRr-Gd22sLrJv1I7evNnUcO6qyeM")
+        expect(response.statusCode).toBe(200)
+    })
+})
+
+describe("testing /workhoursGet get route", () =>{
+    test("should return 200 status code", async()=>{
+        const response = await request(server).get('/workhoursGet').set("Authorization", "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOjEsImlhdCI6MTc3MzIzNzUxMiwiZXhwIjoxNzczMjQxMTEyfQ.wM5W9IdboYAiGwmQRr-Gd22sLrJv1I7evNnUcO6qyeM")
+        expect(response.statusCode).toBe(200)
+        
+    })
+})
+
+
+describe('testing /workhoursUpdate/:id put route', () => {
+test('should return 200 status code', async () => {
+    const response = await request(server)
+    .put('/workhoursUpdate/2')
+    .send({dayOfWeek:5,  end_time:"18:00"})
+    .set("Authorization", "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOjEsImlhdCI6MTc3MzIzNzUxMiwiZXhwIjoxNzczMjQxMTEyfQ.wM5W9IdboYAiGwmQRr-Gd22sLrJv1I7evNnUcO6qyeM")
+    expect(response.statusCode).toBe(200)
+    })
+})
+
+describe('testing /workhoursDelete/:id delete route', () => {
+test('should return 200 status code', async () => {
+    const response = await request(server)
+    .delete('/workhoursDelete/2')
+    .set("Authorization", "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOjEsImlhdCI6MTc3MzIzNzUxMiwiZXhwIjoxNzczMjQxMTEyfQ.wM5W9IdboYAiGwmQRr-Gd22sLrJv1I7evNnUcO6qyeM")
+    expect(response.statusCode).toBe(200)
+
+    
+    })
+})
+*/
+
+//workhours testek vége
