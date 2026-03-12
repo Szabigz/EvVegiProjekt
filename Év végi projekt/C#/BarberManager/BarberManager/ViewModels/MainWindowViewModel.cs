@@ -1,37 +1,32 @@
 ﻿using BarberManager.Services;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using System.Threading.Tasks;
 
 namespace BarberManager.ViewModels;
 
 public partial class MainWindowViewModel : ViewModelBase
 {
-    public ApiService Api { get; } = new ApiService(); [ObservableProperty]
-    private ViewModelBase _currentPage = null!;
+    public ApiService Api { get; } = new ApiService();
 
-    [ObservableProperty]
-    private bool _isLoggedIn;
-
-    [ObservableProperty]
-    private Models.Barber? _currentBarber;
+    [ObservableProperty] private ViewModelBase _currentPage = null!;
+    [ObservableProperty] private bool _isLoggedIn;
+    [ObservableProperty] private Models.Barber? _currentBarber;
 
     public MainWindowViewModel()
     {
-        IsLoggedIn = false;
         ShowLoginScreen();
     }
 
     private void ShowLoginScreen()
     {
         var loginVm = new LoginViewModel(Api);
-
         loginVm.OnLoginSuccess = async () =>
         {
             CurrentBarber = await Api.GetBarberInfoAsync();
             IsLoggedIn = true;
-            CurrentPage = new AppointmentsViewModel();
+            NavigateToAppointments();
         };
-
         CurrentPage = loginVm;
     }
 
@@ -45,14 +40,11 @@ public partial class MainWindowViewModel : ViewModelBase
     }
 
     [RelayCommand]
-    public void NavigateToAppointments()
-    {
-        CurrentPage = new AppointmentsViewModel();
-    }
-
+    public void NavigateToAppointments() => CurrentPage = new AppointmentsViewModel();
     [RelayCommand]
-    public void NavigateToServices()
-    {
-        CurrentPage = new ServicesViewModel(Api);
-    }
+    public void NavigateToServices() => CurrentPage = new ServicesViewModel(Api);
+    [RelayCommand]
+    public void NavigateToWorkHours() => CurrentPage = new WorkHoursViewModel(Api);
+    [RelayCommand]
+    public void NavigateToProfile() => CurrentPage = new ProfileViewModel(Api);
 }

@@ -29,14 +29,15 @@ router.post("/barberReg", async(req,res)=>{
     if(oneBarber){
         return res.status(400).json({message:"Mar van ilyen"})
     }
+    const hashedPassword = await bcrypt.hash(password,9)
     
     
     await dbHandler.barber.create({
         name:name,
         email:email,
-        password: password,
+        password: hashedPassword,
         phoneNum:phoneNum,
-        isAdmin: true
+        isAdmin: isAdmin
     })
     dbHandler.barber.password = await bcrypt.hash(password,9)
     res.status(200).json({message: 'sikeres regisztracio'}).end()
@@ -57,15 +58,18 @@ router.post('/barberLogin', async(req,res)=>{
             return res.status(401).json({"message":"Nem letezik ilyen felhasznalo"})
         }
         else if(oneBarber.name!=name){
-            return res.json({"message":"Hibas nev"})
+            return res.status(400).json({"message":"Hibas nev"})
         }
-        else if(oneBarber.password!=password){
-            res.json({"message":"Hibas jelszo"})
+        const validPassword = await bcrypt.compare(password, oneBarber.password)
+        
+
+        if(!validPassword){
+            return res.status(401).json({message:"Hibás jelszó"})
         }
-        if(oneBarber.name == name && bcrypt.compare(password, oneBarber.password)){
-             const token=JWT.sign({uid:oneBarber.id},SK,{expiresIn: EI})
-            return res.status(201).json({"message": "Sikeres bejelentkezes",token:token}).end()
-        }
+        const token=JWT.sign({uid:oneBarber.id},SK,{expiresIn: EI})
+            
+        return res.status(201).json({"message": "Sikeres bejelentkezes",token:token}).end()
+        
         
         
     }
@@ -105,7 +109,7 @@ router.put('/barberUpdate/:id', Auth(), async(req,res) =>{
             return res.status(400).json({ message: "Nincs ilyen felhasználó" });
         }
         if(!id){
-        return res.status(400).json({'message': 'Hiányzó Tool ID'})
+        return res.status(400).json({'message': 'Hiányzó ID'})
     }
 
     if(req.body.name){

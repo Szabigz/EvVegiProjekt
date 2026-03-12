@@ -1,10 +1,10 @@
-﻿using CommunityToolkit.Mvvm.Input;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
 using System;
-using System.Windows.Input;
 
 namespace BarberManager.ViewModels
 {
-    public class AppointmentsViewModel : ViewModelBase
+    public partial class AppointmentsViewModel : ViewModelBase
     {
         private DateTime _currentMonday;
         private int _weekShift;
@@ -21,7 +21,6 @@ namespace BarberManager.ViewModels
                 OnPropertyChanged(nameof(Thu));
                 OnPropertyChanged(nameof(Fri));
                 OnPropertyChanged(nameof(Sat));
-                OnPropertyChanged(nameof(Sun));
             }
         }
 
@@ -31,32 +30,30 @@ namespace BarberManager.ViewModels
         public string Thu => CurrentMonday.AddDays(3).ToString("MM.dd");
         public string Fri => CurrentMonday.AddDays(4).ToString("MM.dd");
         public string Sat => CurrentMonday.AddDays(5).ToString("MM.dd");
-        public string Sun => CurrentMonday.AddDays(6).ToString("MM.dd");
-
-        public ICommand NextWeek { get; }
-        public ICommand PrevWeek { get; }
 
         public AppointmentsViewModel()
         {
             CurrentMonday = GetMonday(DateTime.Today);
+        }
 
-            NextWeek = new RelayCommand(() =>
+        [RelayCommand]
+        public void NextWeek()
+        {
+            if (_weekShift < 4)
             {
-                if (_weekShift < 4)
-                {
-                    _weekShift++;
-                    CurrentMonday = CurrentMonday.AddDays(7);
-                }
-            });
+                _weekShift++;
+                CurrentMonday = CurrentMonday.AddDays(7);
+            }
+        }
 
-            PrevWeek = new RelayCommand(() =>
+        [RelayCommand]
+        public void PrevWeek()
+        {
+            if (_weekShift > -2)
             {
-                if (_weekShift > -2)
-                {
-                    _weekShift--;
-                    CurrentMonday = CurrentMonday.AddDays(-7);
-                }
-            });
+                _weekShift--;
+                CurrentMonday = CurrentMonday.AddDays(-7);
+            }
         }
 
         private DateTime GetMonday(DateTime date)

@@ -20,12 +20,12 @@ function Log() {
           if (!appointment) {
             return res.status(404).json({ message: "Nincs ilyen időpont" });
           }
-      
+          const user = appointment.userID || 1; // fallback ha null
+          
           await dbHandler.log.create({
             appointmentID: appointment.id,
-            userID: appointment.userID,                  // Auth middleware által beállított felhasználó ID
+            userID: user,                  // Auth middleware által beállított felhasználó ID
             barberID: appointment.barberID,
-            cancelDate: new Date(),
             activity: "Időpont lemondva"     // ide kerül a szöveges jelzés
           });
       
