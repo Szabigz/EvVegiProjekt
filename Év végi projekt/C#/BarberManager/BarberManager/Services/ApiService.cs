@@ -140,6 +140,28 @@ namespace BarberManager.Services
             }
         }
 
+        
+        //--- szolgaltatas torles ---
+        public async Task<(bool IsSuccess, string Message)> DeleteServiceAsync(int id)
+        {
+            SetAuthorizationHeader();
+            try
+            {
+                
+                var response = await _httpClient.DeleteAsync($"/servicesDelete/{id}");
+
+                if (response.IsSuccessStatusCode)
+                {
+                    return (true, "Sikeres törlés!");
+                }
+                return (false, "Nem sikerült a törlés (lehet, hogy már nem létezik).");
+            }
+            catch (Exception ex)
+            {
+                return (false, $"Hálózati hiba: {ex.Message}");
+            }
+        }
+
         public void Logout()
         {
             _jwtToken = string.Empty;

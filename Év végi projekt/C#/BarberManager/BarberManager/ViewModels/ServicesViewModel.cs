@@ -55,9 +55,32 @@ namespace BarberManager.ViewModels
         }
 
         [RelayCommand]
-        public void DeleteService(Service service)
+        public async Task DeleteService(Service service)
         {
-            Services.Remove(service);
+            if (service == null) return;
+
+            IsLoading = true;
+            try
+            {
+                var result = await _api.DeleteServiceAsync(service.Id);
+
+                if (result.IsSuccess)
+                {
+                    await LoadServicesAsync();
+                }
+                else
+                {
+                    ErrorMessage = result.Message;
+                }
+            }
+            catch (Exception ex)
+            {
+                ErrorMessage = "Hiba történt a törlés során.";
+            }
+            finally
+            {
+                IsLoading = false;
+            }
         }
 
         [RelayCommand]
