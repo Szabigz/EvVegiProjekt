@@ -4,6 +4,7 @@ using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
+using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using BarberManager.Models;
@@ -18,9 +19,9 @@ namespace BarberManager.Services
 
         public ApiService()
         {
-            _httpClient = new HttpClient
+            _httpClient = new HttpClient 
             {
-                BaseAddress = new Uri(BaseUrl)
+                BaseAddress = new Uri(BaseUrl) 
             };
         }
 
@@ -31,6 +32,7 @@ namespace BarberManager.Services
                 _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", _jwtToken);
             }
         }
+
         // --- register --- 
         public async Task<(bool IsSuccess, string Message)> RegisterBarberAsync(string email, string name, string password, string phoneNum)
         {
@@ -38,10 +40,9 @@ namespace BarberManager.Services
             try
             {
                 var response = await _httpClient.PostAsJsonAsync("/barberReg", registerData);
-                if (response.IsSuccessStatusCode) return (true, "Sikeres regisztráció!");
-                return (false, "Hiba: Már létezik ilyen felhasználó vagy hibás adatok.");
+                return response.IsSuccessStatusCode ? (true, "Sikeres regisztráció!") : (false, "Hiba a regisztráció során.");
             }
-            catch (Exception ex) { return (false, $"Szerver hiba: {ex.Message}"); }
+            catch (Exception ex) { return (false, ex.Message); }
         }
 
         // --- login ---
@@ -51,17 +52,18 @@ namespace BarberManager.Services
             try
             {
                 var response = await _httpClient.PostAsJsonAsync("/barberLogin", loginData);
-                if (response.IsSuccessStatusCode)
+                var content = await response.Content.ReadAsStringAsync();
+
+                var options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
+                var result = JsonSerializer.Deserialize<LoginResponse>(content, options);
+
+                if (response.IsSuccessStatusCode && result != null && !string.IsNullOrEmpty(result.Token))
                 {
-                    var result = await response.Content.ReadFromJsonAsync<LoginResponse>();
-                    if (result != null && !string.IsNullOrEmpty(result.Token))
-                    {
-                        _jwtToken = result.Token;
-                        SetAuthorizationHeader();
-                        return (true, "Sikeres bejelentkezés!");
-                    }
+                    _jwtToken = result.Token;
+                    SetAuthorizationHeader();
+                    return (true, "Sikeres bejelentkezés!");
                 }
-                return (false, "Hibás név, email vagy jelszó!");
+                return (false, result?.Message ?? "Hibás hitelesítés!");
             }
             catch (Exception ex) { return (false, $"Hálózati hiba: {ex.Message}"); }
         }
@@ -72,12 +74,21 @@ namespace BarberManager.Services
             try
             {
                 var response = await _httpClient.GetAsync("/barberGet");
-                if (response.IsSuccessStatusCode)
+                if (!response.IsSuccessStatusCode) return null;
+
+                string json = await response.Content.ReadAsStringAsync();
+                var options = new JsonSerializerOptions
                 {
-                    var list = await response.Content.ReadFromJsonAsync<List<Barber>>();
+                    PropertyNameCaseInsensitive = true,
+                    NumberHandling = JsonNumberHandling.AllowReadingFromString | JsonNumberHandling.WriteAsString
+                };
+
+                if (json.Trim().StartsWith("["))
+                {
+                    var list = JsonSerializer.Deserialize<List<Barber>>(json, options);
                     return list?.FirstOrDefault();
                 }
-                return null;
+                return JsonSerializer.Deserialize<Barber>(json, options);
             }
             catch { return null; }
         }
@@ -87,17 +98,67 @@ namespace BarberManager.Services
         {
             try
             {
-                var response = await _httpClient.GetAsync("/servicesGet");
+                var response = await _httpClient.GetAsync("/servicesMy");
                 if (response.IsSuccessStatusCode)
                 {
-                    var services = await response.Content.ReadFromJsonAsync<List<Service>>();
-                    return services ?? new List<Service>();
+                    var options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
+                    return await response.Content.ReadFromJsonAsync<List<Service>>(options) ?? new List<Service>();
                 }
                 return new List<Service>();
             }
-            catch
+            catch { return new List<Service>(); }
+        }
+
+        // --- szolgaltatasok letrehozas ---
+        public async Task<(bool IsSuccess, string Message)> CreateServiceAsync(Service service)
+        {
+            SetAuthorizationHeader(); 
+
+            
+            var data = new
             {
-                return new List<Service>();
+                name = service.Name,
+                description = service.Description,
+                duration_minutes = service.DurationMinutes,
+                price = service.Price
+            };
+
+            try
+            {
+                var response = await _httpClient.PostAsJsonAsync("/servicesPost", data);
+                if (response.IsSuccessStatusCode)
+                {
+                    return (true, "Szolgáltatás sikeresen létrehozva!");
+                }
+
+                var error = await response.Content.ReadAsStringAsync();
+                return (false, "Hiba: Lehet, hogy már létezik ilyen nevű szolgáltatás.");
+            }
+            catch (Exception ex)
+            {
+                return (false, $"Hálózati hiba: {ex.Message}");
+            }
+        }
+
+        
+        //--- szolgaltatas torles ---
+        public async Task<(bool IsSuccess, string Message)> DeleteServiceAsync(int id)
+        {
+            SetAuthorizationHeader();
+            try
+            {
+                
+                var response = await _httpClient.DeleteAsync($"/servicesDelete/{id}");
+
+                if (response.IsSuccessStatusCode)
+                {
+                    return (true, "Sikeres törlés!");
+                }
+                return (false, "Nem sikerült a törlés (lehet, hogy már nem létezik).");
+            }
+            catch (Exception ex)
+            {
+                return (false, $"Hálózati hiba: {ex.Message}");
             }
         }
 

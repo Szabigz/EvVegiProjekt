@@ -5,7 +5,6 @@ body {
 
 .container {
     position: relative;
-    z-index: 1; 
 }
 
 .footer-style {
@@ -78,7 +77,6 @@ body {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
     gap: 20px;
-    width: 100%;
     max-width: 500px;
     margin: 0 auto;
 }
@@ -144,7 +142,7 @@ body {
     justify-content: center;
     min-height: 100px;
     white-space: normal;
-    word-wrap: break-word;
+    overflow-wrap: break-word;
 }
 
 .service-btn:hover {
@@ -187,19 +185,19 @@ body {
 }
 
 .calendar-wrapper .selected-day {
-    background: rgba(0, 0, 0, 0.5) !important;
+    background: rgba(0, 0, 0, 0.5);
     border-radius: 5px;
     font-weight: bold;
 }
 
 .calendar-wrapper .disabled-day {
-    background: rgba(0, 0, 0, 0.3) !important;
-    cursor: not-allowed !important;
+    background: rgba(0, 0, 0, 0.3);
+    cursor: not-allowed;
     opacity: 0.5;
 }
 
 #monthYear {
-    color: white !important;
+    color: white;
 }
 
 /* Időpontok */
@@ -207,7 +205,6 @@ body {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
     gap: 12px;
-    min-height: 100px;
 }
 
 .time-slot-btn {
@@ -252,7 +249,6 @@ body {
     border-color: rgba(255, 255, 255, 0.6);
     transform: translateY(-3px);
     box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
-    color: white;
 }
 
 /* Vissza gomb */
