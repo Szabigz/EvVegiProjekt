@@ -13,8 +13,6 @@ router.get("/appointmentGet",Auth(), async(req,res)=>{
     return res.json(await dbHandler.appointments.findAll())
 })
 
-
-
 router.post("/appointmentPost", Auth(), async(req,res)=>{
     const { barberID, serviceID, userID, status, comment, start_time, end_time} = req.body
     const oneBarber = await dbHandler.appointments.findOne({

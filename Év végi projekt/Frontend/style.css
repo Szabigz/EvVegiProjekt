@@ -5,10 +5,6 @@ body {
     background-color: #121212;
     font-family: Georgia, 'Times New Roman', Times, serif;
 }
-#dark-overlay {
-    position: relative; /* vagy fixed? */
-    z-index: 1;
-}
 
 .container, .works h2, #info-box {
     position: relative;
@@ -51,6 +47,8 @@ body {
 }
 .menu-item:first-child {
     flex: 0 0 auto;
+    text-align: center;
+    margin-bottom: 20px;
     margin-right: 40px;
 }
 .menu-link {
@@ -86,11 +84,6 @@ body {
     width: 100%;
 }
 
-.navbar .menu-item:first-child {
-    flex: 0 0 auto;
-    margin-bottom: 20px;
-    text-align: center;
-}
 
 .menu-img {
     display: block;
@@ -132,7 +125,7 @@ body {
     padding-bottom: 6px;
 }
 .scissor-list {
-    list-style:circle;
+    list-style: circle;
     padding-left: 0;
     margin-left: 20px;
 }
@@ -207,7 +200,6 @@ body {
     margin: 40px auto 0;
     border-radius: 50%;
     object-fit: cover;
-    display: block;
 }
 
 .img-circle-hover:hover {
@@ -432,10 +424,6 @@ body {
 
 /* Terkep */
 
-#location-div {
-    width: 100%;
-}
-
 #location-div iframe {
     width: 100%;
     height: 400px;
@@ -464,14 +452,11 @@ body {
 }
 
 .modal-backdrop {
-    display: none !important;
-}
-.modal, .modal-backdrop {
-    z-index: 2000 !important;
+    display: none 
 }
 .modal *:focus {
-    outline: none !important;
-    box-shadow: none !important;
+    outline: none;
+    box-shadow: none; 
     border: none;
 }
 #switchToRegister{
@@ -586,7 +571,7 @@ body {
         width: 85%;
         right: 50%;
         transform: translateX(50%);
-        margin-left: 0 !important;
+        margin-left: 0 
     }
 
     .img-circle-hover {
@@ -746,7 +731,7 @@ body {
 
     #book-appointment-div {
         flex-direction: column;
-        align-items: center !important;
+        align-items: center
     }
 
     #book-appointment-div .col-lg-6,
