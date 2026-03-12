@@ -55,9 +55,32 @@ namespace BarberManager.ViewModels
         }
 
         [RelayCommand]
-        public void DeleteService(Service service)
+        public async Task DeleteService(Service service)
         {
-            Services.Remove(service);
+            if (service == null) return;
+
+            IsLoading = true;
+            try
+            {
+                var result = await _api.DeleteServiceAsync(service.Id);
+
+                if (result.IsSuccess)
+                {
+                    await LoadServicesAsync();
+                }
+                else
+                {
+                    ErrorMessage = result.Message;
+                }
+            }
+            catch (Exception ex)
+            {
+                ErrorMessage = "Hiba történt a törlés során.";
+            }
+            finally
+            {
+                IsLoading = false;
+            }
         }
 
         [RelayCommand]
@@ -66,11 +89,44 @@ namespace BarberManager.ViewModels
             IsEditing = false; // -> lista nezet
         }
 
+
         [RelayCommand]
-        public void SaveService()
+        public async Task SaveService()
         {
-            // api call
-            IsEditing = false; // mentes utan -> lista nezet
+            if (SelectedService == null) return;
+
+            // Alapvető ellenőrzés
+            if (string.IsNullOrWhiteSpace(SelectedService.Name) || SelectedService.Price <= 0)
+            {
+                ErrorMessage = "Kérlek töltsd ki a nevet és az árat!";
+                return;
+            }
+
+            IsLoading = true;
+            ErrorMessage = string.Empty;
+
+            try
+            {
+                var result = await _api.CreateServiceAsync(SelectedService);
+
+                if (result.IsSuccess)
+                {
+                    IsEditing = false; 
+                    await LoadServicesAsync(); 
+                }
+                else
+                {
+                    ErrorMessage = result.Message;
+                }
+            }
+            catch (Exception ex)
+            {
+                ErrorMessage = "Hiba történt a mentés során.";
+            }
+            finally
+            {
+                IsLoading = false;
+            }
         }
     }
 }
