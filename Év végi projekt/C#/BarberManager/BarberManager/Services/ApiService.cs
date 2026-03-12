@@ -109,6 +109,37 @@ namespace BarberManager.Services
             catch { return new List<Service>(); }
         }
 
+        // --- szolgaltatasok letrehozas ---
+        public async Task<(bool IsSuccess, string Message)> CreateServiceAsync(Service service)
+        {
+            SetAuthorizationHeader(); 
+
+            
+            var data = new
+            {
+                name = service.Name,
+                description = service.Description,
+                duration_minutes = service.DurationMinutes,
+                price = service.Price
+            };
+
+            try
+            {
+                var response = await _httpClient.PostAsJsonAsync("/servicesPost", data);
+                if (response.IsSuccessStatusCode)
+                {
+                    return (true, "Szolgáltatás sikeresen létrehozva!");
+                }
+
+                var error = await response.Content.ReadAsStringAsync();
+                return (false, "Hiba: Lehet, hogy már létezik ilyen nevű szolgáltatás.");
+            }
+            catch (Exception ex)
+            {
+                return (false, $"Hálózati hiba: {ex.Message}");
+            }
+        }
+
         public void Logout()
         {
             _jwtToken = string.Empty;

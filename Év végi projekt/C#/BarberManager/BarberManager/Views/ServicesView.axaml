@@ -52,23 +52,35 @@
             </ScrollViewer>
         </Grid>
 
-        <!-- szerkesztes nezet (ha isEditing true) -->
+        <!-- Szerktesztes nezet (ha isEditing true) -->
         <Border IsVisible="{Binding IsEditing}" Background="White" Padding="30" CornerRadius="15" BoxShadow="0 4 20 0 #22000000" VerticalAlignment="Center" HorizontalAlignment="Center" Width="400">
-            <StackPanel Spacing="15">
-                <TextBlock Text="Szolgáltatás szerkesztése" FontSize="20" FontWeight="Bold" HorizontalAlignment="Center" Margin="0,0,0,10"/>
-                
+            <StackPanel Spacing="10">
+                <TextBlock Text="Új szolgáltatás felvétele" FontSize="20" FontWeight="Bold" HorizontalAlignment="Center" Margin="0,0,0,10"/>
+        
+                <TextBlock Text="{Binding ErrorMessage}" Foreground="Red" FontSize="12" HorizontalAlignment="Center" IsVisible="{Binding ErrorMessage, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"/>
+
                 <TextBlock Text="Szolgáltatás neve" FontWeight="SemiBold"/>
                 <TextBox Text="{Binding SelectedService.Name}" Watermark="Pl.: Férfi Hajvágás"/>
 
-                <TextBlock Text="Ár (Ft)" FontWeight="SemiBold"/>
-                <TextBox Text="{Binding SelectedService.Price}" Watermark="Pl.: 6000"/>
+                <TextBlock Text="Rövid leírás" FontWeight="SemiBold"/>
+                <TextBox Text="{Binding SelectedService.Description}" Watermark="Milyen szolgáltatás ez?" Height="60" TextWrapping="Wrap" AcceptsReturn="True"/>
 
-                <Grid ColumnDefinitions="*, *" Margin="0,10,0,0">
+                <Grid ColumnDefinitions="*, *">
+                    <StackPanel Grid.Column="0" Margin="0,0,5,0">
+                        <TextBlock Text="Időtartam (perc)" FontWeight="SemiBold"/>
+                        <TextBox Text="{Binding SelectedService.DurationMinutes}" Watermark="30"/>
+                    </StackPanel>
+                    <StackPanel Grid.Column="1" Margin="5,0,0,0">
+                        <TextBlock Text="Ár (Ft)" FontWeight="SemiBold"/>
+                        <TextBox Text="{Binding SelectedService.Price}" Watermark="6000"/>
+                    </StackPanel>
+                </Grid>
+
+                <Grid ColumnDefinitions="*, *" Margin="0,15,0,0">
                     <Button Grid.Column="0" Command="{Binding CancelEditCommand}" Content="Mégse" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" Margin="5"/>
                     <Button Grid.Column="1" Command="{Binding SaveServiceCommand}" Background="Black" Foreground="White" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" Margin="5">
                         <StackPanel Orientation="Horizontal" Spacing="8">
-                            <Path Fill="White" Stretch="Uniform" Width="14" Height="14" 
-                                  Data="M5 2C4.20435 2 3.44129 2.31607 2.87868 2.87868C2.31607 3.44129 2 4.20435 2 5V19C2 19.7957 2.31607 20.5587 2.87868 21.1213C3.44129 21.6839 4.20435 22 5 22H19C19.7957 22 20.5587 21.6839 21.1213 21.1213C21.6839 20.5587 22 19.7957 22 19V8C22 7.73478 21.8946 7.48043 21.7071 7.29289L16.7071 2.29289C16.5196 2.10536 16.2652 2 16 2H5ZM5 4C4.73478 4 4.48043 4.10536 4.29289 4.29289C4.10536 4.48043 4 4.73478 4 5V19C4 19.2652 4.10536 19.5196 4.29289 19.7071C4.48043 19.8946 4.73478 20 5 20H6V13C6 12.4477 6.44772 12 7 12H17C17.5523 12 18 12.4477 18 13V20H19C19.2652 20 19.5196 19.8946 19.7071 19.7071C19.8946 19.5196 20 19.2652 20 19V8.41421L15.5858 4H9V7H16C16.5523 7 17 7.44772 17 8C17 8.55228 16.5523 9 16 9H8C7.44772 9 7 8.55228 7 8V4H5ZM8 14V20H16V14H8Z"/>
+                            <Path Fill="White" Stretch="Uniform" Width="14" Height="14" Data="M5 2C4.20435 2 3.44129 2.31607 2.87868 2.87868C2.31607 3.44129 2 4.20435 2 5V19C2 19.7957 2.31607 20.5587 2.87868 21.1213C3.44129 21.6839 4.20435 22 5 22H19C19.7957 22 20.5587 21.6839 21.1213 21.1213C21.6839 20.5587 22 19.7957 22 19V8C22 7.73478 21.8946 7.48043 21.7071 7.29289L16.7071 2.29289C16.5196 2.10536 16.2652 2 16 2H5ZM5 4C4.73478 4 4.48043 4.10536 4.29289 4.29289C4.10536 4.48043 4 4.73478 4 5V19C4 19.2652 4.10536 19.5196 4.29289 19.7071C4.48043 19.8946 4.73478 20 5 20H6V13C6 12.4477 6.44772 12 7 12H17C17.5523 12 18 12.4477 18 13V20H19C19.2652 20 19.5196 19.8946 19.7071 19.7071C19.8946 19.5196 20 19.2652 20 19V8.41421L15.5858 4H9V7H16C16.5523 7 17 7.44772 17 8C17 8.55228 16.5523 9 16 9H8C7.44772 9 7 8.55228 7 8V4H5ZM8 14V20H16V14H8Z"/>
                             <TextBlock Text="Mentés"/>
                         </StackPanel>
                     </Button>
