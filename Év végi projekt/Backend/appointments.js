@@ -13,7 +13,7 @@ router.get("/appointmentGet",Auth(), async(req,res)=>{
     return res.json(await dbHandler.appointments.findAll())
 })
 
-router.get("/appointmentMy", Auth(), async (req, res) => {
+router.get("/appointmentMyBarber", Auth(), async (req, res) => {
     try {
         const appointments = await dbHandler.appointments.findAll({
             where: {
@@ -27,8 +27,22 @@ router.get("/appointmentMy", Auth(), async (req, res) => {
     }
 });
 
+router.get("/appointmentMyUser", Auth(), async (req, res) => {
+    try {
+        const appointments = await dbHandler.appointments.findAll({
+            where: {
+                userID: req.uid
+            }
+        });
+        res.json(appointments);
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({ message: "Szerverhiba" });
+    }
+});
+
 router.post("/appointmentPost", Auth(), async(req,res)=>{
-    const {serviceID, userID, comment, start_time, end_time} = req.body
+    const {serviceID, comment, start_time, end_time} = req.body
     const oneBarber = await dbHandler.appointments.findOne({
         where: {
                 barberID: req.uid,
@@ -39,17 +53,23 @@ router.post("/appointmentPost", Auth(), async(req,res)=>{
     if(oneBarber){
         return res.status(400).json({ message: "Ez a barber már foglalt az adott időintervallumban" });
     }
-    
-    await dbHandler.appointments.create({
+    try {
+         await dbHandler.appointments.create({
         barberID:req.uid,
         serviceID:serviceID,
-        userID:userID,
+        userID:null,
         start_time:start_time,
         end_time:end_time,
         comment:comment
         
     })
     res.status(200).json({message: 'sikeres regisztracio'}).end()
+    } catch (error) {
+        console.log(error)
+        res.status(500).json(error)
+    }
+    
+   
 
 })
 
@@ -66,14 +86,18 @@ router.delete("/appointmentDelete/:id", Auth(), Log(), async (req, res) => {
          if (appointment.barberID === uid) {
             await dbHandler.appointments.destroy({ where: { id: Id } });
             return res.status(200).send("Időpont teljesen törölve a barber által");
-        }else{
-            await dbHandler.appointments.update(
-            { status: "available", }, 
-            { where: { id: Id } }
-        );
-        return res.status(200).send("Időpont lemondva, de elérhető másoknak");
-    }
-        
+        }
+         if (appointment.userID === uid) {
+            
+            await appointment.update({
+                status: "available",
+                userID: null
+            });
+
+            return res.status(200).send("Időpont lemondva, újra foglalható");
+        }
+        return res.status(403).send("Nincs jogosultságod lemondani ezt az időpontot");
+
 
         
     } catch (err) {
@@ -100,7 +124,8 @@ router.put("/appointmentBook/:id", Auth(), async (req, res) => {
 
     await dbHandler.appointments.update(
         { 
-            status: "booked"
+            status: "booked",
+            userID :req.uid
         },
         { where: { id: Id } }
     )

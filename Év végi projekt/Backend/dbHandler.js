@@ -124,7 +124,7 @@ const appointmentsTable = dbHandler.define("appointments", {
   },
   userID: {
     type: DataTypes.INTEGER,
-    allowNull: false
+    allowNull: true
   },
   barberID: {
     type: DataTypes.INTEGER,
@@ -182,6 +182,7 @@ const logTable = dbHandler.define("logs", {
     allowNull: false
   }
 });
+
 userTable.hasMany(appointmentsTable, { foreignKey: "userID" });
 appointmentsTable.belongsTo(userTable, { foreignKey: "userID" });
 

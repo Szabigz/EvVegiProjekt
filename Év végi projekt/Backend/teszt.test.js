@@ -138,9 +138,17 @@ describe("testing /appointmentGet get route", () =>{
     })
 })
 
-describe("testing /appointmentMy get route", () =>{
+describe("testing /appointmentMyBarber get route", () =>{
     test("should return 200 status code", async()=>{
-        const response = await request(server).get('/appointmentMy').set("Authorization", "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOjYsImlhdCI6MTc3MzI0MzM2OCwiZXhwIjoxNzczMjQ2OTY4fQ.tAcMgsAzIHjcTpA2Tbm-9GSq736QsGZ7gDA5L27yJo0")
+        const response = await request(server).get('/appointmentMyBarber').set("Authorization", "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOjYsImlhdCI6MTc3MzI0MzM2OCwiZXhwIjoxNzczMjQ2OTY4fQ.tAcMgsAzIHjcTpA2Tbm-9GSq736QsGZ7gDA5L27yJo0")
+        expect(response.statusCode).toBe(200)
+        
+    })
+})
+
+describe("testing /appointmentMyUser get route", () =>{
+    test("should return 200 status code", async()=>{
+        const response = await request(server).get('/appointmentMyUser').set("Authorization", "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOjExLCJpYXQiOjE3NzMzMjgzMzEsImV4cCI6MTc3MzMzMTkzMX0.myw1lEkreAhvFDeBXbeXX9iITe_95gZYJewFnQ5ax4g")
         expect(response.statusCode).toBe(200)
         
     })
