@@ -123,23 +123,97 @@ function generateTimeSlots() {
 //Foglalas veglegesitese
 document.getElementById("finalBookingBtn").addEventListener("click", finalizeBooking)
 
-function finalizeBooking() {
+async function finalizeBooking() {
+
     if (!selectedBarber) return alert("Kérlek válassz egy fodrászt!")
     if (!selectedService) return alert("Kérlek válassz egy szolgáltatást!")
     if (!selectedDate) return alert("Kérlek válassz egy napot!")
     if (!selectedTime) return alert("Kérlek válassz időpontot!")
 
-    const dateText = selectedDate.toLocaleDateString("hu-HU")
-    alert(`Foglalás sikeres! \n\n Fodrász: ${selectedBarber}\n Szolgáltatás: ${selectedService}\n Dátum: ${dateText}\n Időpont: ${selectedTime}`)
-    
-    selectedBarber = null
-    selectedService = null
-    selectedDate = null
-    selectedTime = null
+    const year = selectedDate.getFullYear()
+    const month = String(selectedDate.getMonth() + 1).padStart(2, "0")
+    const day = String(selectedDate.getDate()).padStart(2, "0")
+
+    const hour = selectedTime.split(":")[0]
+
+    const start_time = `${year}-${month}-${day} ${hour}:00:00`
+    const endHour = String(parseInt(hour) + 1).padStart(2, "0")
+    const end_time = `${year}-${month}-${day} ${endHour}:00:00`
+
+    const userID = 0
+    const comment = ""
+
+    const success = await bookAppointment(
+        selectedBarber,
+        selectedService,
+        userID,
+        start_time,
+        end_time,
+        comment
+    )
+
+    if(success){
+
+        const dateText = selectedDate.toLocaleDateString("hu-HU")
+
+        alert(`Foglalás sikeres!
+
+        Fodrász: ${selectedBarber}
+        Szolgáltatás: ${selectedService}
+        Dátum: ${dateText}
+        Időpont: ${selectedTime}`)
+
+        loadMyAppointment()
+
+    } else {
+        alert("Hiba történt a foglalás során!")
+    }
 }
-async function getBookedTimes(barberID, dateObj) {
-    const dateStr = dateObj.toISOString().slice(0,10)
-    const res = await fetch(`/appointmentGetByBarber/${barberID}/${dateStr}`)
-    if(res.ok) return await res.json()
-    return []
+async function bookAppointment(barberID, serviceID, start_time, end_time, comment) {
+
+    const token = sessionStorage.getItem("token")
+
+    const res = await fetch('/appointmentPost', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + token
+        },
+        body: JSON.stringify({ 
+            barberID,
+            serviceID,
+            start_time,
+            end_time,
+            comment 
+        })
+    })
+
+    return res.ok
 }
+
+async function loadMyAppointment(){
+
+    const token = sessionStorage.getItem("token")
+
+    const res = await fetch("/myAppointment",{
+        headers:{
+            "Authorization":"Bearer " + token
+        }
+    })
+
+    if(!res.ok) return
+
+    const data = await res.json()
+
+    if(data.length === 0) return
+
+    const appointment = data[0]
+
+    const date = new Date(appointment.start_time)
+
+    document.getElementById("selectedBarber").innerText = appointment.barberID
+    document.getElementById("selectedService").innerText = appointment.serviceID
+    document.getElementById("selectedDate").innerText = date.toLocaleDateString("hu-HU")
+    document.getElementById("selectedTime").innerText = date.toLocaleTimeString("hu-HU",{hour:"2-digit",minute:"2-digit"})
+}
+loadMyAppointment()

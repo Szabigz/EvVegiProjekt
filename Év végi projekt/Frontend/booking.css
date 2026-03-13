@@ -269,6 +269,50 @@ body {
     transform: translateY(-2px);
 }
 
+.appointment-box h2{
+    font-size: 20px;
+    margin-left: 10px;
+}
+.appointment-box{
+    position: fixed;
+    border: 2px solid rgba(255, 255, 255, 0.25);
+    color: white;
+    background: rgba(255, 255, 255, 0.15);
+    border-radius: 10px;
+    cursor: pointer;
+    z-index: 1;
+    right: 20px;
+    bottom: 20px;
+    width: 220px;
+    
+}
+.appointment-content {
+    margin-left: 10px;
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.4s ease;
+}
+.appointment-box.open .appointment-content {
+    max-height: 500px;
+}
+.appointment-box button{
+    background: rgba(0, 0, 0, 0.6);
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    color: white;
+    border-radius: 30px;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    display: inline-block;
+    margin-top: 5px;
+    margin-left: 40px;
+}
+.appointment-box button:hover{
+    background: rgba(0, 0, 0, 0.6);
+    color: #d4af37;
+    border-color: rgba(255, 255, 255, 0.6);
+    transform: translateY(-2px);
+}
+
 /* Reszponzivitas */
 
 /*Tablet*/
