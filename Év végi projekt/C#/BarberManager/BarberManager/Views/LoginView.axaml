@@ -24,14 +24,14 @@
                            HorizontalAlignment="Center"
                            Margin="0,0,0,10"/>
 
-				<!-- Error -->
+				<!--Uzenet -->
 				<TextBlock Text="{Binding ErrorMessage}"
-                           Foreground="Red"
+                           Foreground="{Binding MessageColor}" 
                            TextWrapping="Wrap"
                            HorizontalAlignment="Center"
                            IsVisible="{Binding ErrorMessage, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"/>
-
-				<!-- Nev -->
+				
+                <!-- Nev -->
 				<StackPanel>
 					<TextBlock Text="Név" FontWeight="SemiBold" Margin="0,0,0,5"/>
 					<TextBox Text="{Binding Name}" Watermark="Írd be a neved..."/>

@@ -162,6 +162,33 @@ namespace BarberManager.Services
             }
         }
 
+        // --- profil frissites ---
+        public async Task<(bool IsSuccess, string Message)> UpdateBarberProfileAsync(int id, string name, string phoneNum)
+        {
+            SetAuthorizationHeader();
+
+            var updateData = new
+            {
+                name = name,
+                phoneNum = phoneNum
+            };
+
+            try
+            {
+                var response = await _httpClient.PutAsJsonAsync($"/barberUpdate/{id}", updateData);
+
+                if (response.IsSuccessStatusCode)
+                {
+                    return (true, "Profil sikeresen frissítve!");
+                }
+
+                return (false, "Nem sikerült a profil frissítése.");
+            }
+            catch (Exception ex)
+            {
+                return (false, $"Hálózati hiba: {ex.Message}");
+            }
+        }
         public void Logout()
         {
             _jwtToken = string.Empty;

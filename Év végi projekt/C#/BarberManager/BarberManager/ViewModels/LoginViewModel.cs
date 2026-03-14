@@ -17,21 +17,16 @@ namespace BarberManager.ViewModels
             IsRegisterMode = false;
         }
 
-        [ObservableProperty]
-        private string _name = string.Empty; [ObservableProperty]
-        private string _email = string.Empty;
+        [ObservableProperty] private string _name = string.Empty;
+        [ObservableProperty] private string _email = string.Empty;
+        [ObservableProperty] private string _password = string.Empty;
+        [ObservableProperty] private string _phoneNum = string.Empty;
 
-        [ObservableProperty]
-        private string _password = string.Empty;
+        [ObservableProperty] private string _errorMessage = string.Empty;
 
-        [ObservableProperty]
-        private string _phoneNum = string.Empty;
+        [ObservableProperty] private string _messageColor = "Red";
 
-        [ObservableProperty]
-        private string _errorMessage = string.Empty;
-
-        [ObservableProperty]
-        private bool _isRegisterMode;
+        [ObservableProperty] private bool _isRegisterMode;
 
         public string TitleText => IsRegisterMode ? "Fodrász Regisztráció" : "Fodrász Bejelentkezés";
         public string SubmitButtonText => IsRegisterMode ? "Regisztráció" : "Bejelentkezés";
@@ -51,6 +46,7 @@ namespace BarberManager.ViewModels
         public async Task SubmitAsync()
         {
             ErrorMessage = string.Empty;
+            MessageColor = "Red";
 
             if (IsRegisterMode)
             {
@@ -66,6 +62,7 @@ namespace BarberManager.ViewModels
                 if (isSuccess)
                 {
                     ToggleMode();
+                    MessageColor = "Green";
                     ErrorMessage = "Sikeres regisztráció! Most már bejelentkezhetsz.";
                 }
                 else
