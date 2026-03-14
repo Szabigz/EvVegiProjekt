@@ -1,28 +1,64 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using BarberManager.Services;
-using System.Diagnostics;
+using System.Threading.Tasks;
 
 namespace BarberManager.ViewModels
 {
     public partial class ProfileViewModel : ViewModelBase
     {
         private readonly ApiService _api;
+        private readonly MainWindowViewModel _mainVm; 
+        private int _barberId;
 
-        [ObservableProperty] private string _barberName = "Pelda nev";
-        [ObservableProperty] private string _barberEmail = "pelda@barbershop.hu";
-        [ObservableProperty] private string _barberPhone = "+36 30 123 4567";
+        [ObservableProperty] private string _barberName = string.Empty;
+        [ObservableProperty] private string _barberEmail = string.Empty;
+        [ObservableProperty] private string _barberPhone = string.Empty;
 
-        public ProfileViewModel(ApiService api)
+        [ObservableProperty] private string _statusMessage = string.Empty;
+        [ObservableProperty] private bool _isSaving;
+
+        public ProfileViewModel(ApiService api, MainWindowViewModel mainVm)
         {
             _api = api;
-            // majd itt api call hogy ne pelda adatok legyenek
+            _mainVm = mainVm;
+            _ = LoadProfileAsync();
+        }
+
+        private async Task LoadProfileAsync()
+        {
+            var barber = await _api.GetBarberInfoAsync();
+            if (barber != null)
+            {
+                _barberId = barber.Id;
+                BarberName = barber.Name;
+                BarberEmail = barber.Email;
+                BarberPhone = barber.PhoneNum.ToString();
+            }
         }
 
         [RelayCommand]
-        public void SaveProfile()
+        public async Task SaveProfileAsync()
         {
-            Debug.WriteLine($"VÁLTOZÁS: Profil mentése - {BarberName}, {BarberPhone}");
+            if (string.IsNullOrWhiteSpace(BarberName))
+            {
+                StatusMessage = "A név nem lehet üres!";
+                return;
+            }
+
+            IsSaving = true;
+            StatusMessage = "Mentés folyamatban...";
+
+            var result = await _api.UpdateBarberProfileAsync(_barberId, BarberName, BarberPhone);
+
+            StatusMessage = result.Message;
+
+            if (result.IsSuccess)
+            {
+                _mainVm.RefreshBarberName(BarberName);
+            }
+
+            IsSaving = false;
         }
     }
 }

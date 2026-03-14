@@ -41,10 +41,27 @@ public partial class MainWindowViewModel : ViewModelBase
 
     [RelayCommand]
     public void NavigateToAppointments() => CurrentPage = new AppointmentsViewModel();
+
     [RelayCommand]
     public void NavigateToServices() => CurrentPage = new ServicesViewModel(Api);
+
     [RelayCommand]
     public void NavigateToWorkHours() => CurrentPage = new WorkHoursViewModel(Api);
+
     [RelayCommand]
-    public void NavigateToProfile() => CurrentPage = new ProfileViewModel(Api);
+    public void NavigateToProfile() => CurrentPage = new ProfileViewModel(Api, this);
+
+    public void RefreshBarberName(string newName)
+    {
+        if (CurrentBarber != null)
+        {
+            CurrentBarber = new Models.Barber
+            {
+                Id = CurrentBarber.Id,
+                Email = CurrentBarber.Email,
+                PhoneNum = CurrentBarber.PhoneNum,
+                Name = newName
+            };
+        }
+    }
 }
