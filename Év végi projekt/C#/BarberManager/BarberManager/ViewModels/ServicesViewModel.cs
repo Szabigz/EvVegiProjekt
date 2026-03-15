@@ -22,9 +22,8 @@ namespace BarberManager.ViewModels
         public ServicesViewModel(ApiService api)
         {
             _api = api;
-
-            //ideiglenes szar hogy ne sirjon az xaml
-            SelectedService = new Service { Name = "", Price = 0 };
+            SelectedService = new Service { Name = "", Price = 0, Description = "", DurationMinutes = 30 };
+            _ = LoadServicesAsync(); // toltse be ha megnyitjuk
         }
 
         [RelayCommand]
@@ -43,59 +42,55 @@ namespace BarberManager.ViewModels
         [RelayCommand]
         public void ShowAddWindow()
         {
-            SelectedService = new Service { Name = "Új szolgáltatás", Price = 0 };
+            SelectedService = new Service { Id = 0, Name = "", Price = 0, Description = "", DurationMinutes = 30 };
             IsEditing = true;
+            ErrorMessage = string.Empty;
         }
 
         [RelayCommand]
         public void EditService(Service service)
         {
-            SelectedService = service;
-            IsEditing = true; // -> szerkeszto nezet
+            if (service == null) return;
+
+            
+            SelectedService = new Service
+            {
+                Id = service.Id,
+                Name = service.Name,
+                Price = service.Price,
+                Description = service.Description,
+                DurationMinutes = service.DurationMinutes,
+                BarberId = service.BarberId
+            };
+            IsEditing = true;
+            ErrorMessage = string.Empty;
         }
 
         [RelayCommand]
         public async Task DeleteService(Service service)
         {
             if (service == null) return;
-
             IsLoading = true;
             try
             {
                 var result = await _api.DeleteServiceAsync(service.Id);
-
-                if (result.IsSuccess)
-                {
-                    await LoadServicesAsync();
-                }
-                else
-                {
-                    ErrorMessage = result.Message;
-                }
+                if (result.IsSuccess) await LoadServicesAsync();
+                else ErrorMessage = result.Message;
             }
-            catch (Exception ex)
-            {
-                ErrorMessage = "Hiba történt a törlés során.";
-            }
-            finally
-            {
-                IsLoading = false;
-            }
+            finally { IsLoading = false; }
         }
 
         [RelayCommand]
         public void CancelEdit()
         {
-            IsEditing = false; // -> lista nezet
+            IsEditing = false;
         }
-
 
         [RelayCommand]
         public async Task SaveService()
         {
             if (SelectedService == null) return;
 
-            // Alapvető ellenőrzés
             if (string.IsNullOrWhiteSpace(SelectedService.Name) || SelectedService.Price <= 0)
             {
                 ErrorMessage = "Kérlek töltsd ki a nevet és az árat!";
@@ -107,22 +102,40 @@ namespace BarberManager.ViewModels
 
             try
             {
-                var result = await _api.CreateServiceAsync(SelectedService);
+                bool isSuccess;
+                string message;
 
-                if (result.IsSuccess)
+                if (SelectedService.Id == 0)
                 {
-                    IsEditing = false; 
-                    await LoadServicesAsync(); 
+                    // ID 0 = nincs az adatbazisban -> letrehozas
+                    var result = await _api.CreateServiceAsync(SelectedService);
+                    isSuccess = result.IsSuccess;
+                    message = result.Message;
                 }
                 else
                 {
-                    ErrorMessage = result.Message;
+                    // ID > 0 = mar letezik a dbben -> modositas
+                    var result = await _api.UpdateServiceAsync(SelectedService);
+                    isSuccess = result.IsSuccess;
+                    message = result.Message;
+                }
+
+                if (isSuccess)
+                {
+                    IsEditing = false;
+                    await LoadServicesAsync(); // lista frissites
+                }
+                else
+                {
+                    ErrorMessage = message;
                 }
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 ErrorMessage = "Hiba történt a mentés során.";
             }
+
+            // ha sikerul a try akkor ez lefut utana tulajdonkeppen nem fut le
             finally
             {
                 IsLoading = false;
