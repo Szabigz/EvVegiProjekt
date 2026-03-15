@@ -31,6 +31,7 @@ router.post("/workhoursPost", Auth(), async(req,res)=>{
     const onewhour = await dbHandler.workhours.findOne({
         where:{
             barberID:req.uid,
+            dayOfWeek: dayOfWeek,
             start_time: { [Op.lt]: end_time },
             end_time: { [Op.gt]: start_time }
         }
@@ -89,9 +90,7 @@ router.put('/workhoursUpdate/:id', Auth(), async(req,res) =>{
         await dbHandler.workhours.update({
             barberID:req.body.barberID
         },{
-            where:{
-                id:Id, barberID 
-            }
+            where: { id: Id, barberID: req.uid }
         })
     }
 
@@ -99,27 +98,21 @@ router.put('/workhoursUpdate/:id', Auth(), async(req,res) =>{
         await dbHandler.workhours.update({
             dayOfWeek:req.body.dayOfWeek
         },{
-            where:{
-                id:Id, barberID 
-            }
+            where: { id: Id, barberID: req.uid }
         })
     }
     if(req.body.start_time){
         await dbHandler.workhours.update({
             start_time:req.body.start_time
         },{
-            where:{
-                id:Id, barberID 
-            }
+            where: { id: Id, barberID: req.uid }
         })
     }
     if(req.body.end_time){
         await dbHandler.workhours.update({
             end_time:req.body.end_time
         },{
-            where:{
-                id:Id, barberID 
-            }
+            where: { id: Id, barberID: req.uid }
         })
     }
     res.json({'message':'sikeres módosítás'})

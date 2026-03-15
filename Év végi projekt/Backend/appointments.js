@@ -9,16 +9,14 @@ const JWT= require('jsonwebtoken')
 
 
 
-router.get("/appointmentGet",Auth(), async(req,res)=>{
-    return res.json(await dbHandler.appointments.findAll())
-})
-
 router.get("/appointmentMyBarber", Auth(), async (req, res) => {
     try {
         const appointments = await dbHandler.appointments.findAll({
-            where: {
-                barberID: req.uid
-            }
+            where: { barberID: req.uid },
+            include: [
+                { model: dbHandler.user, attributes: ['name'] },
+                { model: dbHandler.services, attributes: ['name'] }
+            ]
         });
         res.json(appointments);
     } catch (error) {
@@ -43,14 +41,14 @@ router.get("/appointmentMyUser", Auth(), async (req, res) => {
 
 router.post("/appointmentPost", Auth(), async(req,res)=>{
     const {serviceID, comment, start_time, end_time} = req.body
-    const oneBarber = await dbHandler.appointments.findOne({
+    const oneAppointment = await dbHandler.appointments.findOne({
         where: {
                 barberID: req.uid,
                 start_time: { [Op.lt]: end_time },
                 end_time: { [Op.gt]: start_time }
             }
     })
-    if(oneBarber){
+    if(oneAppointment){
         return res.status(400).json({ message: "Ez a barber már foglalt az adott időintervallumban" });
     }
     try {
@@ -68,9 +66,6 @@ router.post("/appointmentPost", Auth(), async(req,res)=>{
         console.log(error)
         res.status(500).json(error)
     }
-    
-   
-
 })
 
 

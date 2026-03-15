@@ -15,7 +15,7 @@ dbHandler.user.sync()
 dbHandler.barber.sync()
 dbHandler.services.sync()
 dbHandler.workhours.sync()
-dbHandler.appointments.sync({alter:true})
+dbHandler.appointments.sync()
 dbHandler.log.sync()
 require('dotenv').config()
 
