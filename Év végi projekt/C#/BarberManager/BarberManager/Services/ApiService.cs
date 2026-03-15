@@ -162,6 +162,70 @@ namespace BarberManager.Services
             }
         }
 
+        // --- profil frissites ---
+        public async Task<(bool IsSuccess, string Message)> UpdateBarberProfileAsync(int id, string name, string phoneNum)
+        {
+            SetAuthorizationHeader();
+
+            var updateData = new
+            {
+                name = name,
+                phoneNum = phoneNum
+            };
+
+            try
+            {
+                var response = await _httpClient.PutAsJsonAsync($"/barberUpdate/{id}", updateData);
+
+                if (response.IsSuccessStatusCode)
+                {
+                    return (true, "Profil sikeresen frissítve!");
+                }
+
+                return (false, "Nem sikerült a profil frissítése.");
+            }
+            catch (Exception ex)
+            {
+                return (false, $"Hálózati hiba: {ex.Message}");
+            }
+        }
+
+
+        // --- munkaido lekeres ---
+        public async Task<List<WorkHour>> GetMyWorkHoursAsync()
+        {
+            SetAuthorizationHeader();
+            try
+            {
+                var response = await _httpClient.GetAsync("/workhoursMy");
+                if (response.IsSuccessStatusCode)
+                {
+                    var options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
+                    return await response.Content.ReadFromJsonAsync<List<WorkHour>>(options) ?? new List<WorkHour>();
+                }
+                return new List<WorkHour>();
+            }
+            catch { return new List<WorkHour>(); }
+        }
+
+        // --- munkaido mentese (uj vagy modositas) ---
+        public async Task<bool> SaveWorkHourAsync(WorkHour wh)
+        {
+            SetAuthorizationHeader();
+            var data = new { dayOfWeek = wh.DayOfWeek, start_time = wh.StartTime, end_time = wh.EndTime };
+
+            try
+            {
+                HttpResponseMessage response;
+                if (wh.Id == 0) // Ha nincs ID, akkor POST
+                    response = await _httpClient.PostAsJsonAsync("/workhoursPost", data);
+                else // Ha van ID, akkor MODOSITAS
+                    response = await _httpClient.PutAsJsonAsync($"/workhoursUpdate/{wh.Id}", data);
+
+                return response.IsSuccessStatusCode;
+            }
+            catch { return false; }
+        }
         public void Logout()
         {
             _jwtToken = string.Empty;

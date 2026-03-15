@@ -9,8 +9,8 @@
 </head>
 <body id="dark-overlay">
     <script src="users.js"></script>
-    <div class="container">
         <main>
+            <div class="container">
             <div class="booking-wrapper">
                 <h1 class="text-center mb-5"> Foglalj Időpontot</h1>
                 <div class="booking-steps">
@@ -19,11 +19,11 @@
                     <div class="booking-step" id="barbers"> 
                         <h2 class="step-title"> Válassz Fodrászt</h2>
                         <div class="barber-selection">
-                            <div class="barber-card" data-barber="Béres Gergő">
+                            <div class="barber-card" data-barber="1">
                                 <img src="images/geri.png" alt="Béres Gergő">
                                 <h5>Béres Gergő</h5>
                             </div>
-                            <div class="barber-card" data-barber="Kiss Péter">
+                            <div class="barber-card" data-barber="2">
                                 <img src="images/barber.png" alt="Kiss Péter">
                                 <h5>Kiss Péter</h5>
                             </div>
@@ -34,17 +34,17 @@
                     <div class="booking-step">
                         <h2 class="step-title"> Válassz Szolgáltatást</h2>
                         <div class="service-selection">
-                            <button class="service-btn" data-service="Hajvágás">Hajvágás<br>7 200 Ft</button>
-                            <button class="service-btn" data-service="Szakállvágás">Szakállvágás<br>4 490 Ft</button>
-                            <button class="service-btn" data-service="Borotválás">Borotválás<br>4 490 Ft</button>
-                            <button class="service-btn" data-service="Hajmosás">Hajmosás<br>1 000 Ft</button>
-                            <button class="service-btn" data-service="Szakállápolás">Szakállápolás<br>2 000 Ft</button>
-                            <button class="service-btn" data-service="Haj - Szakáll vágás">Haj - Szakáll vágás<br>10 200 Ft</button>
+                            <button class="service-btn" data-service="1">Hajvágás<br>7 200 Ft</button>
+                            <button class="service-btn" data-service="2">Szakállvágás<br>4 490 Ft</button>
+                            <button class="service-btn" data-service="3">Borotválás<br>4 490 Ft</button>
+                            <button class="service-btn" data-service="4">Hajmosás<br>1 000 Ft</button>
+                            <button class="service-btn" data-service="5">Szakállápolás<br>2 000 Ft</button>
+                            <button class="service-btn" data-service="6">Haj - Szakáll vágás<br>10 200 Ft</button>
                         </div>
                     </div>
 
                     <!-- 3. Naptár -->
-                    <div class="booking-step">
+                    <div class="booking-step" id="calendar-div">
                         <h2 class="step-title">Válassz Dátumot</h2>
                         <div class="calendar-wrapper">
                             <div class="d-flex justify-content-between align-items-center mb-3">
@@ -88,11 +88,39 @@
                 <div class="text-center mt-4 mb-5">
                     <a href="mainpage.html" class="back-btn">← Vissza a főoldalra</a>
                 </div>
+            
+            <!-- Idopont informaciok -->
+            </div>
+                <div class="col-lg-2 col-md-4 col-sm-6 appointment-box">
+                    <h2 class="appointment-title">
+                        Időpontod:
+                    </h2>
+                    <div class="appointment-content">
+                      <p> Fodraszod: <br>
+                        <span id="selectedBarber">Nincs kiválasztva</span>
+                      </p>
+                      <p>
+                        Szolgáltatásod: <br>
+                        <span id="selectedService">Nincs kiválasztva</span>
+                      </p>
+                      <p>
+                        Dátum: <br>
+                        <span id="selectedDate">Nincs kiválasztva</span>
+                      </p>
+                      <p>
+                        Időpont: <br>
+                        <span id="selectedTime">Nincs kiválasztva</span>
+                      </p>
+                      <p>
+                        <button id="editBookingBtn" class="btn">Szerkesztés</button><br>
+                        <button id="cancelBookingBtn"  class="btn">Lemondás</button>
+                      </p>
+                    </div>
+                </div>
             </div>
         </main>
-    </div>
-
     <script src="booking.js"></script>
     <script src="bookingButton.js"></script>
+    <script src="bookedappointment.js"></script>
 </body>
 </html>
