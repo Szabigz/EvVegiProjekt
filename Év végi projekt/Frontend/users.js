@@ -45,6 +45,7 @@ async function userRegister() {
         const data = await response.json()
 
         if (response.ok) {
+            sessionStorage.setItem("token", data.token)
             alert(data.message)
             window.location.href = "booking.html"
         } else {

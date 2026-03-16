@@ -32,7 +32,11 @@ router.get("/appointmentMyUser", Auth(), async (req, res) => {
             where: {
                 userID: userID,
                 status: "booked"
-            }
+            },
+            include: [
+                { model: dbHandler.barber, attributes: ['name'] }, 
+                { model: dbHandler.services, attributes: ['name'] } 
+            ]
         });
         res.json(appointments);
     } catch (error) {
@@ -40,6 +44,34 @@ router.get("/appointmentMyUser", Auth(), async (req, res) => {
         res.status(500).json({ message: "Szerverhiba" });
     }
 });
+
+router.get("/appointmentsByBarber/:barberID/:date", async (req, res) => {
+
+    const { barberID, date } = req.params
+
+    try {
+
+        const startOfDay = new Date(date + " 00:00:00")
+        const endOfDay = new Date(date + " 18:59:59")
+
+        const appointments = await dbHandler.appointments.findAll({
+            where: {
+                barberID: barberID,
+                status: "booked",
+                start_time: {
+                    [Op.between]: [startOfDay, endOfDay]
+                }
+            }
+        })
+
+        res.json(appointments)
+
+    } catch (error) {
+        console.log(error)
+        res.status(500).json({message:"Hiba"})
+    }
+
+})
 
 router.post("/appointmentPost", Auth(), async(req,res)=>{
     const {serviceID, comment, start_time, end_time} = req.body
@@ -95,8 +127,8 @@ router.post("/appoointmentUserPost", Auth(), async (req, res) => {
             barberID: barberID,
             serviceID: serviceID,
             userID: userID,
-            start_time: start_time,
-            end_time: end_time,
+            start_time: new Date(start_time),
+            end_time: new Date(end_time),
             comment: comment,
             status: "booked"
         })

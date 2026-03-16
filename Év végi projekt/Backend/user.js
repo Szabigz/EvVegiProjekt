@@ -34,15 +34,15 @@ router.post("/userReg", async(req,res)=>{
     }
     const hashedPassword = await bcrypt.hash(password,9)
 
-    await dbHandler.user.create({
+    const newUser= await dbHandler.user.create({
         name:name,
         email:email,
         password: hashedPassword,
         phoneNum:phoneNum
     })
     
-    dbHandler.user.password = await bcrypt.hash(password,9)
-    res.status(200).json({message: 'sikeres regisztracio'}).end()
+    const token = JWT.sign({uid:newUser.id}, SK, {expiresIn: EI})
+    res.status(200).json({message: 'sikeres regisztracio', token:token}).end()
 
 })
 router.post('/userLogin', async(req,res)=>{
