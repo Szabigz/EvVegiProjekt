@@ -50,13 +50,26 @@
 					<TextBlock Grid.Row="2" Grid.Column="0" Text="9:00" Margin="0,-8,5,0" HorizontalAlignment="Right" VerticalAlignment="Top" FontWeight="SemiBold" FontSize="12"/>
 					<TextBlock Grid.Row="3" Grid.Column="0" Text="9:30" Margin="0,-8,5,0" HorizontalAlignment="Right" VerticalAlignment="Top" Foreground="LightGray" FontSize="11"/>
 					<TextBlock Grid.Row="4" Grid.Column="0" Text="10:00" Margin="0,-8,5,0" HorizontalAlignment="Right" VerticalAlignment="Top" FontWeight="SemiBold" FontSize="12"/>
+					<TextBlock Grid.Row="5" Grid.Column="0" Text="10:30" Margin="0,-8,5,0" HorizontalAlignment="Right" VerticalAlignment="Top" Foreground="LightGray" FontSize="11"/>
 					<TextBlock Grid.Row="6" Grid.Column="0" Text="11:00" Margin="0,-8,5,0" HorizontalAlignment="Right" VerticalAlignment="Top" FontWeight="SemiBold" FontSize="12"/>
+					<TextBlock Grid.Row="7" Grid.Column="0" Text="11:30" Margin="0,-8,5,0" HorizontalAlignment="Right" VerticalAlignment="Top" Foreground="LightGray" FontSize="11"/>
 					<TextBlock Grid.Row="8" Grid.Column="0" Text="12:00" Margin="0,-8,5,0" HorizontalAlignment="Right" VerticalAlignment="Top" FontWeight="SemiBold" FontSize="12"/>
+					<TextBlock Grid.Row="9" Grid.Column="0" Text="12:30" Margin="0,-8,5,0" HorizontalAlignment="Right" VerticalAlignment="Top" Foreground="LightGray" FontSize="11"/>
 					<TextBlock Grid.Row="10" Grid.Column="0" Text="13:00" Margin="0,-8,5,0" HorizontalAlignment="Right" VerticalAlignment="Top" FontWeight="SemiBold" FontSize="12"/>
+					<TextBlock Grid.Row="11" Grid.Column="0" Text="13:30" Margin="0,-8,5,0" HorizontalAlignment="Right" VerticalAlignment="Top" Foreground="LightGray" FontSize="11"/>
+
 					<TextBlock Grid.Row="12" Grid.Column="0" Text="14:00" Margin="0,-8,5,0" HorizontalAlignment="Right" VerticalAlignment="Top" FontWeight="SemiBold" FontSize="12"/>
+					<TextBlock Grid.Row="13" Grid.Column="0" Text="14:30" Margin="0,-8,5,0" HorizontalAlignment="Right" VerticalAlignment="Top" Foreground="LightGray" FontSize="11"/>
+
 					<TextBlock Grid.Row="14" Grid.Column="0" Text="15:00" Margin="0,-8,5,0" HorizontalAlignment="Right" VerticalAlignment="Top" FontWeight="SemiBold" FontSize="12"/>
+					<TextBlock Grid.Row="15" Grid.Column="0" Text="15:30" Margin="0,-8,5,0" HorizontalAlignment="Right" VerticalAlignment="Top" Foreground="LightGray" FontSize="11"/>
+
 					<TextBlock Grid.Row="16" Grid.Column="0" Text="16:00" Margin="0,-8,5,0" HorizontalAlignment="Right" VerticalAlignment="Top" FontWeight="SemiBold" FontSize="12"/>
+					<TextBlock Grid.Row="17" Grid.Column="0" Text="16:30" Margin="0,-8,5,0" HorizontalAlignment="Right" VerticalAlignment="Top" Foreground="LightGray" FontSize="11"/>
+
 					<TextBlock Grid.Row="18" Grid.Column="0" Text="17:00" Margin="0,-8,5,0" HorizontalAlignment="Right" VerticalAlignment="Top" FontWeight="SemiBold" FontSize="12"/>
+					<TextBlock Grid.Row="19" Grid.Column="0" Text="17:30" Margin="0,-8,5,0" HorizontalAlignment="Right" VerticalAlignment="Top" Foreground="LightGray" FontSize="11"/>
+
 					<TextBlock Grid.Row="20" Grid.Column="0" Text="18:00" Margin="0,-8,5,0" HorizontalAlignment="Right" VerticalAlignment="Top" FontWeight="SemiBold" FontSize="12"/>
 
 					<!-- Rácsvonalak -->
