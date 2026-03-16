@@ -32,7 +32,7 @@ router.post("/barberReg", async(req,res)=>{
     const hashedPassword = await bcrypt.hash(password,9)
     
     
-    await dbHandler.barber.create({
+    const newBarber = await dbHandler.barber.create({
         name:name,
         email:email,
         password: hashedPassword,
@@ -40,7 +40,7 @@ router.post("/barberReg", async(req,res)=>{
         isAdmin: isAdmin
     })
     dbHandler.barber.password = await bcrypt.hash(password,9)
-    res.status(200).json({message: 'sikeres regisztracio'}).end()
+    res.status(200).json({message: 'sikeres regisztracio', id:newBarber.id}).end()
 
 })
 

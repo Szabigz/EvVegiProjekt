@@ -52,7 +52,7 @@ router.post("/appointmentPost", Auth(), async(req,res)=>{
         return res.status(400).json({ message: "Ez a barber már foglalt az adott időintervallumban" });
     }
     try {
-         await dbHandler.appointments.create({
+       const newAppointment = await dbHandler.appointments.create({
         barberID:req.uid,
         serviceID:serviceID,
         userID:null,
@@ -61,7 +61,7 @@ router.post("/appointmentPost", Auth(), async(req,res)=>{
         comment:comment
         
     })
-    res.status(200).json({message: 'sikeres regisztracio'}).end()
+    res.status(200).json({message: 'sikeres regisztracio', id:newAppointment.id}).end()
     } catch (error) {
         console.log(error)
         res.status(500).json(error)
@@ -85,7 +85,7 @@ router.delete("/appointmentDelete/:id", Auth(), Log(), async (req, res) => {
          if (appointment.userID === uid) {
             
             await appointment.update({
-                status: "available",
+                status: "canceled",
                 userID: null
             });
 

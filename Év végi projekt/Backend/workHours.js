@@ -41,14 +41,14 @@ router.post("/workhoursPost", Auth(), async(req,res)=>{
         return res.status(400).json({message:"Mar van ilyen"})
     }
     
-    await dbHandler.workhours.create({
+    const workhours = await dbHandler.workhours.create({
         barberID:req.uid,
         dayOfWeek:dayOfWeek,
         start_time:start_time,
         end_time:end_time
         
     })
-    res.status(200).json({message: 'sikeres regisztracio'}).end()
+    res.status(200).json({message: 'sikeres regisztracio', id:workhours.id}).end()
 
 })
 

@@ -34,7 +34,7 @@ router.post("/userReg", async(req,res)=>{
     }
     const hashedPassword = await bcrypt.hash(password,9)
 
-    await dbHandler.user.create({
+    const newUser = await dbHandler.user.create({
         name:name,
         email:email,
         password: hashedPassword,
@@ -42,7 +42,7 @@ router.post("/userReg", async(req,res)=>{
     })
     
     dbHandler.user.password = await bcrypt.hash(password,9)
-    res.status(200).json({message: 'sikeres regisztracio'}).end()
+    res.status(200).json({message: 'sikeres regisztracio', id:newUser.id}).end()
 
 })
 router.post('/userLogin', async(req,res)=>{

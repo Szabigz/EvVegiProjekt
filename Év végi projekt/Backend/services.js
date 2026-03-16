@@ -43,14 +43,14 @@ router.post("/servicesPost", Auth(), async(req,res)=>{
         return res.status(400).json({message:"Mar van ilyen"})
     }
     
-    await dbHandler.services.create({
+   const newService =  await dbHandler.services.create({
         name:name,
         description:description,
         duration_minutes:duration_minutes,
         price:price,
         barberID:req.uid
     })
-    res.status(200).json({message: 'sikeres regisztracio'}).end()
+    res.status(200).json({message: 'sikeres regisztracio', id: newService.id}).end()
 
 })
 
