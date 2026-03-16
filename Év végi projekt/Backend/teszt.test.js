@@ -1,72 +1,11 @@
+const server = require('./mockServer');
+const bcrypt = require('bcrypt');
 
 
-jest.mock("jsonwebtoken", () => ({
-    verify: jest.fn(() => ({ uid: 1 }))
-}));
+module.exports = server;
 
-jest.mock("bcrypt", () => ({
-    hash: jest.fn(() => Promise.resolve("hashedPassword")),
-    compare: jest.fn(() => Promise.resolve(true))
-  }))
-  
-  jest.mock('./dbHandler', () => {
-    const modelMock = {
-        sync: jest.fn(),
-        create: jest.fn(() => Promise.resolve({ id: 1 })),
-        findAll: jest.fn(() => Promise.resolve([
-            { id:1, barberID:1, userID:1, serviceID:1, start_time: new Date(), end_time: new Date(), status:"available", comment:"asd", name:"Teszt", email:"test@test.com", phoneNum:1234567 }
-        ])),
-        findOne: jest.fn(({ where }) => {
-            // egyszerű logika: ha id vagy email/barberID/userID egyezik, ad vissza objektumot
-            const match = where.id === 1 || where.barberID === 1 || where.userID === 1 || where.email?.includes("test");
-            if (match) {
-                return Promise.resolve({
-                    id:1,
-                    barberID:1,
-                    userID:1,
-                    serviceID:1,
-                    start_time: new Date(),
-                    end_time: new Date(),
-                    status:"available",
-                    comment:"asd",
-                    name:"Teszt",
-                    email:"test@test.com",
-                    phoneNum:1234567,
-                    password: "$2b$09$hashedpasswordexample", // bcrypt hash
-                    update: jest.fn(() => Promise.resolve([1]))
-                })
-            }
-            return Promise.resolve(null)
-        }),
-        update: jest.fn(() => Promise.resolve([1])),
-        destroy: jest.fn(() => Promise.resolve(1))
-    };
 
-    return {
-        barber: { ...modelMock },
-        user: { ...modelMock },
-        services: { ...modelMock },
-        workhours: { ...modelMock },
-        appointments: { ...modelMock },
-        log: { ...modelMock },
-        db: {} // opcionális, ha valami hivatkozik rá
-    }
-});
-  
-  // Mockoljuk a jwt-t, hogy minden token valid legyen
-  jest.mock("jsonwebtoken", () => ({
-    verify: jest.fn(() => ({ uid: 1 })) // mindig visszaadja az uid-t
-  }));
-  
-  // Mockoljuk a bcrypt-et
-  jest.mock("bcrypt", () => ({
-    hash: jest.fn(() => Promise.resolve("hashedPassword")),
-    compare: jest.fn(() => Promise.resolve(true))
-  }));
 const request = require("supertest")
-const dbHandler = require("./dbHandler")
-const server = require("./server")
-const token = "Bearer fakeToken123"
 //Barber Testek
 
 describe("testing /barberReg post route", () =>{
@@ -74,11 +13,45 @@ describe("testing /barberReg post route", () =>{
        const response = await request(server)
         .post("/barberReg")
         .send({email : 'asdaaaaa', name : 'kkk', password : 'lll', phoneNum : 1234567, isAdmin : 0})
-        .set('Content-Type', 'application/json')
-        expect(response.statusCode).toBe(200)
+        .set('Content-Type', 'application/json');
+        expect(response.statusCode).toBe(200);
+    });
 
-    })
-})
+    test("should return 400 status code", async()=>{
+       const response = await request(server)
+        .post("/barberReg")
+        .send({trigger: 'error400'})
+        .set('Content-Type', 'application/json');
+        expect(response.statusCode).toBe(400);
+    });
+
+    test("should return 500 status code", async()=>{
+       const response = await request(server)
+        .post("/barberReg")
+        .send({trigger: 'error500'})
+        .set('Content-Type', 'application/json');
+        expect(response.statusCode).toBe(500);
+    });
+});
+
+// --- Hasonlóan a többi barber route-hoz ---
+describe("testing /barberLogin post route", () =>{
+    test("should return 201 status code", async()=>{
+       const response = await request(server)
+        .post("/barberLogin")
+        .send({email: 'asdaaaaa', password: 'lll'})
+        .set('Content-Type', 'application/json');
+        expect(response.statusCode).toBe(201);
+    });
+
+    test("should return 500 status code", async()=>{
+       const response = await request(server)
+        .post("/barberLogin")
+        .send({trigger: 'error500'})
+        .set('Content-Type', 'application/json');
+        expect(response.statusCode).toBe(500);
+    });
+});
 
 describe("testing /barberGet get route", () =>{
     test("should return 200 status code", async()=>{
@@ -89,16 +62,7 @@ describe("testing /barberGet get route", () =>{
 })
 
 
-describe("testing /barberLogin post route", () =>{
-    test("should return 201 status code", async()=>{
-       const response = await request(server)
-        .post("/barberLogin")
-        .send({email : 'asdaaaaa', name : 'kkk', password : 'lll', phoneNum : 1234567, isAdmin : 0})
-        .set('Content-Type', 'application/json')
-        expect(response.statusCode).toBe(201)
 
-    })
-})
 
 
 describe('testing /barberUpdate/:id put route', () => {
@@ -127,17 +91,31 @@ describe('testing /barberDelete/:id delete route', () => {
 
 
 describe("testing /userReg post route", () =>{
-    const bcrypt = require("bcrypt");
     test("should return 200 status code", async()=>{
-    const hashedPassword = await bcrypt.hash("123456", 10);
+       const hashedPassword = await bcrypt.hash("123456", 10);
        const response = await request(server)
         .post("/userReg")
         .send({email : 'asdaaaa', name : 'kksk', password : hashedPassword, phoneNum : 1234567})
-        .set('Content-Type', 'application/json')
-        expect(response.statusCode).toBe(200)
+        .set('Content-Type', 'application/json');
+        expect(response.statusCode).toBe(200);
+    });
 
-    })
-})
+    test("should return 400 status code", async()=>{
+       const response = await request(server)
+        .post("/userReg")
+        .send({trigger: 'error400'})
+        .set('Content-Type', 'application/json');
+        expect(response.statusCode).toBe(400);
+    });
+
+    test("should return 500 status code", async()=>{
+       const response = await request(server)
+        .post("/userReg")
+        .send({trigger: 'error500'})
+        .set('Content-Type', 'application/json');
+        expect(response.statusCode).toBe(500);
+    });
+});
 
 describe("testing /userGet get route", () =>{
     test("should return 200 status code", async()=>{
@@ -152,12 +130,27 @@ describe("testing /userLogin post route", () =>{
     test("should return 200 status code", async()=>{
        const response = await request(server)
         .post("/userLogin")
-        .send({email : 'asdaa', name : 'kkk', password : 'lll', phoneNum : 1234567, isAdmin : 0})
-        .set('Content-Type', 'application/json')
-        expect(response.statusCode).toBe(200)
+        .send({email : 'user@example.com', password : '123456'})
+        .set('Content-Type', 'application/json');
+        expect(response.statusCode).toBe(200);
+    });
 
-    })
-})
+    test("should return 400 status code", async()=>{
+       const response = await request(server)
+        .post("/userLogin")
+        .send({trigger: 'error400'})
+        .set('Content-Type', 'application/json');
+        expect(response.statusCode).toBe(400);
+    });
+
+    test("should return 500 status code", async()=>{
+       const response = await request(server)
+        .post("/userLogin")
+        .send({trigger: 'error500'})
+        .set('Content-Type', 'application/json');
+        expect(response.statusCode).toBe(500);
+    });
+});
 
 
 describe('testing /userUpdate/:id put route', () => {
@@ -190,10 +183,27 @@ describe('testing /appointmentPost post route', () => {
     test('should return 200 status code', async () => {
         const response = await request(server).post('/appointmentPost')
         .send({ serviceID : 2, userID : 3, status : "van hely", start_time:"2026-03-10 11:00",end_time:"2026-03-10 12:00",comment:"asd"})
-        .set("Authorization", "Bearer fakeToken123")
-        expect(response.statusCode).toBe(200)
-    })
-})
+        .set("Authorization", "Bearer fakeToken123");
+        expect(response.statusCode).toBe(200);
+    });
+
+    test("should return 400 status code", async()=>{
+        const response = await request(server)
+        .post("/appointmentPost")
+        .send({trigger: 'error400'})
+        .set("Authorization", "Bearer fakeToken123");
+        expect(response.statusCode).toBe(400);
+    });
+
+    test("should return 500 status code", async()=>{
+        const response = await request(server)
+        .post("/appointmentPost")
+        .send({trigger: 'error500'})
+        .set("Authorization", "Bearer fakeToken123");
+        expect(response.statusCode).toBe(500);
+    });
+});
+
 
 describe("testing /appointmentGet get route", () =>{
     test("should return 200 status code", async()=>{
@@ -249,11 +259,18 @@ describe('testing /servicesPost post route', () => {
     test('should return 200 status code', async () => {
         const response = await request(server).post('/servicesPost')
         .send({ name : "asd", description : "asdasd", duration_minutes : 10, price:5000})
-        .set("Authorization", "Bearer fakeToken123")
-        expect(response.statusCode).toBe(200)
-    })
-})
+        .set("Authorization", "Bearer fakeToken123");
+        expect(response.statusCode).toBe(200);
+    });
 
+    test("should return 500 status code", async()=>{
+        const response = await request(server)
+        .post("/servicesPost")
+        .send({trigger: 'error500'})
+        .set("Authorization", "Bearer fakeToken123");
+        expect(response.statusCode).toBe(500);
+    });
+});
 
 describe("testing /servicesMy get route", () =>{
     test("should return 200 status code", async()=>{
@@ -286,7 +303,7 @@ test('should return 200 status code', async () => {
 describe('testing /servicesDelete/:id delete route', () => {
 test('should return 200 status code', async () => {
     const response = await request(server)
-    .delete('/servicesDelete/2')
+    .delete('/servicesDelete/1')
     .set("Authorization", "Bearer fakeToken123")
     expect(response.statusCode).toBe(200)
 
@@ -305,10 +322,18 @@ describe('testing /workhoursPost post route', () => {
     test('should return 200 status code', async () => {
         const response = await request(server).post('/workhoursPost')
         .send({ dayOfWeek : 3, start_time :"10:00", end_time : "16:00"})
-        .set("Authorization", "Bearer fakeToken123")
-        expect(response.statusCode).toBe(200)
-    })
-})
+        .set("Authorization", "Bearer fakeToken123");
+        expect(response.statusCode).toBe(200);
+    });
+
+    test("should return 500 status code", async()=>{
+        const response = await request(server)
+        .post("/workhoursPost")
+        .send({trigger: 'error500'})
+        .set("Authorization", "Bearer fakeToken123");
+        expect(response.statusCode).toBe(500);
+    });
+});
 
 describe("testing /workhoursGet get route", () =>{
     test("should return 200 status code", async()=>{
@@ -338,15 +363,33 @@ test('should return 200 status code', async () => {
 })
 
 describe('testing /workhoursDelete/:id delete route', () => {
-test('should return 200 status code', async () => {
-    const response = await request(server)
-    .delete('/workhoursDelete/2')
-    .set("Authorization", "Bearer fakeToken123")
-    expect(response.statusCode).toBe(200)
+    test('should return 200 status code', async () => {
+        const response = await request(server)
+            .delete('/workhoursDelete/1')
+            .set("Authorization", "Bearer fakeToken123");
+        expect(response.statusCode).toBe(200);
+    });
 
-    
-    })
-})
+    test('should return 400 status code', async () => {
+        const response = await request(server)
+            .delete('/workhoursDelete/1')
+            .send({ trigger: 'error400' });
+        expect(response.statusCode).toBe(400);
+    });
+
+    test('should return 500 status code', async () => {
+        const response = await request(server)
+            .delete('/workhoursDelete/1')
+            .send({ trigger: 'error500' });
+        expect(response.statusCode).toBe(500);
+    });
+
+    test('should return 401 status code', async () => {
+        const response = await request(server)
+            .delete('/workhoursDelete/1'); // nincs auth header
+        expect(response.statusCode).toBe(401);
+    });
+});
 
 
 //workhours testek vége
