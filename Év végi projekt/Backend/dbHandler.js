@@ -2,7 +2,7 @@ const { Sequelize, DataTypes } = require("sequelize");
 
 const dbHandler = new Sequelize("barberShop", "root", "", {
   dialect: "mysql",
-  host: "localhost"
+  host: "localhost",
 });
 
 /* USERS */
@@ -182,7 +182,6 @@ const logTable = dbHandler.define("logs", {
     allowNull: false
   }
 });
-
 userTable.hasMany(appointmentsTable, { foreignKey: "userID" });
 appointmentsTable.belongsTo(userTable, { foreignKey: "userID" });
 

@@ -1,10 +1,17 @@
+//Vedelem
+const token = sessionStorage.getItem("token")
 
+if(!token){
+    window.location.href = "login.html"
+}
+
+//Alaphelyzet
 let selectedBarber = null
 let selectedService = null
 let selectedDate = null
 let selectedTime = null
 
-
+//Lepegetes
 function scrollToStep(stepNumber) {
     const steps = document.querySelectorAll(".booking-step")
     if (steps[stepNumber]) {
@@ -40,9 +47,7 @@ let current = new Date()
 function renderCalendar() {
     const year = current.getFullYear()
     const month = current.getMonth()
-
     monthYear.innerText = current.toLocaleString("hu-HU", { month: "long", year: "numeric" })
-
     calendarBody.innerHTML = ""
 
     const firstDay = new Date(year, month, 1).getDay()
@@ -50,21 +55,20 @@ function renderCalendar() {
     let dayIndex = (firstDay + 6) % 7
 
     let row = document.createElement("tr")
-
     for (let i = 0; i < dayIndex; i++) row.appendChild(document.createElement("td"))
 
     for (let day = 1; day <= daysInMonth; day++) {
-        if (dayIndex === 7) {
+        if (dayIndex == 7) {
             calendarBody.appendChild(row)
             row = document.createElement("tr")
             dayIndex = 0
         }
 
-        let cell = document.createElement("td")
+        const cell = document.createElement("td")
         cell.innerText = day
         const dateObj = new Date(year, month, day)
 
-        if (dateObj.getDay() === 0) {
+        if (dateObj.getDay() == 0) { // vasarnap tiltva
             cell.classList.add("disabled-day")
         } else {
             cell.addEventListener("click", () => {
@@ -76,104 +80,170 @@ function renderCalendar() {
         row.appendChild(cell)
         dayIndex++
     }
-
     calendarBody.appendChild(row)
 }
 
-function highlightSelectedDay(selectedCell) {
+function highlightSelectedDay(cell) {
     document.querySelectorAll("#calendarBody td").forEach(td => td.classList.remove("selected-day"))
-    selectedCell.classList.add("selected-day")
-    scrollToStep(3)
+    cell.classList.add("selected-day")
     generateTimeSlots()
 }
 
-document.getElementById("prevMonth").onclick = () => { current.setMonth(current.getMonth() - 1); renderCalendar(); }
-document.getElementById("nextMonth").onclick = () => { current.setMonth(current.getMonth() + 1); renderCalendar(); }
+//Elozo/kovi honap
+document.getElementById("prevMonth").onclick = () => { current.setMonth(current.getMonth() - 1); renderCalendar() }
+document.getElementById("nextMonth").onclick = () => { current.setMonth(current.getMonth() + 1); renderCalendar() }
 
 renderCalendar()
 
+//Helyes datum formatum miatt segedfuggveny
+function formatLocalDateTime(date) {
+    const year = date.getFullYear()
+    const month = String(date.getMonth() + 1).padStart(2, "0")
+    const day = String(date.getDate()).padStart(2, "0")
+    const hour = String(date.getHours()).padStart(2, "0")
+    const minute = String(date.getMinutes()).padStart(2, "0")
+    const second = String(date.getSeconds()).padStart(2, "0")
+    return `${year}-${month}-${day} ${hour}:${minute}:${second}`
+}
 //Idopontok
 const timeSlotsContainer = document.querySelector('.time-slot-wrapper')
 
-function generateTimeSlots() {
-    timeSlotsContainer.innerHTML = ""
+async function getBookedTimes(barberID, date) {
+    const formattedDate = formatLocalDateTime(new Date(date.getFullYear(), date.getMonth(), date.getDate(), 0, 0, 0)).split(" ")[0]
+    const res = await fetch(`/appointmentsByBarber/${barberID}/${formattedDate}`)
+    if (!res.ok) return []
 
-    const times = ["09:00","09:30","10:00","10:30","11:00","11:30","12:00","13:00","13:30","14:00","14:30","15:00","15:30","16:00","16:30","17:00","17:30","18:00"]
+    const data = await res.json();
+    //Csak a booked statuszu idopontok
+    return data
+        .filter(app => app.status == "booked")
+        .map(app => {
+            const d = new Date(app.start_time)
+            const hours = String(d.getHours()).padStart(2, "0")
+            const minutes = String(d.getMinutes()).padStart(2, "0")
+            return `${hours}:${minutes}`
+        })
+}
+
+async function generateTimeSlots() {
+    timeSlotsContainer.innerHTML = ""
+    if (!selectedBarber || !selectedDate) return
+
+    const bookedTimes = await getBookedTimes(selectedBarber, selectedDate)
+
+    const times = [
+        "09:00","10:00","11:00","12:00",
+        "13:00","14:00","15:00",
+        "16:00","17:00","18:00","19:00"
+    ]
 
     times.forEach((time, index) => {
         const btn = document.createElement("button")
         btn.classList.add("time-slot-btn")
         btn.textContent = time
 
+        if (bookedTimes.includes(time)) {
+            btn.disabled = true
+            btn.classList.add("booked")
+        } else {
+            btn.addEventListener("click", () => {
+                timeSlotsContainer.querySelectorAll("button").forEach(b => b.classList.remove("active"))
+                btn.classList.add("active")
+                selectedTime = time
+                scrollToStep(3)
+            })
+        }
+
+        timeSlotsContainer.appendChild(btn)
+        setTimeout(() => btn.classList.add("show"), index * 50)
+    })
+}
+/*
+async function generateTimeSlots() {
+    timeSlotsContainer.innerHTML = ""
+    if (!selectedBarber || !selectedDate) return
+
+    const formattedDate = selectedDate.toISOString().split("T")[0]
+    const res = await fetch(`/availableSlots/${selectedBarber}/${formattedDate}`)
+    if (!res.ok) return
+    const slots = await res.json()
+
+    slots.forEach((slot, index) => {
+        const d = new Date(slot)
+        const timeStr = d.toLocaleTimeString("hu-HU", { hour:"2-digit", minute:"2-digit" })
+
+        const btn = document.createElement("button")
+        btn.classList.add("time-slot-btn")
+        btn.textContent = timeStr
+
         btn.addEventListener("click", () => {
             timeSlotsContainer.querySelectorAll("button").forEach(b => b.classList.remove("active"))
             btn.classList.add("active")
-            selectedTime = time
+            selectedTime = timeStr
             scrollToStep(3)
         })
 
         timeSlotsContainer.appendChild(btn)
-
-        setTimeout(() => {
-            btn.classList.add("show")
-        }, index * 50)
+        setTimeout(() => btn.classList.add("show"), index * 50)
     })
-}
+}*/
 
 //Foglalas veglegesitese
+
 document.getElementById("finalBookingBtn").addEventListener("click", finalizeBooking)
 
 async function finalizeBooking() {
-
     if (!selectedBarber) return alert("Kérlek válassz egy fodrászt!")
     if (!selectedService) return alert("Kérlek válassz egy szolgáltatást!")
     if (!selectedDate) return alert("Kérlek válassz egy napot!")
     if (!selectedTime) return alert("Kérlek válassz időpontot!")
 
-    const year = selectedDate.getFullYear()
-    const month = String(selectedDate.getMonth() + 1).padStart(2, "0")
-    const day = String(selectedDate.getDate()).padStart(2, "0")
+    const comment = document.getElementById("commentInput").value || ""
+    const [hour, minute] = selectedTime.split(":").map(Number)
 
-    const hour = selectedTime.split(":")[0]
+    const start_time = new Date(
+        selectedDate.getFullYear(),
+        selectedDate.getMonth(),
+        selectedDate.getDate(),
+        hour,
+        minute,
+        0
+    )
 
-    const start_time = `${year}-${month}-${day} ${hour}:00:00`
-    const endHour = String(parseInt(hour) + 1).padStart(2, "0")
-    const end_time = `${year}-${month}-${day} ${endHour}:00:00`
-
-    const userID = 0
-    const comment = ""
+    const end_time = new Date(start_time.getTime() + 60 * 60 * 1000)
 
     const success = await bookAppointment(
         selectedBarber,
         selectedService,
-        userID,
-        start_time,
-        end_time,
+        formatLocalDateTime(start_time),
+        formatLocalDateTime(end_time),
         comment
     )
 
-    if(success){
+    if (success) {
+        const dateText = start_time.toLocaleDateString("hu-HU")
+        const timeText = start_time.toLocaleTimeString("hu-HU", { hour: "2-digit", minute: "2-digit" })
+        const barberName = document.querySelector(`.barber-card[data-barber="${selectedBarber}"] h5`).innerText
+        const serviceName = document.querySelector(`.service-btn[data-service="${selectedService}"]`).innerText.split("\n")[0]
 
-        const dateText = selectedDate.toLocaleDateString("hu-HU")
+        alert(`Foglalás sikeres!\n
+        Fodrász: ${barberName}\n
+        Szolgáltatás: ${serviceName}\n
+        Dátum: ${dateText}\n
+        Időpont: ${timeText}`)
 
-        alert(`Foglalás sikeres!
-
-        Fodrász: ${selectedBarber}
-        Szolgáltatás: ${selectedService}
-        Dátum: ${dateText}
-        Időpont: ${selectedTime}`)
-
+        generateTimeSlots()
         loadMyAppointment()
-
     } else {
         alert("Hiba történt a foglalás során!")
     }
 }
+
 async function bookAppointment(barberID, serviceID, start_time, end_time, comment) {
 
     const token = sessionStorage.getItem("token")
 
-    const res = await fetch('/appointmentPost', {
+    const res = await fetch('/appoointmentUserPost', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
@@ -191,29 +261,25 @@ async function bookAppointment(barberID, serviceID, start_time, end_time, commen
     return res.ok
 }
 
-async function loadMyAppointment(){
-
+async function loadMyAppointment() {
     const token = sessionStorage.getItem("token")
+    if(!token) return
 
-    const res = await fetch("/myAppointment",{
-        headers:{
-            "Authorization":"Bearer " + token
-        }
+    const res = await fetch("/appointmentMyUser", {
+        headers: { "Authorization": "Bearer " + token }
     })
-
     if(!res.ok) return
 
     const data = await res.json()
-
-    if(data.length === 0) return
+    if(data.length == 0) return
 
     const appointment = data[0]
-
     const date = new Date(appointment.start_time)
 
-    document.getElementById("selectedBarber").innerText = appointment.barberID
-    document.getElementById("selectedService").innerText = appointment.serviceID
+    document.getElementById("selectedBarber").innerText = appointment.barber.name
+    document.getElementById("selectedService").innerText = appointment.service.name
     document.getElementById("selectedDate").innerText = date.toLocaleDateString("hu-HU")
-    document.getElementById("selectedTime").innerText = date.toLocaleTimeString("hu-HU",{hour:"2-digit",minute:"2-digit"})
+    document.getElementById("selectedTime").innerText = date.toLocaleTimeString("hu-HU", {hour:"2-digit", minute:"2-digit"})
 }
+
 loadMyAppointment()

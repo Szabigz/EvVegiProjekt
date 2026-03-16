@@ -40,7 +40,7 @@ public partial class MainWindowViewModel : ViewModelBase
     }
 
     [RelayCommand]
-    public void NavigateToAppointments() => CurrentPage = new AppointmentsViewModel();
+    public void NavigateToAppointments() => CurrentPage = new AppointmentsViewModel(Api);
 
     [RelayCommand]
     public void NavigateToServices() => CurrentPage = new ServicesViewModel(Api);

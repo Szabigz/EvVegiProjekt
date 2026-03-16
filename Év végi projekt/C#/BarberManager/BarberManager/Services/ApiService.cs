@@ -93,9 +93,10 @@ namespace BarberManager.Services
             catch { return null; }
         }
 
-        // --- Szolgaltatasok lekeres ---
+        // --- szolgaltatas lekeres ---
         public async Task<List<Service>> GetServicesAsync()
         {
+            SetAuthorizationHeader();
             try
             {
                 var response = await _httpClient.GetAsync("/servicesMy");
@@ -109,12 +110,10 @@ namespace BarberManager.Services
             catch { return new List<Service>(); }
         }
 
-        // --- szolgaltatasok letrehozas ---
+        // --- szolgaltatas letrehozas ---
         public async Task<(bool IsSuccess, string Message)> CreateServiceAsync(Service service)
         {
-            SetAuthorizationHeader(); 
-
-            
+            SetAuthorizationHeader();
             var data = new
             {
                 name = service.Name,
@@ -126,40 +125,45 @@ namespace BarberManager.Services
             try
             {
                 var response = await _httpClient.PostAsJsonAsync("/servicesPost", data);
-                if (response.IsSuccessStatusCode)
-                {
-                    return (true, "Szolgáltatás sikeresen létrehozva!");
-                }
-
+                if (response.IsSuccessStatusCode) return (true, "Szolgáltatás sikeresen létrehozva!");
                 var error = await response.Content.ReadAsStringAsync();
                 return (false, "Hiba: Lehet, hogy már létezik ilyen nevű szolgáltatás.");
             }
-            catch (Exception ex)
-            {
-                return (false, $"Hálózati hiba: {ex.Message}");
-            }
+            catch (Exception ex) { return (false, $"Hálózati hiba: {ex.Message}"); }
         }
 
-        
-        //--- szolgaltatas torles ---
+        // --- szolgaltatas modositas ---
+        public async Task<(bool IsSuccess, string Message)> UpdateServiceAsync(Service service)
+        {
+            SetAuthorizationHeader();
+            var data = new
+            {
+                name = service.Name,
+                description = service.Description,
+                duration_minutes = service.DurationMinutes,
+                price = service.Price
+            };
+
+            try
+            {
+                var response = await _httpClient.PutAsJsonAsync($"/servicesUpdate/{service.Id}", data);
+                if (response.IsSuccessStatusCode) return (true, "Szolgáltatás sikeresen módosítva!");
+                return (false, "Hiba: Nem sikerült módosítani a szolgáltatást.");
+            }
+            catch (Exception ex) { return (false, $"Hálózati hiba: {ex.Message}"); }
+        }
+
+        // --- szolgaltatas torles ---
         public async Task<(bool IsSuccess, string Message)> DeleteServiceAsync(int id)
         {
             SetAuthorizationHeader();
             try
             {
-                
                 var response = await _httpClient.DeleteAsync($"/servicesDelete/{id}");
-
-                if (response.IsSuccessStatusCode)
-                {
-                    return (true, "Sikeres törlés!");
-                }
-                return (false, "Nem sikerült a törlés (lehet, hogy már nem létezik).");
+                if (response.IsSuccessStatusCode) return (true, "Sikeres törlés!");
+                return (false, "Nem sikerült a törlés.");
             }
-            catch (Exception ex)
-            {
-                return (false, $"Hálózati hiba: {ex.Message}");
-            }
+            catch (Exception ex) { return (false, $"Hálózati hiba: {ex.Message}"); }
         }
 
         // --- profil frissites ---
@@ -226,6 +230,49 @@ namespace BarberManager.Services
             }
             catch { return false; }
         }
+
+
+        // --- idopontok lekeres ---
+        public async Task<List<Appointment>> GetMyAppointmentsAsync()
+        {
+            SetAuthorizationHeader();
+            try
+            {
+                var response = await _httpClient.GetAsync("/appointmentMyBarber");
+                if (response.IsSuccessStatusCode)
+                {
+                    return await response.Content.ReadFromJsonAsync<List<Appointment>>() ?? new List<Appointment>();
+                }
+                return new List<Appointment>();
+            }
+            catch { return new List<Appointment>(); }
+        }
+
+        // --- idopont lemondas ---
+
+        public async Task<bool> CancelAppointmentAsync(int id)
+        {
+            SetAuthorizationHeader();
+            try
+            {
+                var response = await _httpClient.DeleteAsync($"/appointmentDelete/{id}");
+                return response.IsSuccessStatusCode;
+            }
+            catch { return false; }
+        }
+
+        // --- idopont status frissites ---
+        public async Task<bool> UpdateAppointmentStatusAsync(int id, string newStatus)
+        {
+            SetAuthorizationHeader();
+            try
+            {
+                var response = await _httpClient.PutAsJsonAsync($"/appointmentUpdate/{id}", new { status = newStatus });
+                return response.IsSuccessStatusCode;
+            }
+            catch { return false; }
+        }
+
         public void Logout()
         {
             _jwtToken = string.Empty;

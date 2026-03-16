@@ -223,6 +223,16 @@ body {
     border-color: rgba(255, 255, 255, 0.6);
     transform: translateY(-2px);
 }
+.time-slot-btn:disabled {
+    background: rgba(255, 255, 255, 0.15);
+    color: rgba(255, 255, 255, 0.15);
+    border-color: rgba(255, 255, 255, 0.15);
+}
+.time-slot-btn:disabled:hover {
+    transform: none;
+    border-color: rgba(255, 255, 255, 0.15);
+}
+
 
 .time-slot-btn.active {
     background: rgba(0, 0, 0, 0.4);

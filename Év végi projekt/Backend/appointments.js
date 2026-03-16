@@ -26,11 +26,17 @@ router.get("/appointmentMyBarber", Auth(), async (req, res) => {
 });
 
 router.get("/appointmentMyUser", Auth(), async (req, res) => {
+    const userID=req.uid
     try {
         const appointments = await dbHandler.appointments.findAll({
             where: {
-                userID: req.uid
-            }
+                userID: userID,
+                status: "booked"
+            },
+            include: [
+                { model: dbHandler.barber, attributes: ['name'] }, 
+                { model: dbHandler.services, attributes: ['name'] } 
+            ]
         });
         res.json(appointments);
     } catch (error) {
@@ -38,6 +44,34 @@ router.get("/appointmentMyUser", Auth(), async (req, res) => {
         res.status(500).json({ message: "Szerverhiba" });
     }
 });
+
+router.get("/appointmentsByBarber/:barberID/:date", async (req, res) => {
+
+    const { barberID, date } = req.params
+
+    try {
+
+        const startOfDay = new Date(date + " 00:00:00")
+        const endOfDay = new Date(date + " 18:59:59")
+
+        const appointments = await dbHandler.appointments.findAll({
+            where: {
+                barberID: barberID,
+                status: "booked",
+                start_time: {
+                    [Op.between]: [startOfDay, endOfDay]
+                }
+            }
+        })
+
+        res.json(appointments)
+
+    } catch (error) {
+        console.log(error)
+        res.status(500).json({message:"Hiba"})
+    }
+
+})
 
 router.post("/appointmentPost", Auth(), async(req,res)=>{
     const {serviceID, comment, start_time, end_time} = req.body
@@ -69,6 +103,100 @@ router.post("/appointmentPost", Auth(), async(req,res)=>{
 })
 
 
+router.get("/availableSlots/:barberID/:date", async (req,res)=>{
+
+    const {barberID,date} = req.params
+
+    const startDay = new Date(date+" 00:00:00")
+    const endDay = new Date(date+" 23:59:59")
+
+    const workhour = await dbHandler.workhours.findOne({
+        where:{
+            barberID,
+            dayOfWeek:new Date(date).getDay()
+        }
+    })
+
+    const appointments = await dbHandler.appointments.findAll({
+        where:{
+            barberID,
+            status:"booked",
+            start_time:{
+                [Op.between]:[startDay,endDay]
+            }
+        }
+    })
+
+    const slots=[]
+
+    let start = new Date(date+" "+workhour.start_time)
+    let end = new Date(date+" "+workhour.end_time)
+
+    while(start < end){
+
+        const booked = appointments.some(a =>
+            new Date(a.start_time).getTime() === start.getTime()
+        )
+
+        if(!booked){
+            slots.push(start)
+        }
+
+        start = new Date(start.getTime()+30*60000)
+    }
+
+    res.json(slots)
+})
+
+router.post("/appoointmentUserPost", Auth(), async (req, res) => {
+
+    const { barberID, serviceID, start_time, end_time, comment } = req.body
+    const userID = req.uid
+
+    try {
+
+        const existingAppointment = await dbHandler.appointments.findOne({
+            where: {
+                barberID: barberID,
+                start_time: { [Op.lt]: end_time },
+                end_time: { [Op.gt]: start_time }
+            }
+        })
+
+        if (existingAppointment) {
+            return res.status(400).json({
+                message: "Ez az időpont már foglalt ennél a fodrásznál"
+            })
+        }
+
+        await dbHandler.appointments.create({
+            barberID: barberID,
+            serviceID: serviceID,
+            userID: userID,
+            start_time: new Date(start_time),
+            end_time: new Date(end_time),
+            comment: comment,
+            status: "booked"
+        })
+
+        res.status(200).json({
+            message: "Foglalás sikeres"
+        })
+
+    }
+    catch (error) {
+
+        console.log(error)
+
+        res.status(500).json({
+            message: "Szerver hiba"
+        })
+
+    }
+
+})
+
+
 router.delete("/appointmentDelete/:id", Auth(), Log(), async (req, res) => {
     const Id = req.params.id;
     const uid = req.uid;
@@ -86,7 +214,7 @@ router.delete("/appointmentDelete/:id", Auth(), Log(), async (req, res) => {
             
             await appointment.update({
                 status: "canceled",
-                userID: null
+
             });
 
             return res.status(200).send("Időpont lemondva, újra foglalható");
