@@ -65,7 +65,7 @@
 					<TextBlock Grid.Row="15" Grid.Column="0" Text="15:30" Margin="0,-8,5,0" HorizontalAlignment="Right" VerticalAlignment="Top" Foreground="LightGray" FontSize="11"/>
 
 					<TextBlock Grid.Row="16" Grid.Column="0" Text="16:00" Margin="0,-8,5,0" HorizontalAlignment="Right" VerticalAlignment="Top" FontWeight="SemiBold" FontSize="12"/>
-					<TextBlock Grid.Row="1" Grid.Column="0" Text="16:30" Margin="0,-8,5,0" HorizontalAlignment="Right" VerticalAlignment="Top" Foreground="LightGray" FontSize="11"/>
+					<TextBlock Grid.Row="17" Grid.Column="0" Text="16:30" Margin="0,-8,5,0" HorizontalAlignment="Right" VerticalAlignment="Top" Foreground="LightGray" FontSize="11"/>
 
 					<TextBlock Grid.Row="18" Grid.Column="0" Text="17:00" Margin="0,-8,5,0" HorizontalAlignment="Right" VerticalAlignment="Top" FontWeight="SemiBold" FontSize="12"/>
 					<TextBlock Grid.Row="19" Grid.Column="0" Text="17:30" Margin="0,-8,5,0" HorizontalAlignment="Right" VerticalAlignment="Top" Foreground="LightGray" FontSize="11"/>
