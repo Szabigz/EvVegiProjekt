@@ -1,4 +1,4 @@
-const express = require('express');
+/*const express = require('express');
 const app = express();
 
 app.use(express.json());
@@ -7,16 +7,16 @@ app.use(express.json());
 // ---------------- AUTH MOCK ----------------
 const Auth = () => {
     return (req, res, next) => {
-        const trigger = req.body.trigger; // ha tesztben trigger van, Auth ellenőrzést kihagyjuk
-        if (trigger) return next(); // trigger mód, Auth ellenőrzés kihagyva
-
         const authHeader = req.headers.authorization;
-        if (authHeader === 'Bearer fakeToken123') {
-            req.uid = 1;
-            return next();
-        } else {
-            return res.status(401).json({ message: 'Unauthorized' });
+
+        // Ha nincs auth, vagy rossz token
+        if (!authHeader || authHeader !== "Bearer fakeToken123") {
+            return res.status(401).json({ message: "Unauthorized" });
         }
+
+        // Auth OK
+        req.uid = 1;
+        next();
     };
 };
 
@@ -80,16 +80,26 @@ app.delete('/userDelete/:id', (req, res) => {
 });
 
 // ================== APPOINTMENT ROUTES ==================
-app.post('/appointmentPost', (req, res) => {
-    if (req.body.trigger === 'error500') return res.status(500).json({ message: 'Internal Server Error' });
-    if (req.body.trigger === 'error400') return res.status(400).json({ message: 'Bad Request' });
-    res.status(200).json({ message: 'Appointment created' });
-});
+app.post("/appointmentPost", Auth(), async (req, res) => {
+    try {
+      if (req.body.trigger === "error400") return res.status(400).json({ message: "Hibás adat" });
+      if (req.body.trigger === "error500") return res.status(500).json({ message: "Szerverhiba" });
+  
+      // valós adatbeszúrás
+      return res.status(200).json({ message: "Sikeres létrehozás" });
+    } catch (err) {
+      return res.status(500).json({ message: "Szerverhiba" });
+    }
+  });
 
-app.get('/appointmentGet', (req, res) => {
-    if (req.headers.authorization === 'Bearer fakeToken123') return res.status(200).json([{ id: 1, service: 'Haircut' }]);
-    res.status(404).json({ message: 'Not Found' });
-});
+  app.get("/appointmentGet", Auth(), async (req, res) => {
+    try {
+      // ha minden OK, visszaadjuk a találatokat
+      res.status(200).json({ appointments: [] });
+    } catch (err) {
+      res.status(500).json({ message: "Szerverhiba" });
+    }
+  });
 
 app.get('/appointmentMyBarber', (req, res) => {
     if (req.headers.authorization === 'Bearer fakeToken123') return res.status(200).json([]);
@@ -101,20 +111,51 @@ app.get('/appointmentMyUser', (req, res) => {
     res.status(401).json({ message: 'Unauthorized' });
 });
 
-app.put('/appointmentUpdate/:id', (req, res) => {
-    if (req.body.trigger === 'error400') return res.status(400).json({ message: 'Bad Request' });
-    if (req.headers.authorization === 'Bearer fakeToken123') return res.status(200).json({ message: 'Appointment updated' });
-    res.status(401).json({ message: 'Unauthorized' });
-});
-
-app.delete('/appointmentDelete/:id', (req, res) => {
-    if (req.headers.authorization === 'Bearer fakeToken123') return res.status(200).json({ message: 'Appointment deleted' });
-    res.status(403).json({ message: 'Forbidden' });
-});
+app.put("/appointmentUpdate/:id", Auth(), async (req, res) => {
+    try {
+      const { trigger } = req.body;
+  
+      if (trigger === "error400") return res.status(400).json({ message: "Hibás adat" });
+      if (trigger === "error500") return res.status(500).json({ message: "Szerverhiba" });
+  
+      // létező id ellenőrzése
+      const appointmentExists = true; // pl. db lekérdezés
+      if (!appointmentExists) return res.status(404).json({ message: "Nincs ilyen ID" });
+  
+      return res.status(200).json({ message: "Sikeres frissítés" });
+    } catch (err) {
+      return res.status(500).json({ message: "Szerverhiba" });
+    }
+  });
+  app.delete("/appointmentDelete/:id", Auth(), async (req, res) => {
+    try {
+      const id = req.params.id;
+      const trigger = req.body?.trigger;
+  
+      // Teszt trigger-ek
+      if (trigger === "error400") return res.status(400).json({ message: "Hiba 400" });
+      if (trigger === "error500") throw new Error("Hiba 500");
+  
+      // Ellenőrzés, hogy létezik-e a rekord
+      const appointment = await dbHandler.appointments.findOne({ where: { id } });
+      if (!appointment) return res.status(400).json({ message: "Nincs ilyen időpont" });
+  
+      await dbHandler.appointments.destroy({ where: { id } });
+      return res.status(200).json({ message: "Sikeres törlés" });
+  
+    } catch (error) {
+      console.error(error.message);
+      return res.status(500).json({ message: "Szerverhiba" });
+    }
+  });
 
 // ================== SERVICES ROUTES
-app.post('/servicesPost', (req, res) => {
-    if (req.body.trigger === 'error500') return res.status(500).json({ message: 'Internal Server Error' });
+app.post('/servicesPost', Auth(), (req, res) => {
+    const trigger = req.body.trigger;
+
+    if (trigger === 'error400') return res.status(400).json({ message: 'Bad Request' });
+    if (trigger === 'error500') return res.status(500).json({ message: 'Internal Server Error' });
+
     res.status(200).json({ message: 'Service created' });
 });
 
@@ -128,23 +169,46 @@ app.get('/servicesGet', (req, res) => {
     res.status(401).json({ message: 'Unauthorized' });
 });
 
-app.put('/servicesUpdate/:id', (req, res) => {
-    if (req.body.trigger === 'error400') return res.status(400).json({ message: 'Bad Request' });
-    if (req.headers.authorization === 'Bearer fakeToken123') return res.status(200).json({ message: 'Service updated' });
-    res.status(401).json({ message: 'Unauthorized' });
+app.put('/servicesUpdate/:id', Auth(), (req, res) => {
+    const trigger = req.body.trigger;
+
+    if (!req.uid) return res.status(401).json({ message: 'Unauthorized' }); // Auth hiánya
+
+    if (trigger === 'error400') return res.status(400).json({ message: 'Bad Request' });
+    if (trigger === 'error500') return res.status(500).json({ message: 'Internal Server Error' });
+
+    return res.status(200).json({ message: 'Service updated' });
 });
 
-app.delete('/servicesDelete/:id', (req, res) => {
-    if (req.body.trigger === 'error400') return res.status(400).json({ message: 'Bad Request' });
-    if (req.body.trigger === 'error500') return res.status(500).json({error: 'Internal Server Error'});
-    if (req.headers.authorization === 'Bearer fakeToken123') return res.status(200).json({ message: 'Service deleted' });
-    res.status(401).json({ message: 'Unauthorized' });
+app.delete("/servicesDelete/:id", Auth(), async (req, res) => {
+    try {
+        const Id = req.params.id;
+        const barberID = req.uid;
+
+        if (req.body.trigger === 'error400') return res.status(400).json({ message: "Nincs ilyen felhasználó" });
+        if (req.body.trigger === 'error500') throw new Error("Szerverhiba");
+
+        // Mock DB check
+        const oneService = { id: Id, barberID }; // pl. van service
+        if (!oneService) return res.status(400).json({ message: "Nincs ilyen szolgáltatás" });
+
+        // Mock DB delete
+        return res.status(200).json({ message: "Sikeres törlés" });
+
+    } catch (error) {
+        return res.status(500).json({ message: error.message });
+    }
 });
 
 //WORKHOURS ROUTES
-app.post('/workhoursPost', (req, res) => {
-    if (req.body.trigger === 'error500') return res.status(500).json({ message: 'Internal Server Error' });
-    res.status(200).json({ message: 'Workhours created' });
+app.post('/workhoursPost', Auth(), (req, res) => {
+    const trigger = req.body.trigger;
+
+    if (trigger === 'error400') return res.status(400).json({ message: 'Bad Request' });
+    if (trigger === 'error500') return res.status(500).json({ message: 'Internal Server Error' });
+
+    // sima sikeres létrehozás
+    return res.status(200).json({ message: 'Workhours created' });
 });
 
 app.get('/workhoursGet', (req, res) => {
@@ -159,6 +223,7 @@ app.get('/workhoursMy', (req, res) => {
 
 app.put('/workhoursUpdate/:id', (req, res) => {
     if (req.body.trigger === 'error400') return res.status(400).json({ message: 'Bad Request' });
+    if (req.body.trigger === 'error500') return res.status(500).json({ message: 'Internal Server Error' });
     if (req.headers.authorization === 'Bearer fakeToken123') return res.status(200).json({ message: 'Workhours updated' });
     res.status(401).json({ message: 'Unauthorized' });
 });
@@ -174,4 +239,4 @@ app.delete('/workhoursDelete/:id', Auth(), (req, res) => {
 
 
 // Export server for Supertest
-module.exports = app;
+module.exports = app;*/

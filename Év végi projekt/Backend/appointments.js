@@ -102,6 +102,52 @@ router.post("/appointmentPost", Auth(), async(req,res)=>{
     }
 })
 
+
+router.get("/availableSlots/:barberID/:date", async (req,res)=>{
+
+    const {barberID,date} = req.params
+
+    const startDay = new Date(date+" 00:00:00")
+    const endDay = new Date(date+" 23:59:59")
+
+    const workhour = await dbHandler.workhours.findOne({
+        where:{
+            barberID,
+            dayOfWeek:new Date(date).getDay()
+        }
+    })
+
+    const appointments = await dbHandler.appointments.findAll({
+        where:{
+            barberID,
+            status:"booked",
+            start_time:{
+                [Op.between]:[startDay,endDay]
+            }
+        }
+    })
+
+    const slots=[]
+
+    let start = new Date(date+" "+workhour.start_time)
+    let end = new Date(date+" "+workhour.end_time)
+
+    while(start < end){
+
+        const booked = appointments.some(a =>
+            new Date(a.start_time).getTime() === start.getTime()
+        )
+
+        if(!booked){
+            slots.push(start)
+        }
+
+        start = new Date(start.getTime()+30*60000)
+    }
+
+    res.json(slots)
+})
+
 router.post("/appoointmentUserPost", Auth(), async (req, res) => {
 
     const { barberID, serviceID, start_time, end_time, comment } = req.body
@@ -167,8 +213,7 @@ router.delete("/appointmentDelete/:id", Auth(), Log(), async (req, res) => {
          if (appointment.userID === uid) {
             
             await appointment.update({
-                status: "available",
-                userID: null
+                status: "canceled",
             });
 
             return res.status(200).send("Időpont lemondva, újra foglalható");
