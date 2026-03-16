@@ -6,6 +6,7 @@
     "express": "^5.2.1",
     "jest": "^30.3.0",
     "jsonwebtoken": "^9.0.3",
+    "mysql": "^2.18.1",
     "mysql2": "^3.20.0",
     "path": "^0.12.7",
     "sequelize": "^6.37.8",
