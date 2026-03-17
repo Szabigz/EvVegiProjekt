@@ -20,21 +20,29 @@ router.get("/userGet",Auth(), async(req,res)=>{
 })
 
 
-router.post("/userReg", async(req,res)=>{
+router.post("/userReg", async (req, res) => {
     console.log(req.body)
-    const {email, name, password, phoneNum} = req.body
+
+    const { email, name, password, phoneNum } = req.body
+
     const oneUser = await dbHandler.user.findOne({
-        where:{
-            email:email
-        }
-        
+        where: { email: email }
     })
-    if(oneUser){
-        return res.status(400).json({message:"Mar van ilyen"})
+
+    if (oneUser) {
+        return res.status(400).json({ message: "Mar van ilyen" })
     }
-    const hashedPassword = await bcrypt.hash(password,9)
 
+    const hashedPassword = await bcrypt.hash(password, 9)
 
+    const newUser = await dbHandler.user.create({
+        email,
+        name,
+        password: hashedPassword,
+        phoneNum
+    })
+
+    return res.status(200).json(newUser)
 })
 router.post('/userLogin', async(req,res)=>{
     try{

@@ -260,7 +260,7 @@ test('should return 200 status code', async () => {
 })
 
 
-/*describe('testing /appointmentDelete/:id delete route', () => {
+describe('testing /appointmentDelete/:id delete route', () => {
     test('should return 200 status code', async () => {
         const response = await request(server)
         .delete(`/appointmentDelete/${appointmentId}`)
@@ -298,4 +298,4 @@ describe('testing /userDelete/:id delete route', () => {
         .set("Authorization", `Bearer ${userToken}`)
         expect(response.statusCode).toBe(200)
     })
-})*/
+})
