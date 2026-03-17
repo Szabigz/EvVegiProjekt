@@ -1,6 +1,6 @@
 const express = require("express");
 const dbHandler = require("./dbHandler");
-const { Op } = require('sequelize'); // <-- ez kell
+const { Op } = require('sequelize');
 const user = require("./user.js")
 const barber = require('./barber.js')
 const appointments = require("./appointments.js")
@@ -11,12 +11,7 @@ const path = require("path")
 const server = express();
 server.use(express.json());
 server.use(express.static(path.join(__dirname, "../Frontend")));
-dbHandler.user.sync()
-dbHandler.barber.sync()
-dbHandler.services.sync()
-dbHandler.workhours.sync()
-dbHandler.appointments.sync()
-dbHandler.log.sync()
+dbHandler.db.sync() // a tobbit kiszedtem hiszen NEM volt sorrendben, ezzel mindig sorrendben lesz - Csongor 03.17
 require('dotenv').config()
 
 server.get("/", (req,res)=>{
