@@ -17,7 +17,7 @@ async function userLogin() {
         if (response.ok) { 
             alert(data.message || "Sikeres bejelentkezés!")
             sessionStorage.setItem('token', data.token)
-            window.location.href = "booking.html"
+            window.location.href = "/HTML/booking.html"
         } else {
             alert("Hiba: " + data.message)
         }
@@ -47,7 +47,7 @@ async function userRegister() {
         if (response.ok) {
             sessionStorage.setItem("token", data.token)
             alert(data.message)
-            window.location.href = "booking.html"
+            window.location.href = "/HTML/booking.html"
         } else {
             alert("Regisztrációs hiba: " + data.message)
         }

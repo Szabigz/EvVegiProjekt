@@ -11,6 +11,19 @@ router.get("/servicesGet",Auth(), async(req,res)=>{
     return res.json(await dbHandler.services.findAll())
 })
 
+router.get("/services", async (req, res) => {
+    try {
+        const services = await dbHandler.services.findAll({
+            attributes: ["id", "name", "price"]
+        })
+
+        res.json(services)
+    } catch (error) {
+        console.log(error)
+        res.status(500).json({ message: "Hiba" })
+    }
+})
+
 router.get("/servicesMy", Auth(), async (req, res) => {
     try {
 
