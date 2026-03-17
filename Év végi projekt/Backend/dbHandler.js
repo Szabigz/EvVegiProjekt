@@ -3,6 +3,12 @@ const { Sequelize, DataTypes } = require("sequelize");
 const dbHandler = new Sequelize("barberShop", "root", "", {
   dialect: "mysql",
   host: "localhost",
+  timezone: '+01:00', // +1 idozona
+  dialectOptions: {
+    dateStrings: true, // ezzel stringkent kezeli a datumokat :)
+    typeCast: true
+  },
+  timezone: '+01:00' 
 });
 
 /* USERS */
@@ -145,7 +151,7 @@ const appointmentsTable = dbHandler.define("appointments", {
   status: {
     type: DataTypes.STRING,
     allowNull: false,
-    defaultValue:"available"
+    defaultValue:"booked" // ezt atirtam booked-ra hiszen nem kell olyan hogy available - de ezt mar mondtam amugy  - Csongor 03.17
   },
   comment: {
     type: DataTypes.STRING,

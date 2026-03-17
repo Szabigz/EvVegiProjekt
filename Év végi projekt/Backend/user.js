@@ -19,6 +19,18 @@ router.get("/userGet",Auth(), async(req,res)=>{
     return res.json(await dbHandler.user.findAll({where:{id:req.uid}}))
 })
 
+// route a userek lekeresehez, a barbernek kell  - Csongor 03.17
+router.get("/usersAll", Auth(), async (req, res) => {
+    try {
+        const users = await dbHandler.user.findAll({
+            attributes: ['id', 'name', 'email']
+        });
+        res.json(users);
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({ message: "Szerverhiba a vendégek lekérésekor" });
+    }
+});
 
 router.post("/userReg", async (req, res) => {
     console.log(req.body)

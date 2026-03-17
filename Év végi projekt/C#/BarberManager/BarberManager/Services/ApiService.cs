@@ -19,10 +19,15 @@ namespace BarberManager.Services
 
         public ApiService()
         {
-            _httpClient = new HttpClient 
-            {
-                BaseAddress = new Uri(BaseUrl) 
-            };
+            _httpClient = new HttpClient { BaseAddress = new Uri(BaseUrl) };
+        }
+
+        private JsonSerializerOptions GetJsonOptions()
+        {
+            var options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
+            options.Converters.Add(new LocalTimeConverter());
+            options.NumberHandling = JsonNumberHandling.AllowReadingFromString | JsonNumberHandling.WriteAsString;
+            return options;
         }
 
         private void SetAuthorizationHeader()
@@ -42,7 +47,7 @@ namespace BarberManager.Services
                 var response = await _httpClient.PostAsJsonAsync("/barberReg", registerData);
                 return response.IsSuccessStatusCode ? (true, "Sikeres regisztráció!") : (false, "Hiba a regisztráció során.");
             }
-            catch (Exception ex) { return (false, ex.Message); }
+            catch { return (false, "Hálózati hiba"); }
         }
 
         // --- login ---
@@ -53,9 +58,7 @@ namespace BarberManager.Services
             {
                 var response = await _httpClient.PostAsJsonAsync("/barberLogin", loginData);
                 var content = await response.Content.ReadAsStringAsync();
-
-                var options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
-                var result = JsonSerializer.Deserialize<LoginResponse>(content, options);
+                var result = JsonSerializer.Deserialize<LoginResponse>(content, GetJsonOptions());
 
                 if (response.IsSuccessStatusCode && result != null && !string.IsNullOrEmpty(result.Token))
                 {
@@ -65,32 +68,46 @@ namespace BarberManager.Services
                 }
                 return (false, result?.Message ?? "Hibás hitelesítés!");
             }
-            catch (Exception ex) { return (false, $"Hálózati hiba: {ex.Message}"); }
+            catch { return (false, "Hálózati hiba"); }
         }
 
         // --- barber lekeres ---
         public async Task<Barber?> GetBarberInfoAsync()
         {
+            SetAuthorizationHeader();
             try
             {
                 var response = await _httpClient.GetAsync("/barberGet");
                 if (!response.IsSuccessStatusCode) return null;
-
-                string json = await response.Content.ReadAsStringAsync();
-                var options = new JsonSerializerOptions
-                {
-                    PropertyNameCaseInsensitive = true,
-                    NumberHandling = JsonNumberHandling.AllowReadingFromString | JsonNumberHandling.WriteAsString
-                };
-
-                if (json.Trim().StartsWith("["))
-                {
-                    var list = JsonSerializer.Deserialize<List<Barber>>(json, options);
-                    return list?.FirstOrDefault();
-                }
-                return JsonSerializer.Deserialize<Barber>(json, options);
+                var content = await response.Content.ReadAsStringAsync();
+                var list = JsonSerializer.Deserialize<List<Barber>>(content, GetJsonOptions());
+                return list?.FirstOrDefault();
             }
             catch { return null; }
+        }
+
+        // --- profil frissites ---
+        public async Task<(bool IsSuccess, string Message)> UpdateBarberProfileAsync(int id, string name, string phoneNum, string? password = null)
+        {
+            SetAuthorizationHeader();
+
+            var updateData = new Dictionary<string, object>
+            {
+                { "name", name },
+                { "phoneNum", phoneNum }
+            };
+
+            if (!string.IsNullOrEmpty(password))
+            {
+                updateData.Add("password", password);
+            }
+
+            try
+            {
+                var response = await _httpClient.PutAsJsonAsync($"/barberUpdate/{id}", updateData);
+                return response.IsSuccessStatusCode ? (true, "Profil frissítve!") : (false, "Hiba a mentéskor.");
+            }
+            catch { return (false, "Hálózati hiba."); }
         }
 
         // --- szolgaltatas lekeres ---
@@ -100,12 +117,8 @@ namespace BarberManager.Services
             try
             {
                 var response = await _httpClient.GetAsync("/servicesMy");
-                if (response.IsSuccessStatusCode)
-                {
-                    var options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
-                    return await response.Content.ReadFromJsonAsync<List<Service>>(options) ?? new List<Service>();
-                }
-                return new List<Service>();
+                var content = await response.Content.ReadAsStringAsync();
+                return JsonSerializer.Deserialize<List<Service>>(content, GetJsonOptions()) ?? new List<Service>();
             }
             catch { return new List<Service>(); }
         }
@@ -114,43 +127,24 @@ namespace BarberManager.Services
         public async Task<(bool IsSuccess, string Message)> CreateServiceAsync(Service service)
         {
             SetAuthorizationHeader();
-            var data = new
-            {
-                name = service.Name,
-                description = service.Description,
-                duration_minutes = service.DurationMinutes,
-                price = service.Price
-            };
-
             try
             {
-                var response = await _httpClient.PostAsJsonAsync("/servicesPost", data);
-                if (response.IsSuccessStatusCode) return (true, "Szolgáltatás sikeresen létrehozva!");
-                var error = await response.Content.ReadAsStringAsync();
-                return (false, "Hiba: Lehet, hogy már létezik ilyen nevű szolgáltatás.");
+                var response = await _httpClient.PostAsJsonAsync("/servicesPost", service);
+                return response.IsSuccessStatusCode ? (true, "Létrehozva!") : (false, "Hiba.");
             }
-            catch (Exception ex) { return (false, $"Hálózati hiba: {ex.Message}"); }
+            catch { return (false, "Hiba."); }
         }
 
         // --- szolgaltatas modositas ---
         public async Task<(bool IsSuccess, string Message)> UpdateServiceAsync(Service service)
         {
             SetAuthorizationHeader();
-            var data = new
-            {
-                name = service.Name,
-                description = service.Description,
-                duration_minutes = service.DurationMinutes,
-                price = service.Price
-            };
-
             try
             {
-                var response = await _httpClient.PutAsJsonAsync($"/servicesUpdate/{service.Id}", data);
-                if (response.IsSuccessStatusCode) return (true, "Szolgáltatás sikeresen módosítva!");
-                return (false, "Hiba: Nem sikerült módosítani a szolgáltatást.");
+                var response = await _httpClient.PutAsJsonAsync($"/servicesUpdate/{service.Id}", service);
+                return response.IsSuccessStatusCode ? (true, "Módosítva!") : (false, "Hiba.");
             }
-            catch (Exception ex) { return (false, $"Hálózati hiba: {ex.Message}"); }
+            catch { return (false, "Hiba."); }
         }
 
         // --- szolgaltatas torles ---
@@ -160,40 +154,10 @@ namespace BarberManager.Services
             try
             {
                 var response = await _httpClient.DeleteAsync($"/servicesDelete/{id}");
-                if (response.IsSuccessStatusCode) return (true, "Sikeres törlés!");
-                return (false, "Nem sikerült a törlés.");
+                return response.IsSuccessStatusCode ? (true, "Törölve!") : (false, "Hiba.");
             }
-            catch (Exception ex) { return (false, $"Hálózati hiba: {ex.Message}"); }
+            catch { return (false, "Hiba."); }
         }
-
-        // --- profil frissites ---
-        public async Task<(bool IsSuccess, string Message)> UpdateBarberProfileAsync(int id, string name, string phoneNum)
-        {
-            SetAuthorizationHeader();
-
-            var updateData = new
-            {
-                name = name,
-                phoneNum = phoneNum
-            };
-
-            try
-            {
-                var response = await _httpClient.PutAsJsonAsync($"/barberUpdate/{id}", updateData);
-
-                if (response.IsSuccessStatusCode)
-                {
-                    return (true, "Profil sikeresen frissítve!");
-                }
-
-                return (false, "Nem sikerült a profil frissítése.");
-            }
-            catch (Exception ex)
-            {
-                return (false, $"Hálózati hiba: {ex.Message}");
-            }
-        }
-
 
         // --- munkaido lekeres ---
         public async Task<List<WorkHour>> GetMyWorkHoursAsync()
@@ -202,12 +166,8 @@ namespace BarberManager.Services
             try
             {
                 var response = await _httpClient.GetAsync("/workhoursMy");
-                if (response.IsSuccessStatusCode)
-                {
-                    var options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
-                    return await response.Content.ReadFromJsonAsync<List<WorkHour>>(options) ?? new List<WorkHour>();
-                }
-                return new List<WorkHour>();
+                var content = await response.Content.ReadAsStringAsync();
+                return JsonSerializer.Deserialize<List<WorkHour>>(content, GetJsonOptions()) ?? new List<WorkHour>();
             }
             catch { return new List<WorkHour>(); }
         }
@@ -216,21 +176,15 @@ namespace BarberManager.Services
         public async Task<bool> SaveWorkHourAsync(WorkHour wh)
         {
             SetAuthorizationHeader();
-            var data = new { dayOfWeek = wh.DayOfWeek, start_time = wh.StartTime, end_time = wh.EndTime };
-
             try
             {
-                HttpResponseMessage response;
-                if (wh.Id == 0) // Ha nincs ID, akkor POST
-                    response = await _httpClient.PostAsJsonAsync("/workhoursPost", data);
-                else // Ha van ID, akkor MODOSITAS
-                    response = await _httpClient.PutAsJsonAsync($"/workhoursUpdate/{wh.Id}", data);
-
-                return response.IsSuccessStatusCode;
+                HttpResponseMessage resp = (wh.Id == 0)
+                    ? await _httpClient.PostAsJsonAsync("/workhoursPost", wh)
+                    : await _httpClient.PutAsJsonAsync($"/workhoursUpdate/{wh.Id}", wh);
+                return resp.IsSuccessStatusCode;
             }
             catch { return false; }
         }
-
 
         // --- idopontok lekeres ---
         public async Task<List<Appointment>> GetMyAppointmentsAsync()
@@ -239,38 +193,52 @@ namespace BarberManager.Services
             try
             {
                 var response = await _httpClient.GetAsync("/appointmentMyBarber");
-                if (response.IsSuccessStatusCode)
-                {
-                    return await response.Content.ReadFromJsonAsync<List<Appointment>>() ?? new List<Appointment>();
-                }
-                return new List<Appointment>();
+                var content = await response.Content.ReadAsStringAsync();
+                return JsonSerializer.Deserialize<List<Appointment>>(content, GetJsonOptions()) ?? new List<Appointment>();
             }
             catch { return new List<Appointment>(); }
         }
 
-        // --- idopont lemondas ---
+        // --- idopont letrehozas ---
+        public async Task<(bool IsSuccess, string Message)> PostAppointmentAsync(int serviceId, int? userId, DateTime start, DateTime end, string comment)
+        {
+            SetAuthorizationHeader();
+            var data = new { serviceID = serviceId, userID = userId, start_time = start.ToString("yyyy-MM-ddTHH:mm:ss"), end_time = end.ToString("yyyy-MM-ddTHH:mm:ss"), comment };
+            try
+            {
+                var response = await _httpClient.PostAsJsonAsync("/appointmentPost", data);
+                if (response.IsSuccessStatusCode) return (true, "Sikeres!");
+                return (false, "Foglalt vagy hiba.");
+            }
+            catch { return (false, "Hiba."); }
+        }
 
+        // --- idopont lemondas ---
         public async Task<bool> CancelAppointmentAsync(int id)
         {
             SetAuthorizationHeader();
-            try
-            {
-                var response = await _httpClient.DeleteAsync($"/appointmentDelete/{id}");
-                return response.IsSuccessStatusCode;
-            }
+            try { return (await _httpClient.DeleteAsync($"/appointmentDelete/{id}")).IsSuccessStatusCode; }
             catch { return false; }
         }
-
         // --- idopont status frissites ---
         public async Task<bool> UpdateAppointmentStatusAsync(int id, string newStatus)
         {
             SetAuthorizationHeader();
+            try { return (await _httpClient.PutAsJsonAsync($"/appointmentUpdate/{id}", new { status = newStatus })).IsSuccessStatusCode; }
+            catch { return false; }
+        }
+
+        // --- felhasznalok lekeres ---
+        public async Task<List<User>> GetAllUsersAsync()
+        {
+            SetAuthorizationHeader();
             try
             {
-                var response = await _httpClient.PutAsJsonAsync($"/appointmentUpdate/{id}", new { status = newStatus });
-                return response.IsSuccessStatusCode;
+                var response = await _httpClient.GetAsync("/usersAll");
+                var content = await response.Content.ReadAsStringAsync();
+                return JsonSerializer.Deserialize<List<User>>(content, GetJsonOptions()) ?? new List<User>();
             }
-            catch { return false; }
+            catch { return new List<User>(); }
         }
 
         public void Logout()
@@ -283,6 +251,22 @@ namespace BarberManager.Services
         {
             [JsonPropertyName("message")] public string Message { get; set; } = string.Empty;
             [JsonPropertyName("token")] public string Token { get; set; } = string.Empty;
+        }
+    }
+
+    // --- idozona fix ---
+    public class LocalTimeConverter : JsonConverter<DateTime>
+    {
+        public override DateTime Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+        {
+            var dateStr = reader.GetString();
+            if (string.IsNullOrEmpty(dateStr)) return DateTime.MinValue;
+            return DateTime.Parse(dateStr);
+        }
+
+        public override void Write(Utf8JsonWriter writer, DateTime value, JsonSerializerOptions options)
+        {
+            writer.WriteStringValue(value.ToString("yyyy-MM-ddTHH:mm:ss"));
         }
     }
 }

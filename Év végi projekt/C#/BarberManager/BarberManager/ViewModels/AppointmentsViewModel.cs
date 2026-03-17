@@ -14,16 +14,24 @@ namespace BarberManager.ViewModels
         private DateTime _currentMonday;
         private int _weekShift;
 
-        // naptar tartalma
+        // --- naptar tartalma es panelek ---
         [ObservableProperty] private ObservableCollection<AppointmentCard> _appointments = new();
-
-        // panelek kapcsolgatasa
         [ObservableProperty] private bool _isAddingAppointment;
         [ObservableProperty] private bool _isViewingDetails;
         [ObservableProperty] private AppointmentCard? _selectedAppointment;
-
-        // gomb szovege, attol fuggeon mit akarok csinalni
         [ObservableProperty] private string _actionButtonText = "Időpont Lemondása";
+
+        // --- uj foglalas adatok, + dropdown adatok ---
+        [ObservableProperty] private ObservableCollection<User> _allUsers = new();
+        [ObservableProperty] private ObservableCollection<Service> _allServices = new();
+
+        [ObservableProperty] private User? _newSelectedUser;
+        [ObservableProperty] private Service? _newSelectedService;
+        [ObservableProperty] private DateTimeOffset _newDate = DateTimeOffset.Now;
+        [ObservableProperty] private string _newTime = "10:00";
+        [ObservableProperty] private string _newComment = string.Empty;
+        [ObservableProperty] private string _addErrorMessage = string.Empty;
+        [ObservableProperty] private bool _isSaving;
 
         // datum figyeles
         public DateTime CurrentMonday
@@ -32,7 +40,7 @@ namespace BarberManager.ViewModels
             set { SetProperty(ref _currentMonday, value); UpdateDays(); }
         }
 
-        // napok formázása... unom már
+        // napok
         public string Mon => CurrentMonday.ToString("MM.dd");
         public string Tue => CurrentMonday.AddDays(1).ToString("MM.dd");
         public string Wed => CurrentMonday.AddDays(2).ToString("MM.dd");
@@ -45,9 +53,18 @@ namespace BarberManager.ViewModels
             _api = api;
             CurrentMonday = GetMonday(DateTime.Today);
             _ = LoadData();
+            _ = LoadDropdownsAsync(); // vendegek es szolgaltatasok betoltese indulaskor
         }
 
-        // adatok lekerese backendbol, ha nem megy felrobbantom izraelt
+        private async Task LoadDropdownsAsync()
+        {
+            var users = await _api.GetAllUsersAsync();
+            var services = await _api.GetServicesAsync();
+
+            AllUsers = new ObservableCollection<User>(users);
+            AllServices = new ObservableCollection<Service>(services);
+        }
+
         public async Task LoadData()
         {
             var data = await _api.GetMyAppointmentsAsync();
@@ -55,7 +72,6 @@ namespace BarberManager.ViewModels
 
             foreach (var dbApp in data)
             {
-                // adatbazisbol valami lathatot kell csinalni, ez lehete jobb is de erdekel
                 newList.Add(new AppointmentCard
                 {
                     Id = dbApp.Id,
@@ -71,7 +87,6 @@ namespace BarberManager.ViewModels
 
                     ServiceName = dbApp.Service?.Name ?? "Szolgáltatás",
                     ServicePrice = dbApp.Service != null ? $"{dbApp.Service.Price} Ft" : "Ismeretlen ár",
-
                     TimeString = $"{dbApp.StartTime:HH:mm} - {dbApp.EndTime:HH:mm}"
                 });
             }
@@ -94,14 +109,60 @@ namespace BarberManager.ViewModels
             IsViewingDetails = true;
         }
 
-        // panel bezarasa
+        [RelayCommand] public void CloseDetails() { IsViewingDetails = false; SelectedAppointment = null; }
+
         [RelayCommand]
-        public void CloseDetails()
+        public void ShowAddPanel()
         {
-            IsViewingDetails = false;
-            SelectedAppointment = null;
+            AddErrorMessage = string.Empty;
+            NewComment = string.Empty;
+            NewTime = "10:00";
+            NewSelectedUser = null;
+            NewSelectedService = null;
+            NewDate = DateTimeOffset.Now;
+
+            IsAddingAppointment = true;
         }
 
+        [RelayCommand] public void CloseAddPanel() => IsAddingAppointment = false;
+
+        // ---  uj foglalas kuldes ---
+        [RelayCommand]
+        public async Task SaveAppointmentAsync()
+        {
+            if (NewSelectedService == null) { AddErrorMessage = "Válassz szolgáltatást!"; return; }
+
+            string[] timeParts = NewTime.Split(':');
+            if (timeParts.Length < 2 || !int.TryParse(timeParts[0], out int hour) || !int.TryParse(timeParts[1], out int min))
+            {
+                AddErrorMessage = "Rossz időformátum! (Pl.: 10:30)";
+                return;
+            }
+
+            IsSaving = true;
+            AddErrorMessage = string.Empty;
+
+            try
+            {
+                // idozona nelkuli datum es ido
+                DateTime raw = NewDate.DateTime.Date;
+                DateTime startDate = new DateTime(raw.Year, raw.Month, raw.Day, hour, min, 0, DateTimeKind.Unspecified);
+
+                int duration = NewSelectedService.DurationMinutes > 0 ? NewSelectedService.DurationMinutes : 30;
+                DateTime endDate = startDate.AddMinutes(duration);
+
+                var result = await _api.PostAppointmentAsync(NewSelectedService.Id, NewSelectedUser?.Id, startDate, endDate, NewComment);
+
+                if (result.IsSuccess)
+                {
+                    IsAddingAppointment = false;
+                    await LoadData();
+                }
+                else { AddErrorMessage = result.Message; }
+            }
+            catch { AddErrorMessage = "Hiba történt a mentés során."; }
+            finally { IsSaving = false; }
+        }
         // lemondas vagy torles
         [RelayCommand]
         public async Task ExecuteAction()
@@ -116,7 +177,7 @@ namespace BarberManager.ViewModels
             }
             else
             {
-                // csak egy sima lemondas nem tudom minek
+                // sima lemondas
                 var success = await _api.UpdateAppointmentStatusAsync(SelectedAppointment.Id, "canceled");
                 if (success) { IsViewingDetails = false; await LoadData(); }
             }

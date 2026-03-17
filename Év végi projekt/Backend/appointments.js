@@ -150,8 +150,8 @@ router.post("/appointmentUserPost", Auth(), async (req, res) => {
             barberID: barberID,
             serviceID: serviceID,
             userID: userID,
-            start_time: new Date(start_time),
-            end_time: new Date(end_time),
+            start_time: start_time, //ezek mostmar stringek  - Csongor 03.17
+            end_time: end_time, //ezek mostmar stringek  - Csongor 03.17
             comment: comment,
             status: "booked"
         })
