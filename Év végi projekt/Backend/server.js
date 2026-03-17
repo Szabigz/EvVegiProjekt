@@ -20,7 +20,7 @@ dbHandler.log.sync()
 require('dotenv').config()
 
 server.get("/", (req,res)=>{
-    res.sendFile (path.join(__dirname, "../Frontend/mainpage.html"))
+    res.sendFile (path.join(__dirname, "../Frontend/HTML/mainpage.html"))
 })
 const PORT = process.env.PORT
 

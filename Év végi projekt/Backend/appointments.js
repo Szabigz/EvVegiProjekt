@@ -116,7 +116,9 @@ router.get("/availableSlots/:barberID/:date", async (req,res)=>{
             dayOfWeek:new Date(date).getDay()
         }
     })
-
+    if (!workhour) {
+        return res.json([])
+    }
     const appointments = await dbHandler.appointments.findAll({
         where:{
             barberID,
