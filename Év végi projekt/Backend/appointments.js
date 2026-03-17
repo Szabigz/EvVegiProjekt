@@ -60,14 +60,7 @@ router.get("/availableSlots/:barberID/:date", async (req,res)=>{
         }
     })
     if (!workhour) {
-<<<<<<< HEAD
-        return res.status(404).json({ message: "Nincs beállítva munkaidő erre a napra" });
-    }
 
-=======
-        return res.json([])
-    }
->>>>>>> 901d64dbd371199b5eaf696402090febb38c75bf
     const appointments = await dbHandler.appointments.findAll({
         where:{
             barberID,
@@ -76,7 +69,7 @@ router.get("/availableSlots/:barberID/:date", async (req,res)=>{
                 [Op.between]:[startDay,endDay]
             }   
         }
-    })
+    })}
 
     const slots=[]
 
