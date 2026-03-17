@@ -14,7 +14,7 @@ router.get("/appointmentMyBarber", Auth(), async (req, res) => {
         const appointments = await dbHandler.appointments.findAll({
             where: { barberID: req.uid },
             include: [
-                { model: dbHandler.user, attributes: ['name', 'email','phoneNum '] },
+                { model: dbHandler.user, attributes: ['name', 'email','phoneNum'] },
                 { model: dbHandler.services, attributes: ['name', 'price'] }
             ]
         });
@@ -59,6 +59,9 @@ router.get("/availableSlots/:barberID/:date", async (req,res)=>{
             dayOfWeek:new Date(date).getDay()
         }
     })
+    if (!workhour) {
+        return res.status(404).json({ message: "Nincs beállítva munkaidő erre a napra" });
+    }
 
     const appointments = await dbHandler.appointments.findAll({
         where:{
@@ -66,7 +69,7 @@ router.get("/availableSlots/:barberID/:date", async (req,res)=>{
             status:"booked",
             start_time:{
                 [Op.between]:[startDay,endDay]
-            }
+            }   
         }
     })
 
@@ -88,7 +91,7 @@ router.get("/availableSlots/:barberID/:date", async (req,res)=>{
         start = new Date(start.getTime()+30*60000)
     }
 
-    res.json(slots)
+    res.status(200).json(slots)
 })
 
 
@@ -128,7 +131,7 @@ router.post("/appointmentPost", Auth(), async(req,res)=>{
 
 
 
-router.post("/appoointmentUserPost", Auth(), async (req, res) => {
+router.post("/appointmentUserPost", Auth(), async (req, res) => {
     const { barberID, serviceID, start_time, end_time, comment } = req.body
     const userID = req.uid
     try {
@@ -136,7 +139,8 @@ router.post("/appoointmentUserPost", Auth(), async (req, res) => {
             where: {
                 barberID: barberID,
                 start_time: { [Op.lt]: end_time },
-                end_time: { [Op.gt]: start_time }
+                end_time: { [Op.gt]: start_time },
+                status: { [Op.ne]: 'canceled' }
             }
         })
         if (existingAppointment) {
@@ -144,7 +148,7 @@ router.post("/appoointmentUserPost", Auth(), async (req, res) => {
                 message: "Ez az időpont már foglalt ennél a fodrásznál"
             })
         }
-        await dbHandler.appointments.create({
+        const newAppointment = await dbHandler.appointments.create({
             barberID: barberID,
             serviceID: serviceID,
             userID: userID,
@@ -154,7 +158,8 @@ router.post("/appoointmentUserPost", Auth(), async (req, res) => {
             status: "booked"
         })
         res.status(200).json({
-            message: "Foglalás sikeres"
+            message: "Foglalás sikeres",
+            id:newAppointment.id
         })
     }
     catch(error){
@@ -189,8 +194,7 @@ router.delete("/appointmentDelete/:id", Auth(), Log(), async (req, res) => {
             return res.status(200).send("Időpont lemondva, újra foglalható");
         }
         return res.status(403).send("Nincs jogosultságod lemondani ezt az időpontot");
-
-
+        
         
     } catch (err) {
         console.error("Hiba a lemondás közben:", err);

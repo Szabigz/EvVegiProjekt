@@ -108,6 +108,30 @@ describe('testing /appointmentPost post route', () => {
     });
 });
 
+
+describe('testing /appointmentUserPost post route', () => {
+    test('should return 200 status code', async () => {
+        const start_time = "2026-03-20 10:00"
+        const end_time = "2026-03-20 11:00"
+        const response = await request(server)
+            .post('/appointmentUserPost') // <<< itt a helyes endpoint
+            .send({ 
+                barberID:barberId,
+                serviceID: serviceId, 
+                start_time: start_time, 
+                end_time: end_time, 
+                comment: "asd",
+                staus:"booked"
+            })
+            .set("Authorization", `Bearer ${userToken}`);
+
+        console.log("APPOINTMENT POST RESPONSE:", response.body);
+        expect(response.body.id).toBeDefined();  // biztos, hogy van ID
+        appointmentId = response.body.id;         // eltároljuk a későbbi tesztekhez
+        expect(response.statusCode).toBe(200);
+    });
+});
+
 //Get testek
 
 describe("testing /barberGet get route", () =>{
@@ -145,7 +169,13 @@ describe("testing /servicesMy get route", () =>{
     })
 })
 
-
+describe("testing /servicesMy get route", () =>{
+    test("should return 200 status code", async()=>{
+        const response = await request(server).get('/servicesMy').set("Authorization", `Bearer ${barberToken}`)
+        expect(response.statusCode).toBe(200)
+        
+    })
+})
 
 describe("testing /workhoursGet get route", () =>{
     test("should return 200 status code", async()=>{
@@ -155,6 +185,13 @@ describe("testing /workhoursGet get route", () =>{
     })
 })
 
+describe("testing /workhoursMy get route", () =>{
+    test("should return 200 status code", async()=>{
+        const response = await request(server).get('/workhoursMy').set("Authorization", `Bearer ${barberToken}`)
+        expect(response.statusCode).toBe(200)
+        
+    })
+})
 
 describe("testing /appointmentMyBarber get route", () =>{
     test("should return 200 status code", async()=>{
@@ -174,6 +211,34 @@ describe("testing /appointmentMyUser get route", () =>{
 })
 
 
+describe('GET /availableSlots/:barberID/:date', () => {
+    let barberID; 
+    let workhoursDate;
+
+    beforeAll(async () => {
+        
+        barberID = 36; 
+        workhoursDate = "2026-03-18";
+    });
+
+    test('should return available slots for a barber', async () => {
+        const response = await request(server)
+            .get(`/availableSlots/${barberID}/${workhoursDate}`);
+
+        expect(response.statusCode).toBe(200);
+
+        expect(Array.isArray(response.body)).toBe(true);
+
+        response.body.forEach(slot => {
+            expect(!isNaN(new Date(slot).getTime())).toBe(true);
+        });
+
+        const firstSlotTimestamp = new Date(`${workhoursDate} 10:00`).getTime();
+        const hasFirst = response.body.some(slot => new Date(slot).getTime() === firstSlotTimestamp);
+        expect(hasFirst).toBe(true);
+    });
+});
+
 describe("testing /workhoursGet get route", () =>{
     test("should return 200 status code", async()=>{
         const response = await request(server).get('/workhoursGet').set("Authorization", `Bearer ${barberToken}`)
@@ -183,13 +248,7 @@ describe("testing /workhoursGet get route", () =>{
 })
 
 
-describe("testing /workhoursMy get route", () =>{
-    test("should return 200 status code", async()=>{
-        const response = await request(server).get('/workhoursMy').set("Authorization", `Bearer ${barberToken}`)
-        expect(response.statusCode).toBe(200)
-        
-    })
-})
+
 
 //Update Testek
 
@@ -263,11 +322,12 @@ test('should return 200 status code', async () => {
 describe('testing /appointmentDelete/:id delete route', () => {
     test('should return 200 status code', async () => {
         const response = await request(server)
-        .delete(`/appointmentDelete/${appointmentId}`)
-        .set("Authorization", `Bearer ${barberToken}`)
-        expect(response.statusCode).toBe(200)
-    })
-})
+            .delete(`/appointmentDelete/${appointmentId}`)
+            .set("Authorization", `Bearer ${userToken}`); // vagy barberToken
+
+        expect(response.statusCode).toBe(200);
+    });
+});
 
 describe('testing /workhoursDelete/:id delete route', () => {
 test('should return 200 status code', async () => {
