@@ -14,8 +14,8 @@ router.get("/appointmentMyBarber", Auth(), async (req, res) => {
         const appointments = await dbHandler.appointments.findAll({
             where: { barberID: req.uid },
             include: [
-                { model: dbHandler.user, attributes: ['name'] },
-                { model: dbHandler.services, attributes: ['name'] }
+                { model: dbHandler.user, attributes: ['name', 'email','phoneNum '] },
+                { model: dbHandler.services, attributes: ['name', 'price'] }
             ]
         });
         res.json(appointments);
@@ -44,63 +44,6 @@ router.get("/appointmentMyUser", Auth(), async (req, res) => {
         res.status(500).json({ message: "Szerverhiba" });
     }
 });
-
-router.get("/appointmentsByBarber/:barberID/:date", async (req, res) => {
-
-    const { barberID, date } = req.params
-
-    try {
-
-        const startOfDay = new Date(date + " 00:00:00")
-        const endOfDay = new Date(date + " 18:59:59")
-
-        const appointments = await dbHandler.appointments.findAll({
-            where: {
-                barberID: barberID,
-                status: "booked",
-                start_time: {
-                    [Op.between]: [startOfDay, endOfDay]
-                }
-            }
-        })
-
-        res.json(appointments)
-
-    } catch (error) {
-        console.log(error)
-        res.status(500).json({message:"Hiba"})
-    }
-
-})
-
-router.post("/appointmentPost", Auth(), async(req,res)=>{
-    const {serviceID, comment, start_time, end_time} = req.body
-    const oneAppointment = await dbHandler.appointments.findOne({
-        where: {
-                barberID: req.uid,
-                start_time: { [Op.lt]: end_time },
-                end_time: { [Op.gt]: start_time }
-            }
-    })
-    if(oneAppointment){
-        return res.status(400).json({ message: "Ez a barber már foglalt az adott időintervallumban" });
-    }
-    try {
-       const newAppointment = await dbHandler.appointments.create({
-        barberID:req.uid,
-        serviceID:serviceID,
-        userID:null,
-        start_time:start_time,
-        end_time:end_time,
-        comment:comment
-        
-    })
-    res.status(200).json({message: 'sikeres regisztracio', id:newAppointment.id}).end()
-    } catch (error) {
-        console.log(error)
-        res.status(500).json(error)
-    }
-})
 
 
 router.get("/availableSlots/:barberID/:date", async (req,res)=>{
@@ -149,6 +92,43 @@ router.get("/availableSlots/:barberID/:date", async (req,res)=>{
 
     res.json(slots)
 })
+
+
+
+
+
+router.post("/appointmentPost", Auth(), async(req,res)=>{
+    const {serviceID, comment, start_time, end_time, userID} = req.body
+    const oneAppointment = await dbHandler.appointments.findOne({
+        where: {
+                barberID: req.uid,
+                start_time: { [Op.lt]: end_time },
+                end_time: { [Op.gt]: start_time },
+                status: { [Op.ne]: 'canceled' }
+            }
+    })
+    if(oneAppointment){
+        return res.status(400).json({ message: "Ez a barber már foglalt az adott időintervallumban" });
+    }
+    try {
+       const newAppointment = await dbHandler.appointments.create({
+        barberID:req.uid,
+        serviceID:serviceID,
+        userID:userID,
+        start_time:start_time,
+        end_time:end_time,
+        comment:comment
+        
+    })
+    res.status(200).json({message: 'sikeres regisztracio', id:newAppointment.id}).end()
+    } catch (error) {
+        console.log(error)
+        res.status(500).json(error)
+    }
+})
+
+
+
 
 router.post("/appoointmentUserPost", Auth(), async (req, res) => {
     const { barberID, serviceID, start_time, end_time, comment } = req.body
@@ -253,6 +233,19 @@ router.put('/appointmentUpdate/:id', Auth(), async(req,res) =>{
     try {
         const Id = req.params.id
         const barberID = req.uid
+        const conflictingAppointment = await dbHandler.appointments.findOne({
+            where: {
+                barberID: req.uid,
+                start_time: { [Op.lt]: req.body.end_time },
+                end_time: { [Op.gt]: req.body.start_time },
+                id: { [Op.ne]: Id },
+                status: { [Op.ne]: 'canceled' }
+            }
+        })
+        
+        if (conflictingAppointment) {
+            return res.status(400).json({ message: "Ez a barber már foglalt az adott időintervallumban" })
+        }
         const oneAppointment = await dbHandler.appointments.findOne({ where: { id:Id, barberID  } });
 
         if (!oneAppointment) {
