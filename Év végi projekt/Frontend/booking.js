@@ -108,57 +108,6 @@ function formatLocalDateTime(date) {
 //Idopontok
 const timeSlotsContainer = document.querySelector('.time-slot-wrapper')
 
-async function getBookedTimes(barberID, date) {
-    const formattedDate = formatLocalDateTime(new Date(date.getFullYear(), date.getMonth(), date.getDate(), 0, 0, 0)).split(" ")[0]
-    const res = await fetch(`/appointmentsByBarber/${barberID}/${formattedDate}`)
-    if (!res.ok) return []
-
-    const data = await res.json();
-    //Csak a booked statuszu idopontok
-    return data
-        .filter(app => app.status == "booked")
-        .map(app => {
-            const d = new Date(app.start_time)
-            const hours = String(d.getHours()).padStart(2, "0")
-            const minutes = String(d.getMinutes()).padStart(2, "0")
-            return `${hours}:${minutes}`
-        })
-}
-
-async function generateTimeSlots() {
-    timeSlotsContainer.innerHTML = ""
-    if (!selectedBarber || !selectedDate) return
-
-    const bookedTimes = await getBookedTimes(selectedBarber, selectedDate)
-
-    const times = [
-        "09:00","10:00","11:00","12:00",
-        "13:00","14:00","15:00",
-        "16:00","17:00","18:00","19:00"
-    ]
-
-    times.forEach((time, index) => {
-        const btn = document.createElement("button")
-        btn.classList.add("time-slot-btn")
-        btn.textContent = time
-
-        if (bookedTimes.includes(time)) {
-            btn.disabled = true
-            btn.classList.add("booked")
-        } else {
-            btn.addEventListener("click", () => {
-                timeSlotsContainer.querySelectorAll("button").forEach(b => b.classList.remove("active"))
-                btn.classList.add("active")
-                selectedTime = time
-                scrollToStep(3)
-            })
-        }
-
-        timeSlotsContainer.appendChild(btn)
-        setTimeout(() => btn.classList.add("show"), index * 50)
-    })
-}
-/*
 async function generateTimeSlots() {
     timeSlotsContainer.innerHTML = ""
     if (!selectedBarber || !selectedDate) return
@@ -186,7 +135,7 @@ async function generateTimeSlots() {
         timeSlotsContainer.appendChild(btn)
         setTimeout(() => btn.classList.add("show"), index * 50)
     })
-}*/
+}
 
 //Foglalas veglegesitese
 

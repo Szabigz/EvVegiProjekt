@@ -149,12 +149,9 @@ router.get("/availableSlots/:barberID/:date", async (req,res)=>{
 })
 
 router.post("/appoointmentUserPost", Auth(), async (req, res) => {
-
     const { barberID, serviceID, start_time, end_time, comment } = req.body
     const userID = req.uid
-
     try {
-
         const existingAppointment = await dbHandler.appointments.findOne({
             where: {
                 barberID: barberID,
@@ -162,13 +159,11 @@ router.post("/appoointmentUserPost", Auth(), async (req, res) => {
                 end_time: { [Op.gt]: start_time }
             }
         })
-
         if (existingAppointment) {
             return res.status(400).json({
                 message: "Ez az időpont már foglalt ennél a fodrásznál"
             })
         }
-
         await dbHandler.appointments.create({
             barberID: barberID,
             serviceID: serviceID,
@@ -178,22 +173,16 @@ router.post("/appoointmentUserPost", Auth(), async (req, res) => {
             comment: comment,
             status: "booked"
         })
-
         res.status(200).json({
             message: "Foglalás sikeres"
         })
-
     }
-    catch (error) {
-
+    catch(error){
         console.log(error)
-
         res.status(500).json({
             message: "Szerver hiba"
         })
-
     }
-
 })
 
 
