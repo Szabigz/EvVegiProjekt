@@ -133,8 +133,9 @@ router.put('/barberUpdate/:id', Auth(), async(req,res) =>{
     }
 
     if(req.body.password){
+        const hashedPassword = await bcrypt.hash(req.body.password, 9);
         await dbHandler.barber.update({
-            password:req.body.password
+            password: hashedPassword
         },{
             where:{
                 id:Id

@@ -16,7 +16,12 @@ namespace BarberManager.ViewModels
         [ObservableProperty] private string _barberPhone = string.Empty;
 
         [ObservableProperty] private string _statusMessage = string.Empty;
+        [ObservableProperty] private string _statusMessageColor = "Green"; 
         [ObservableProperty] private bool _isSaving;
+
+        [ObservableProperty] private string _currentPassword = string.Empty;
+        [ObservableProperty] private string _newPassword = string.Empty;
+        [ObservableProperty] private string _confirmPassword = string.Empty;
 
         public ProfileViewModel(ApiService api, MainWindowViewModel mainVm)
         {
@@ -43,15 +48,30 @@ namespace BarberManager.ViewModels
             if (string.IsNullOrWhiteSpace(BarberName))
             {
                 StatusMessage = "A név nem lehet üres!";
+                StatusMessageColor = "Red";
+                return;
+            }
+
+            if (!string.IsNullOrEmpty(NewPassword) && NewPassword != ConfirmPassword)
+            {
+                StatusMessage = "Az új jelszavak nem egyeznek!";
+                StatusMessageColor = "Red"; 
                 return;
             }
 
             IsSaving = true;
             StatusMessage = "Mentés folyamatban...";
+            StatusMessageColor = "Black";
 
-            var result = await _api.UpdateBarberProfileAsync(_barberId, BarberName, BarberPhone);
+            var result = await _api.UpdateBarberProfileAsync(
+                _barberId,
+                BarberName,
+                BarberPhone,
+                string.IsNullOrEmpty(NewPassword) ? null : NewPassword
+            );
 
             StatusMessage = result.Message;
+            StatusMessageColor = result.IsSuccess ? "Green" : "Red";
 
             if (result.IsSuccess)
             {
