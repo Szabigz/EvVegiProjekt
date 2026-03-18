@@ -14,12 +14,11 @@
                 </StackPanel>
 
                 <!-- uzenet -->
-                <TextBlock Text="{Binding StatusMessage}" 
-                           Foreground="Green" 
-                           FontWeight="SemiBold" 
-                           HorizontalAlignment="Center" 
-                           IsVisible="{Binding StatusMessage, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"/>
-
+				<TextBlock Text="{Binding StatusMessage}"
+			        Foreground="{Binding StatusMessageColor}"
+			        FontWeight="SemiBold"
+			        HorizontalAlignment="Center"
+			        IsVisible="{Binding StatusMessage, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"/>
                 <StackPanel Spacing="5">
                     <TextBlock Text="Teljes név" FontWeight="SemiBold" Foreground="Gray"/>
                     <TextBox Text="{Binding BarberName}"/>
@@ -35,6 +34,100 @@
                     <TextBox Text="{Binding BarberPhone}"/>
                 </StackPanel>
 
+                <!-- reset jelszo section-->
+				
+				<!-- Current Password -->
+				<Grid>
+					<TextBox Text="{Binding CurrentPassword}"
+							 PasswordChar="*"
+							 RevealPassword="{Binding IsCurrentPasswordVisible}"
+							 Watermark="Jelenlegi jelszó..."
+							 Padding="10,6,36,6"/>
+
+					<Button Command="{Binding ToggleCurrentPasswordVisibilityCommand}"
+							Width="30" Height="30"
+							HorizontalAlignment="Right" VerticalAlignment="Center"
+							Background="Transparent"
+							BorderBrush="{x:Null}"
+							Padding="0"
+							Cursor="Hand">
+						<Button.Styles>
+							<Style Selector="Button:hover">
+								<Setter Property="Background" Value="#22000000"/>
+							</Style>
+							<Style Selector="Button:pressed">
+								<Setter Property="Background" Value="#33000000"/>
+							</Style>
+						</Button.Styles>
+						<Path Data="{Binding CurrentPasswordIcon}"
+							  Fill="Gray"
+							  Stretch="Uniform"
+							  Width="20" Height="20"
+							  VerticalAlignment="Center"/>
+					</Button>
+				</Grid>
+
+				<!-- New Password -->
+				<Grid>
+					<TextBox Text="{Binding NewPassword}"
+							 PasswordChar="*"
+							 RevealPassword="{Binding IsNewPasswordVisible}"
+							 Watermark="Új jelszó..."
+							 Padding="10,6,36,6"/>
+
+					<Button Command="{Binding ToggleNewPasswordVisibilityCommand}"
+							Width="30" Height="30"
+							HorizontalAlignment="Right" VerticalAlignment="Center"
+							Background="Transparent"
+							BorderBrush="{x:Null}"
+							Padding="0"
+							Cursor="Hand">
+						<Button.Styles>
+							<Style Selector="Button:hover">
+								<Setter Property="Background" Value="#22000000"/>
+							</Style>
+							<Style Selector="Button:pressed">
+								<Setter Property="Background" Value="#33000000"/>
+							</Style>
+						</Button.Styles>
+						<Path Data="{Binding NewPasswordIcon}"
+							  Fill="Gray"
+							  Stretch="Uniform"
+							  Width="20" Height="20"
+							  VerticalAlignment="Center"/>
+					</Button>
+				</Grid>
+
+				<!-- Confirm Password -->
+				<Grid>
+					<TextBox Text="{Binding ConfirmPassword}"
+							 PasswordChar="*"
+							 RevealPassword="{Binding IsConfirmPasswordVisible}"
+							 Watermark="Új jelszó újra..."
+							 Padding="10,6,36,6"/>
+
+					<Button Command="{Binding ToggleConfirmPasswordVisibilityCommand}"
+							Width="30" Height="30"
+							HorizontalAlignment="Right" VerticalAlignment="Center"
+							Background="Transparent"
+							BorderBrush="{x:Null}"
+							Padding="0"
+							Cursor="Hand">
+						<Button.Styles>
+							<Style Selector="Button:hover">
+								<Setter Property="Background" Value="#22000000"/>
+							</Style>
+							<Style Selector="Button:pressed">
+								<Setter Property="Background" Value="#33000000"/>
+							</Style>
+						</Button.Styles>
+						<Path Data="{Binding ConfirmPasswordIcon}"
+							  Fill="Gray"
+							  Stretch="Uniform"
+							  Width="20" Height="20"
+							  VerticalAlignment="Center"/>
+					</Button>
+				</Grid>
                 <Button Command="{Binding SaveProfileCommand}" 
                         IsEnabled="{Binding !IsSaving}"
                         Background="Black" Foreground="White" Padding="20,10" HorizontalAlignment="Right" Margin="0,10,0,0">

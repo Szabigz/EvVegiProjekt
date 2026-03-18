@@ -50,6 +50,9 @@ public partial class MainWindowViewModel : ViewModelBase
 
     [RelayCommand]
     public void NavigateToProfile() => CurrentPage = new ProfileViewModel(Api, this);
+    [RelayCommand]
+    public void NavigateToLogs() => CurrentPage = new LogsViewModel(Api);
+
 
     public void RefreshBarberName(string newName)
     {
