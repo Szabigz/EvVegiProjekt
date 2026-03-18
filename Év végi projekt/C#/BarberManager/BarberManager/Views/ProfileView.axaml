@@ -14,12 +14,11 @@
                 </StackPanel>
 
                 <!-- uzenet -->
-                <TextBlock Text="{Binding StatusMessage}" 
-                           Foreground="Green" 
-                           FontWeight="SemiBold" 
-                           HorizontalAlignment="Center" 
-                           IsVisible="{Binding StatusMessage, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"/>
-
+				<TextBlock Text="{Binding StatusMessage}"
+			        Foreground="{Binding StatusMessageColor}"
+			        FontWeight="SemiBold"
+			        HorizontalAlignment="Center"
+			        IsVisible="{Binding StatusMessage, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"/>
                 <StackPanel Spacing="5">
                     <TextBlock Text="Teljes név" FontWeight="SemiBold" Foreground="Gray"/>
                     <TextBox Text="{Binding BarberName}"/>
@@ -34,6 +33,23 @@
                     <TextBlock Text="Telefonszám" FontWeight="SemiBold" Foreground="Gray"/>
                     <TextBox Text="{Binding BarberPhone}"/>
                 </StackPanel>
+
+                <!-- reset jelszo section-->
+				<StackPanel>
+					<TextBlock Text="Jelszó" FontWeight="SemiBold"/>
+					<TextBox Text="{Binding CurrentPassword}" PasswordChar="*" RevealPassword="False" Watermark="Jelenlegi jelszó..."/>
+				</StackPanel>
+				
+			    <!-- uj jelszo 2x-->
+				<StackPanel Spacing="5">
+					<TextBlock Text="Új jelszó" FontWeight="SemiBold" Foreground="Gray"/>
+					<TextBox Text="{Binding NewPassword}" PasswordChar="*" RevealPassword="False" Watermark="Új jelszó..."/>
+				</StackPanel>
+
+				<StackPanel Spacing="5">
+					<TextBlock Text="Új jelszó megerősítése" FontWeight="SemiBold" Foreground="Gray"/>
+					<TextBox Text="{Binding ConfirmPassword}" PasswordChar="*" RevealPassword="False" Watermark="Új jelszó újra..."/>
+				</StackPanel>
 
                 <Button Command="{Binding SaveProfileCommand}" 
                         IsEnabled="{Binding !IsSaving}"
