@@ -44,13 +44,35 @@
 				</StackPanel>
 
 				<!-- Jelszo -->
-				<StackPanel>
-					<TextBlock Text="Jelszó" FontWeight="SemiBold" Margin="0,0,0,5"/>
+				<Grid>
 					<TextBox Text="{Binding Password}"
-                             PasswordChar="*"
-                             RevealPassword="False" 
-                             Watermark="Add meg a jelszót..."/>
-				</StackPanel>
+							 PasswordChar="*"
+							 RevealPassword="{Binding IsPasswordVisible}"
+							 Watermark="Add meg a jelszót..."
+							 Padding="10,6,36,6"/>
+
+					<Button Command="{Binding TogglePasswordVisibilityCommand}"
+							Width="30" Height="30"
+							HorizontalAlignment="Right" VerticalAlignment="Center"
+							Background="Transparent"
+							BorderBrush="{x:Null}"
+							Padding="0"
+							Cursor="Hand">
+						<Button.Styles>
+							<Style Selector="Button:hover">
+								<Setter Property="Background" Value="#22000000"/>
+							</Style>
+							<Style Selector="Button:pressed">
+								<Setter Property="Background" Value="#33000000"/>
+							</Style>
+						</Button.Styles>
+						<Path Data="{Binding PasswordIcon}"
+							  Fill="Gray"
+							  Stretch="Uniform"
+							  Width="20" Height="20"
+							  VerticalAlignment="Center"/>
+					</Button>
+				</Grid>
 
 				<!-- Telefonszam -->
 				<StackPanel IsVisible="{Binding IsRegisterMode}">
