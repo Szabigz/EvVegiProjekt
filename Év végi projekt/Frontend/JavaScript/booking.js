@@ -113,7 +113,9 @@ function renderCalendar() {
 function highlightSelectedDay(cell) {
     document.querySelectorAll("#calendarBody td").forEach(td => td.classList.remove("selected-day"))
     cell.classList.add("selected-day")
+    scrollToStep(3)
     generateTimeSlots()
+
 }
 
 //Elozo/kovi honap
@@ -203,12 +205,11 @@ async function finalizeBooking() {
         const barberName = document.querySelector(`.barber-card[data-barber="${selectedBarber}"] h5`).innerText
         const selectedBtn = document.querySelector(`.service-btn[data-service="${selectedService}"]`).innerText.split("\n")[0]
         const serviceName = selectedBtn ? selectedBtn.innerText.split("\n")[0] : "Ismeretlen"
-
-        alert(`Foglalás sikeres!\n
-        Fodrász: ${barberName}\n
-        Szolgáltatás: ${serviceName}\n
-        Dátum: ${dateText}\n
-        Időpont: ${timeText}`)
+        alert(`Foglalást visszaigazoló sikeresen email elküldve!!\n
+            Fodrász: ${barberName}\n
+            Szolgáltatás: ${serviceName}\n
+            Dátum: ${dateText}\n
+            Időpont: ${timeText}`)
 
         generateTimeSlots()
         loadMyAppointment()
@@ -221,7 +222,7 @@ async function bookAppointment(barberID, serviceID, start_time, end_time, commen
 
     const token = sessionStorage.getItem("token")
 
-    const res = await fetch('/appoointmentUserPost', {
+    const res = await fetch('/appointmentUserPost', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',

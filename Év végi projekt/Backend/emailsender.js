@@ -1,0 +1,33 @@
+require('dotenv').config()
+const nodemailer=require('nodemailer')
+
+const EMAIL_USER= process.env.EMAIL_USER
+const EMAIL_PASS= process.env.EMAIL_PASS
+
+const transporter= nodemailer.createTransport({
+    service: "smtp-relay.brevo.com",
+    port: 587,
+    secure: false,
+    auth:{
+        user: EMAIL_USER,
+        pass: EMAIL_PASS
+    }
+})
+async function sendBookingEmail(to, barberName, service, date, time) {
+    await transporter.sendMail({
+        from: '"Slick Barber Shop" <myexammail@gmail.com>',
+        to: to,
+        subject: "Foglalás visszaigazolás",
+        html: `
+            <h2>Foglalás sikeres!</h2>
+            <p><b>Fodrász:</b> ${barberName}</p>
+            <p><b>Szolgáltatás:</b> ${service}</p>
+            <p><b>Dátum:</b> ${date}</p>
+            <p><b>Időpont:</b> ${time}</p>
+            <br>
+            <p>Várunk szeretettel!</p>
+        `
+    })
+}
+
+module.exports={transporter,sendBookingEmail}

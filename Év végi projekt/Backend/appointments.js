@@ -3,10 +3,9 @@ const router=express.Router()
 const { Op, where } = require("sequelize");
 const Auth=require('./Auth')
 const Log = require('./log') 
-
 const dbHandler=require('./dbHandler')
-const JWT= require('jsonwebtoken')
-
+const JWT= require('jsonwebtoken');
+const { sendBookingEmail } = require('./emailsender.js')
 
 
 router.get("/appointmentMyBarber", Auth(), async (req, res) => {
@@ -47,49 +46,54 @@ router.get("/appointmentMyUser", Auth(), async (req, res) => {
 
 
 router.get("/availableSlots/:barberID/:date", async (req,res)=>{
+    try{
+        const {barberID,date} = req.params
 
-    const {barberID,date} = req.params
-
-    const startDay = new Date(date+" 00:00:00")
-    const endDay = new Date(date+" 23:59:59")
-
-    const workhour = await dbHandler.workhours.findOne({
-        where:{
-            barberID,
-            dayOfWeek:new Date(date).getDay()
+        const startDay = new Date(date+" 00:00:00")
+        const endDay = new Date(date+" 23:59:59")
+    
+        const workhour = await dbHandler.workhours.findOne({
+            where:{
+                barberID,
+                dayOfWeek:new Date(date).getDay()
+            }
+        })
+        if (!workhour) {
+            return res.status(404).json({message:"Nincs munkaidő ehez a fodrászhoz ezen a napon"})
         }
-    })
-    if (!workhour) {
-
-    const appointments = await dbHandler.appointments.findAll({
-        where:{
-            barberID,
-            status:"booked",
-            start_time:{
-                [Op.between]:[startDay,endDay]
-            }   
+        const appointments = await dbHandler.appointments.findAll({
+            where:{
+                barberID,
+                status:"booked",
+                start_time:{
+                    [Op.between]:[startDay,endDay]
+                }   
+            }
+        })
+    
+        const slots=[]
+    
+        let start = new Date(date+" "+workhour.start_time)
+        let end = new Date(date+" "+workhour.end_time)
+    
+        while(start < end){
+    
+            const booked = appointments.some(a =>
+                new Date(a.start_time).getTime() === start.getTime()
+            )
+    
+            if(!booked){
+                slots.push(start)
+            }
+    
+            start = new Date(start.getTime()+30*60000)
         }
-    })}
-
-    const slots=[]
-
-    let start = new Date(date+" "+workhour.start_time)
-    let end = new Date(date+" "+workhour.end_time)
-
-    while(start < end){
-
-        const booked = appointments.some(a =>
-            new Date(a.start_time).getTime() === start.getTime()
-        )
-
-        if(!booked){
-            slots.push(start)
-        }
-
-        start = new Date(start.getTime()+30*60000)
+        res.status(200).json(slots)
     }
-
-    res.status(200).json(slots)
+    catch(err){
+        res.status(500).json({message:"Szerver hiba"})
+    }
+    
 })
 
 
@@ -155,10 +159,27 @@ router.post("/appointmentUserPost", Auth(), async (req, res) => {
             comment: comment,
             status: "booked"
         })
+        /*const user=await dbHandler.user.findByPk(userID)
+        const service= await dbHandler.services.findByPk(serviceID)
+        const barber= await dbHandler.barber.findByPk(barberID)
+        try{
+            await sendBookingEmail(
+                user.email,
+                barber.name,
+                service.name,
+                start_time,
+                end_time 
+            )
+        }
+        catch(err){
+            console.log("Email hiba: ",err);
+        }*/
         res.status(200).json({
             message: "Foglalás sikeres",
             id:newAppointment.id
-        })
+        }
+    )
+        
     }
     catch(error){
         console.log(error)

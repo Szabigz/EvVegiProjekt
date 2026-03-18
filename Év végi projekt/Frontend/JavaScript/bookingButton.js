@@ -42,8 +42,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
         if (modalTitle.textContent == "Bejelentkezés") {
             userLogin()
-        } else {
-           userRegister()
+        } 
+        else {
+            userRegister()
+
         }
     })
 })

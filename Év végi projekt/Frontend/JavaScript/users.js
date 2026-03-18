@@ -45,9 +45,19 @@ async function userRegister() {
         const data = await response.json()
 
         if (response.ok) {
-            sessionStorage.setItem("token", data.token)
-            alert(data.message)
-            window.location.href = "/HTML/booking.html"
+            const modalTitle = document.querySelector("#loginModal .modal-title")
+            const modalSubmitBtn = document.getElementById("modalSubmitBtn")
+            const switchLink = document.getElementById("switchToRegister")
+            const switchText = document.getElementById("switch")
+            const phoneField = document.getElementById("phoneField")
+            
+            modalTitle.textContent = "Bejelentkezés"
+            modalSubmitBtn.textContent = "Bejelentkezés"
+            switchLink.textContent = "Regisztrálj!"
+            switchText.textContent = "Még nincs fiókod? "
+            phoneField.classList.add("d-none")
+            document.getElementById("nameInput").removeAttribute("required")
+            document.getElementById("phoneNumInput").removeAttribute("required")
         } else {
             alert("Regisztrációs hiba: " + data.message)
         }
