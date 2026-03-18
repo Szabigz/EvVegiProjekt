@@ -107,8 +107,9 @@ namespace BarberManager.ViewModels
         {
             if (app == null) return;
             SelectedAppointment = app;
-            ActionButtonText = app.Status == "canceled" ? "Időpont Végleges Törlése" : "Időpont Lemondása";
-            IsViewingDetails = true;
+            ActionButtonText = (app.Status == "canceled" || app.Status == "completed")
+                ? "Időpont Végleges Törlése"
+                : "Időpont Lemondása"; IsViewingDetails = true;
         }
 
         //complete domb
@@ -186,15 +187,15 @@ namespace BarberManager.ViewModels
         {
             if (SelectedAppointment == null) return;
 
-            if (SelectedAppointment.Status == "canceled")
+            if (SelectedAppointment.Status == "canceled" || SelectedAppointment.Status == "completed")
             {
-                // ha mar le van mondva akkor torles
+                //ha levan mondva vagy kesz akkor torles
                 var success = await _api.CancelAppointmentAsync(SelectedAppointment.Id);
                 if (success) { IsViewingDetails = false; await LoadData(); }
             }
             else
             {
-                // sima lemondas
+                //alapbol csak lemondas
                 var success = await _api.UpdateAppointmentStatusAsync(SelectedAppointment.Id, "canceled");
                 if (success) { IsViewingDetails = false; await LoadData(); }
             }

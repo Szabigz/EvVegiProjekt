@@ -82,7 +82,7 @@ namespace BarberManager.Views
                 topGrid.Children.Add(nameText);
 
                 // completed gomb (csak ha nem completed akkor van ott)
-                if (app.Status != "completed") {
+                if (app.Status == "booked" ) {
                     var completedBtn = new Button
                     {
                         Background = Brushes.Transparent,
