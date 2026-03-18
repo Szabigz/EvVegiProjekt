@@ -5,6 +5,8 @@ using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 using BarberManager.Services;
 using BarberManager.Models;
+using System.Threading.Tasks.Dataflow;
+using System.Diagnostics;
 
 namespace BarberManager.ViewModels
 {
@@ -107,6 +109,21 @@ namespace BarberManager.ViewModels
             SelectedAppointment = app;
             ActionButtonText = app.Status == "canceled" ? "Időpont Végleges Törlése" : "Időpont Lemondása";
             IsViewingDetails = true;
+        }
+
+        //complete domb
+        [RelayCommand]
+        public async Task MarkAsDone(AppointmentCard app)
+        {
+            if (app == null) return;
+
+            var success = await _api.UpdateAppointmentStatusAsync(app.Id, "completed");
+
+            if (success)
+            {
+                app.Status = "completed";
+                await LoadData();
+            }
         }
 
         [RelayCommand] public void CloseDetails() { IsViewingDetails = false; SelectedAppointment = null; }
