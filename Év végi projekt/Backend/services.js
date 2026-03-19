@@ -12,8 +12,10 @@ router.get("/servicesGet",Auth(), async(req,res)=>{
 })
 
 router.get("/services", async (req, res) => {
+    const {barberID} = req.query
     try {
         const services = await dbHandler.services.findAll({
+            where: {barberID:barberID},
             attributes: ["id", "name", "price"]
         })
 

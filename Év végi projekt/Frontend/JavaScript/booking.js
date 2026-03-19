@@ -26,6 +26,8 @@ document.querySelectorAll(".barber-card").forEach(card => {
         card.classList.add("selected")
         selectedBarber = card.getAttribute("data-barber")
         scrollToStep(1)
+        loadServices()
+
     })
 })
 
@@ -34,7 +36,7 @@ async function loadServices() {
     const container = document.getElementById("serviceContainer")
     container.innerHTML = ""
 
-    const res = await fetch(`/services`)
+    const res = await fetch(`/services?barberID=${selectedBarber}`)
     if (!res.ok) return
 
     const services = await res.json()
@@ -49,7 +51,7 @@ async function loadServices() {
         btn.addEventListener("click", () => {
             document.querySelectorAll(".service-btn").forEach(b => b.classList.remove("selected"))
             btn.classList.add("selected")
-
+            
             selectedService = service.id
             scrollToStep(2)
         })
@@ -177,8 +179,11 @@ async function finalizeBooking() {
     if (!selectedDate) return alert("Kérlek válassz egy napot!")
     if (!selectedTime) return alert("Kérlek válassz időpontot!")
 
-    const comment = document.getElementById("commentInput").value || ""
-    const [hour, minute] = selectedTime.split(":").map(Number)
+    const comment = document.getElementById("commentInput").value || "";
+    
+    const timeParts = selectedTime.split(":")
+    const hour = parseInt(timeParts[0])
+    const minute = parseInt(timeParts[1])
 
     const start_time = new Date(
         selectedDate.getFullYear(),
@@ -202,10 +207,14 @@ async function finalizeBooking() {
     if (success) {
         const dateText = start_time.toLocaleDateString("hu-HU")
         const timeText = start_time.toLocaleTimeString("hu-HU", { hour: "2-digit", minute: "2-digit" })
-        const barberName = document.querySelector(`.barber-card[data-barber="${selectedBarber}"] h5`).innerText
-        const selectedBtn = document.querySelector(`.service-btn[data-service="${selectedService}"]`).innerText.split("\n")[0]
-        const serviceName = selectedBtn ? selectedBtn.innerText.split("\n")[0] : "Ismeretlen"
-        alert(`Foglalást visszaigazoló sikeresen email elküldve!!\n
+        
+        const barberElem = document.querySelector(`.barber-card[data-barber="${selectedBarber}"] h5`)
+        const barberName = barberElem ? barberElem.innerText : "Fodrász";
+
+        const serviceElem = document.querySelector(`.service-btn[data-service="${selectedService}"]`)
+        const serviceName = serviceElem ? serviceElem.innerText.split("\n")[0] : "Szolgáltatás"
+
+        alert(`Foglalás sikeres!\n
             Fodrász: ${barberName}\n
             Szolgáltatás: ${serviceName}\n
             Dátum: ${dateText}\n
@@ -282,4 +291,3 @@ async function deleteAppointment(barberID, userID, start_time, end_time) {
 }
 
 loadMyAppointment()
-loadServices()
