@@ -14,7 +14,7 @@ namespace BarberManager.ViewModels
         public LogsViewModel(ApiService api)
         {
             _api = api;
-            
+
         }
     }
 }

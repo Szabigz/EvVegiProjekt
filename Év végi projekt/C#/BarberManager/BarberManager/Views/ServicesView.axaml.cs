@@ -1,12 +1,13 @@
+using Avalonia;
 using Avalonia.Controls;
+using Avalonia.Markup.Xaml;
 
-namespace BarberManager.Views
+namespace BarberManager;
+
+public partial class ServicesView : UserControl
 {
-    public partial class ServicesView : UserControl
+    public ServicesView()
     {
-        public ServicesView()
-        {
-            InitializeComponent();
-        }
+        InitializeComponent();
     }
 }

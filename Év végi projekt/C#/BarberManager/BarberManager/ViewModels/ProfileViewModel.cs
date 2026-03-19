@@ -1,14 +1,18 @@
-﻿using CommunityToolkit.Mvvm.ComponentModel;
-using CommunityToolkit.Mvvm.Input;
-using BarberManager.Services;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
+using BarberManager.Services;
+using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
 
 namespace BarberManager.ViewModels
 {
     public partial class ProfileViewModel : ViewModelBase
     {
         private readonly ApiService _api;
-        private readonly MainWindowViewModel _mainVm; 
+        private readonly MainWindowViewModel _mainVm;
         private int _barberId;
 
         [ObservableProperty] private string _barberName = string.Empty;
@@ -16,7 +20,7 @@ namespace BarberManager.ViewModels
         [ObservableProperty] private string _barberPhone = string.Empty;
 
         [ObservableProperty] private string _statusMessage = string.Empty;
-        [ObservableProperty] private string _statusMessageColor = "Green"; 
+        [ObservableProperty] private string _statusMessageColor = "Green";
         [ObservableProperty] private bool _isSaving;
 
         [ObservableProperty] private string _currentPassword = string.Empty;
@@ -68,7 +72,7 @@ namespace BarberManager.ViewModels
             if (!string.IsNullOrEmpty(NewPassword) && NewPassword != ConfirmPassword)
             {
                 StatusMessage = "Az új jelszavak nem egyeznek!";
-                StatusMessageColor = "Red"; 
+                StatusMessageColor = "Red";
                 return;
             }
 

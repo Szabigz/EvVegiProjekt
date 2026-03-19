@@ -1,12 +1,12 @@
-ï»¿<UserControl xmlns="https://github.com/avaloniaui"
+<UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:vm="using:BarberManager.ViewModels"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             mc:Ignorable="d" d:DesignWidth="1000" d:DesignHeight="800"
-             x:DataType="vm:AppointmentsViewModel"
-             x:Class="BarberManager.Views.AppointmentsView">
-	
+             xmlns:viewmodels="using:BarberManager.ViewModels"
+             xmlns:models="using:BarberManager.Models"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:Class="BarberManager.AppointmentsView"
+             x:DataType="viewmodels:AppointmentsViewModel"> 
 	<Grid>
 		<!-- naptar -->
 		<Grid RowDefinitions="Auto, *">
@@ -19,15 +19,15 @@
 			
 			<Border Grid.Row="0" Background="White" Padding="0,10" BorderThickness="0,0,0,1" BorderBrush="#EEEEEE">
 				<Grid ColumnDefinitions="60, *, *, *, *, *, *, Auto, Auto">
-					<Button Grid.Column="0" Command="{Binding ShowAddPanelCommand}" Background="Transparent" ToolTip.Tip="Ãšj foglalÃ¡s rÃ¶gzÃ­tÃ©se" Margin="10,0,10,0">
+					<Button Grid.Column="0" Command="{Binding ShowAddPanelCommand}" Background="Transparent" ToolTip.Tip="Új foglalás rögzítése" Margin="10,0,10,0">
 						<Path Fill="Black" Stretch="Uniform" Width="20" Height="20" 
 							  Data="M12 6C12.5523 6 13 6.44772 13 7V11H17C17.5523 11 18 11.4477 18 12C18 12.5523 17.5523 13 17 13H13V17C13 17.5523 12.5523 18 12 18C11.4477 18 11 17.5523 11 17V13H7C6.44772 13 6 12.5523 6 12C6 11.4477 6.44772 11 7 11H11V7C11 6.44772 11.4477 6 12 6Z M1 12C1 5.92487 5.92487 1 12 1C18.0751 1 23 5.92487 23 12C23 18.0751 18.0751 23 12 23C5.92487 23 1 18.0751 1 12ZM12 3C7.02944 3 3 7.02944 3 12C3 16.9706 7.02944 21 12 21C16.9706 21 21 16.9706 21 12C21 7.02944 16.9706 3 12 3Z"/>
 					</Button>
-					<StackPanel Grid.Column="1" HorizontalAlignment="Center"><TextBlock Text="HÃ©tfÅ‘" FontWeight="Bold" FontSize="14" /><TextBlock Text="{Binding Mon}" FontSize="11" Foreground="Gray" HorizontalAlignment="Center"/></StackPanel>
+					<StackPanel Grid.Column="1" HorizontalAlignment="Center"><TextBlock Text="Hétfõ" FontWeight="Bold" FontSize="14" /><TextBlock Text="{Binding Mon}" FontSize="11" Foreground="Gray" HorizontalAlignment="Center"/></StackPanel>
 					<StackPanel Grid.Column="2" HorizontalAlignment="Center"><TextBlock Text="Kedd" FontWeight="Bold" FontSize="14" /><TextBlock Text="{Binding Tue}" FontSize="11" Foreground="Gray" HorizontalAlignment="Center"/></StackPanel>
 					<StackPanel Grid.Column="3" HorizontalAlignment="Center"><TextBlock Text="Szerda" FontWeight="Bold" FontSize="14" /><TextBlock Text="{Binding Wed}" FontSize="11" Foreground="Gray" HorizontalAlignment="Center"/></StackPanel>
-					<StackPanel Grid.Column="4" HorizontalAlignment="Center"><TextBlock Text="CsÃ¼tÃ¶rtÃ¶k" FontWeight="Bold" FontSize="14" /><TextBlock Text="{Binding Thu}" FontSize="11" Foreground="Gray" HorizontalAlignment="Center"/></StackPanel>
-					<StackPanel Grid.Column="5" HorizontalAlignment="Center"><TextBlock Text="PÃ©ntek" FontWeight="Bold" FontSize="14" /><TextBlock Text="{Binding Fri}" FontSize="11" Foreground="Gray" HorizontalAlignment="Center"/></StackPanel>
+					<StackPanel Grid.Column="4" HorizontalAlignment="Center"><TextBlock Text="Csütörtök" FontWeight="Bold" FontSize="14" /><TextBlock Text="{Binding Thu}" FontSize="11" Foreground="Gray" HorizontalAlignment="Center"/></StackPanel>
+					<StackPanel Grid.Column="5" HorizontalAlignment="Center"><TextBlock Text="Péntek" FontWeight="Bold" FontSize="14" /><TextBlock Text="{Binding Fri}" FontSize="11" Foreground="Gray" HorizontalAlignment="Center"/></StackPanel>
 					<StackPanel Grid.Column="6" HorizontalAlignment="Center"><TextBlock Text="Szombat" FontWeight="Bold" FontSize="14" /><TextBlock Text="{Binding Sat}" FontSize="11" Foreground="Gray" HorizontalAlignment="Center"/></StackPanel>
 
 					<Button Grid.Column="7" Command="{Binding PrevWeekCommand}" Background="Transparent" Padding="10">
@@ -48,7 +48,7 @@
 						<RowDefinition Height="Auto" MinHeight="60" /><RowDefinition Height="Auto" MinHeight="60" /><RowDefinition Height="Auto" MinHeight="60" /><RowDefinition Height="Auto" MinHeight="60" /><RowDefinition Height="Auto" MinHeight="60" /><RowDefinition Height="Auto" MinHeight="60" /><RowDefinition Height="Auto" MinHeight="60" /><RowDefinition Height="Auto" MinHeight="60" /><RowDefinition Height="Auto" MinHeight="60" /><RowDefinition Height="Auto" MinHeight="60" /><RowDefinition Height="Auto" MinHeight="60" /><RowDefinition Height="Auto" MinHeight="60" /><RowDefinition Height="Auto" MinHeight="60" /><RowDefinition Height="Auto" MinHeight="60" /><RowDefinition Height="Auto" MinHeight="60" /><RowDefinition Height="Auto" MinHeight="60" /><RowDefinition Height="Auto" MinHeight="60" /><RowDefinition Height="Auto" MinHeight="60" /><RowDefinition Height="Auto" MinHeight="60" /><RowDefinition Height="Auto" MinHeight="60" /><RowDefinition Height="Auto" MinHeight="60" /><RowDefinition Height="Auto" MinHeight="60" /><RowDefinition Height="Auto" MinHeight="60" /><RowDefinition Height="Auto" MinHeight="60" /><RowDefinition Height="Auto" MinHeight="60" /><RowDefinition Height="Auto" MinHeight="60" /><RowDefinition Height="Auto" MinHeight="60" />
 					</Grid.RowDefinitions>
 
-					<!-- Ã“rÃ¡k -->
+					<!-- Órák -->
 					<TextBlock Grid.Row="0" Grid.Column="0" Text="8:00" Margin="0,0,5,0" HorizontalAlignment="Right" VerticalAlignment="Top" FontWeight="SemiBold" FontSize="12"/>
 					<TextBlock Grid.Row="1" Grid.Column="0" Text="8:30" Margin="0,-8,5,0" HorizontalAlignment="Right" VerticalAlignment="Top" Foreground="LightGray" FontSize="11"/>
 					<TextBlock Grid.Row="2" Grid.Column="0" Text="9:00" Margin="0,-8,5,0" HorizontalAlignment="Right" VerticalAlignment="Top" FontWeight="SemiBold" FontSize="12"/>
@@ -76,7 +76,7 @@
 
 					<TextBlock Grid.Row="20" Grid.Column="0" Text="18:00" Margin="0,-8,5,0" HorizontalAlignment="Right" VerticalAlignment="Top" FontWeight="SemiBold" FontSize="12"/>
 
-					<!-- RÃ¡csvonalak -->
+					<!-- Rácsvonalak -->
 					<Border Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="6" BorderThickness="0,0,0,1" BorderBrush="#EEEEEE"/>
 					<Border Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="6" BorderThickness="0,0,0,1" BorderBrush="#EEEEEE"/>
 					<Border Grid.Row="4" Grid.Column="1" Grid.ColumnSpan="6" BorderThickness="0,0,0,1" BorderBrush="#EEEEEE"/>
@@ -102,7 +102,7 @@
 					<Button Grid.Column="0" Command="{Binding CloseDetailsCommand}" Background="Transparent" Padding="5">
 						<Path Fill="Black" Stretch="Uniform" Width="20" Height="20" Data="M10.7071 7.70711C11.0976 7.31658 11.0976 6.68342 10.7071 6.29289C10.3166 5.90237 9.68342 5.90237 9.29289 6.29289L4.29289 11.2929C3.90237 11.6834 3.90237 12.3166 4.29289 12.7071L9.29289 17.7071C9.68342 18.0976 10.3166 18.0976 10.7071 17.7071C11.0976 17.3166 11.0976 16.6834 10.7071 16.2929L7.41422 13L19 13C19.5523 13 20 12.5523 20 12C20 11.4477 19.5523 11 19 11L7.41421 11L10.7071 7.70711Z"/>
 					</Button>
-					<TextBlock Grid.Column="1" Text="RÃ©szletek" FontSize="20" FontWeight="Bold" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+					<TextBlock Grid.Column="1" Text="Részletek" FontSize="20" FontWeight="Bold" VerticalAlignment="Center" HorizontalAlignment="Center"/>
 					
 					<Border Grid.Column="2" Background="#EEEEEE" Padding="10,5" CornerRadius="5">
 						<TextBlock Text="{Binding SelectedAppointment.Status}" FontWeight="Bold" Foreground="Gray"/>
@@ -113,18 +113,18 @@
 
 				<!-- name -->
 				<StackPanel Spacing="5">
-					<TextBlock Text="VendÃ©g neve:" FontWeight="Bold" Foreground="Gray" FontSize="12"/>
+					<TextBlock Text="Vendég neve:" FontWeight="Bold" Foreground="Gray" FontSize="12"/>
 					<TextBlock Text="{Binding SelectedAppointment.GuestName}" FontSize="18" FontWeight="SemiBold"/>
 				</StackPanel>
 
                 <!-- telefon email -->
 				<Grid ColumnDefinitions="*, *" Margin="0,5,0,0">
 					<StackPanel Spacing="5">
-						<TextBlock Text="TelefonszÃ¡m:" FontWeight="Bold" Foreground="Gray" FontSize="12"/>
+						<TextBlock Text="Telefonszám:" FontWeight="Bold" Foreground="Gray" FontSize="12"/>
 						<TextBlock Text="{Binding SelectedAppointment.GuestPhone}" FontSize="14"/>
 					</StackPanel>
 					<StackPanel Grid.Column="1" Spacing="5">
-						<TextBlock Text="Email cÃ­m:" FontWeight="Bold" Foreground="Gray" FontSize="12"/>
+						<TextBlock Text="Email cím:" FontWeight="Bold" Foreground="Gray" FontSize="12"/>
 						<TextBlock Text="{Binding SelectedAppointment.GuestEmail}" FontSize="14" TextTrimming="CharacterEllipsis"/>
 					</StackPanel>
 				</Grid>
@@ -132,11 +132,11 @@
                 <!-- idopont, szolgaltatas price -->
 				<Grid ColumnDefinitions="*, *" Margin="0,5,0,0">
 					<StackPanel Spacing="5">
-						<TextBlock Text="IdÅ‘pont:" FontWeight="Bold" Foreground="Gray" FontSize="12"/>
+						<TextBlock Text="Idõpont:" FontWeight="Bold" Foreground="Gray" FontSize="12"/>
 						<TextBlock Text="{Binding SelectedAppointment.TimeString}" FontSize="16"/>
 					</StackPanel>
 					<StackPanel Grid.Column="1" Spacing="5">
-						<TextBlock Text="SzolgÃ¡ltatÃ¡s:" FontWeight="Bold" Foreground="Gray" FontSize="12"/>
+						<TextBlock Text="Szolgáltatás:" FontWeight="Bold" Foreground="Gray" FontSize="12"/>
 						<TextBlock Text="{Binding SelectedAppointment.ServiceName}" FontSize="16" TextTrimming="CharacterEllipsis"/>
 						<TextBlock Text="{Binding SelectedAppointment.ServicePrice}" FontSize="12" Foreground="DarkGreen" FontWeight="Bold"/>
 					</StackPanel>
@@ -144,7 +144,7 @@
 
 				<!-- comment -->
 				<StackPanel Spacing="5" IsVisible="{Binding SelectedAppointment.HasComment}">
-					<TextBlock Text="VendÃ©g megjegyzÃ©se:" FontWeight="Bold" Foreground="Gray" FontSize="12"/>
+					<TextBlock Text="Vendég megjegyzése:" FontWeight="Bold" Foreground="Gray" FontSize="12"/>
 					<Border Background="#F9F9F9" Padding="15" CornerRadius="8" BorderBrush="#EEEEEE" BorderThickness="1">
 						<TextBlock Text="{Binding SelectedAppointment.Comment}" FontStyle="Italic" TextWrapping="Wrap"/>
 					</Border>
@@ -164,16 +164,17 @@
 		<Border IsVisible="{Binding IsAddingAppointment}" Background="White" Padding="30" CornerRadius="15" BoxShadow="0 4 30 0 #44000000" VerticalAlignment="Center" HorizontalAlignment="Center" Width="500">
 			<StackPanel Spacing="15" Margin="5">
 				
-				<TextBlock Text="Ãšj FoglalÃ¡s FelvÃ©tele" FontSize="20" FontWeight="Bold" HorizontalAlignment="Center" Margin="0,0,0,10"/>
+				<TextBlock Text="Új Foglalás Felvétele" FontSize="20" FontWeight="Bold" HorizontalAlignment="Center" Margin="0,0,0,10"/>
 				
 				<TextBlock Text="{Binding AddErrorMessage}" Foreground="Red" FontSize="12" HorizontalAlignment="Center" IsVisible="{Binding AddErrorMessage, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"/>
 
 				<!-- vendeg lista -->
 				<StackPanel Spacing="5">
-					<TextBlock Text="VendÃ©g kivÃ¡lasztÃ¡sa" FontWeight="SemiBold" Foreground="Gray"/>
-					<ComboBox ItemsSource="{Binding AllUsers}" SelectedItem="{Binding NewSelectedUser}" HorizontalAlignment="Stretch" PlaceholderText="VÃ¡lassz vendÃ©get (opcionÃ¡lis)...">
+					<TextBlock Text="Vendég kiválasztása" FontWeight="SemiBold" Foreground="Gray"/>
+					<ComboBox ItemsSource="{Binding AllUsers}" SelectedItem="{Binding NewSelectedUser}" HorizontalAlignment="Stretch" PlaceholderText="Válassz vendéget (opcionális)...">
 						<ComboBox.ItemTemplate>
-							<DataTemplate>
+							<!-- 2. JAVÍTÁS: Itt a DataTemplate-nek meg kell mondani, hogy ez egy Model.User lista -->
+							<DataTemplate x:DataType="models:User"> 
 								<TextBlock Text="{Binding DisplayName}"/>
 							</DataTemplate>
 						</ComboBox.ItemTemplate>
@@ -182,10 +183,11 @@
 
 				<!-- service lista -->
 				<StackPanel Spacing="5">
-					<TextBlock Text="SzolgÃ¡ltatÃ¡s (KÃ¶telezÅ‘)" FontWeight="SemiBold" Foreground="Gray"/>
-					<ComboBox ItemsSource="{Binding AllServices}" SelectedItem="{Binding NewSelectedService}" HorizontalAlignment="Stretch" PlaceholderText="VÃ¡lassz szolgÃ¡ltatÃ¡st...">
+					<TextBlock Text="Szolgáltatás (Kötelezõ)" FontWeight="SemiBold" Foreground="Gray"/>
+					<ComboBox ItemsSource="{Binding AllServices}" SelectedItem="{Binding NewSelectedService}" HorizontalAlignment="Stretch" PlaceholderText="Válassz szolgáltatást...">
 						<ComboBox.ItemTemplate>
-							<DataTemplate>
+							<!-- 3. JAVÍTÁS: Itt a DataTemplate-nek meg kell mondani, hogy ez egy Model.Service lista -->
+							<DataTemplate x:DataType="models:Service">
 								<TextBlock Text="{Binding Name}"/>
 							</DataTemplate>
 						</ComboBox.ItemTemplate>
@@ -194,27 +196,27 @@
 
 				<!-- datum -->
 					<StackPanel Spacing="5" Margin="0,5,0,0">
-					<TextBlock Text="DÃ¡tum" FontWeight="SemiBold" Foreground="Gray"/>
+					<TextBlock Text="Dátum" FontWeight="SemiBold" Foreground="Gray"/>
 					<DatePicker SelectedDate="{Binding NewDate}" HorizontalAlignment="Stretch" MinWidth="200"/>
 				</StackPanel>
 
 				<!-- idopont -->
 				<StackPanel Spacing="5" Margin="0,5,0,0">
-					<TextBlock Text="IdÅ‘pont (HH:mm)" FontWeight="SemiBold" Foreground="Gray"/>
+					<TextBlock Text="Idõpont (HH:mm)" FontWeight="SemiBold" Foreground="Gray"/>
 					<TextBox Text="{Binding NewTime}" Watermark="Pl.: 14:30" HorizontalAlignment="Stretch"/>
 				</StackPanel>
 				
 
 				<!-- komment -->
 				<StackPanel Spacing="5" Margin="0,5,0,0">
-					<TextBlock Text="MegjegyzÃ©s" FontWeight="SemiBold" Foreground="Gray"/>
-					<TextBox Text="{Binding NewComment}" Height="60" TextWrapping="Wrap" AcceptsReturn="True" Watermark="Telefonos foglalÃ¡s, stb..."/>
+					<TextBlock Text="Megjegyzés" FontWeight="SemiBold" Foreground="Gray"/>
+					<TextBox Text="{Binding NewComment}" Height="60" TextWrapping="Wrap" AcceptsReturn="True" Watermark="Telefonos foglalás, stb..."/>
 				</StackPanel>
 
 				<!-- muveletek, close/add -->
 				<Grid ColumnDefinitions="*, *" Margin="0,15,0,0">
-					<Button Grid.Column="0" Command="{Binding CloseAddPanelCommand}" Content="MÃ©gse" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" Margin="5"/>
-					<Button Grid.Column="1" Command="{Binding SaveAppointmentCommand}" Content="FoglalÃ¡s MentÃ©se" Background="Black" Foreground="White" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" Margin="5">
+					<Button Grid.Column="0" Command="{Binding CloseAddPanelCommand}" Content="Mégse" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" Margin="5"/>
+					<Button Grid.Column="1" Command="{Binding SaveAppointmentCommand}" Content="Foglalás Mentése" Background="Black" Foreground="White" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" Margin="5">
                         <Button.IsEnabled>
                             <MultiBinding Converter="{x:Static BoolConverters.And}">
                                 <Binding Path="!IsSaving"/>

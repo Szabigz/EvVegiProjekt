@@ -1,12 +1,13 @@
+using Avalonia;
 using Avalonia.Controls;
+using Avalonia.Markup.Xaml;
 
-namespace BarberManager.Views
+namespace BarberManager;
+
+public partial class LogsView : UserControl
 {
-    public partial class LogsView : UserControl
+    public LogsView()
     {
-        public LogsView()
-        {
-            InitializeComponent();
-        }
+        InitializeComponent();
     }
 }
