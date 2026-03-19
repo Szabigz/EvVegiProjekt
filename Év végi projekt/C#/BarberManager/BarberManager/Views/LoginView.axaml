@@ -1,9 +1,9 @@
-<UserControl xmlns="https://github.com/avaloniaui"
+ï»¿<UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
-             x:Class="BarberManager.LoginView"
+             x:Class="BarberManager.Views.LoginView"
 			 xmlns:vm="using:BarberManager.ViewModels"
 x:DataType="vm:LoginViewModel">
 <Grid Background="#222222">
@@ -32,50 +32,50 @@ x:DataType="vm:LoginViewModel">
 				
                 <!-- Nev -->
 				<StackPanel>
-					<TextBlock Text="Név" FontWeight="SemiBold" Margin="0,0,0,5"/>
-					<TextBox Text="{Binding Name}" Watermark="Írd be a neved..."/>
+					<TextBlock Text="NÃ©v" FontWeight="SemiBold" Margin="0,0,0,5"/>
+					<TextBox Text="{Binding Name}" Watermark="Ãrd be a neved..."/>
 				</StackPanel>
 
 				<!-- Email  -->
 				<StackPanel>
 					<TextBlock Text="Email" FontWeight="SemiBold" Margin="0,0,0,5"/>
-					<TextBox Text="{Binding Email}" Watermark="Írd be az email címed..."/>
+					<TextBox Text="{Binding Email}" Watermark="Ãrd be az email cÃ­med..."/>
 				</StackPanel>
 
 				<!-- Jelszo -->
-				<Grid>
-					<TextBox Text="{Binding Password}"
-							 PasswordChar="*"
-							 RevealPassword="{Binding IsPasswordVisible}"
-							 Watermark="Add meg a jelszót..."
-							 Padding="10,6,36,6"/>
+				<StackPanel>
+    <TextBlock Text="JelszÃ³" FontWeight="SemiBold" Margin="0,0,0,5"/>
+    <Grid>
+        <TextBox Text="{Binding Password}"
+                 PasswordChar="*"
+                 RevealPassword="{Binding IsPasswordVisible}"
+                 Watermark="Add meg a jelszÃ³t..."
+                 Padding="10,6,36,6"/>
 
-					<Button Command="{Binding TogglePasswordVisibilityCommand}"
-							Width="30" Height="30"
-							HorizontalAlignment="Right" VerticalAlignment="Center"
-							Background="Transparent"
-							BorderBrush="{x:Null}"
-							Padding="0"
-							Cursor="Hand">
-						<Button.Styles>
-							<Style Selector="Button:hover">
-								<Setter Property="Background" Value="#22000000"/>
-							</Style>
-							<Style Selector="Button:pressed">
-								<Setter Property="Background" Value="#33000000"/>
-							</Style>
-						</Button.Styles>
-						<Path Data="{Binding PasswordIcon}"
-							  Fill="Gray"
-							  Stretch="Uniform"
-							  Width="20" Height="20"
-							  VerticalAlignment="Center"/>
-					</Button>
-				</Grid>
+        <Button Command="{Binding TogglePasswordVisibilityCommand}"
+                Width="30" Height="30"
+                HorizontalAlignment="Right" VerticalAlignment="Center"
+                Background="Transparent"
+                BorderBrush="{x:Null}"
+                Padding="0"
+                Cursor="Hand">
+            <Button.Styles>
+                <Style Selector="Button:hover">
+                    <Setter Property="Background" Value="#22000000"/>
+                </Style>
+            </Button.Styles>
+            <Path Data="{Binding PasswordIcon}"
+                  Fill="Gray"
+                  Stretch="Uniform"
+                  Width="20" Height="20"
+                  VerticalAlignment="Center"/>
+        </Button>
+    </Grid>
+</StackPanel>
 
 				<!-- Telefonszam -->
 				<StackPanel IsVisible="{Binding IsRegisterMode}">
-					<TextBlock Text="Telefonszám" FontWeight="SemiBold" Margin="0,0,0,5"/>
+					<TextBlock Text="TelefonszÃ¡m" FontWeight="SemiBold" Margin="0,0,0,5"/>
 					<TextBox Text="{Binding PhoneNum}" Watermark="Pl.: +36 20 123 4567"/>
 				</StackPanel>
 
