@@ -246,36 +246,38 @@ router.put("/appointmentBook/:id", Auth(), async (req, res) => {
    return res.status(200).send("Időpont sikeresen lefoglalva")
 })
 
-
 router.put('/appointmentUpdate/:id', Auth(), async (req, res) => {
     try {
         const Id = req.params.id;
         const barberID = req.uid;
 
-        if (isNaN(Id)) {
-            return res.status(400).json({ message: 'Invalid ID' });
-        }
+        // frissiteni valo mezok
+        const updateFields = {};
+        const { userID, start_time, end_time, status, comment } = req.body;
 
-        if (!barberID) {
-            return res.status(401).json({ message: "Hiányzó Tool ID / jogosultság" });
-        }
+        if (userID !== undefined) updateFields.userID = userID;
+        if (start_time !== undefined) updateFields.start_time = start_time;
+        if (end_time !== undefined) updateFields.end_time = end_time;
+        if (status !== undefined) updateFields.status = status;
+        if (comment !== undefined) updateFields.comment = comment;
 
-        if (!req.body.start_time && !req.body.end_time && !req.body.comment) {
+        // megnezi mik valtoztak
+        if (Object.keys(updateFields).length === 0) {
             return res.status(400).json({ message: 'Nincs frissítendő adat' });
         }
 
+        // megkeresi az idopontot
         const oneAppointment = await dbHandler.appointments.findOne({ where: { id: Id, barberID }});
         if (!oneAppointment) {
-            return res.status(404).json({ message: "Appointment not found" });
+            return res.status(404).json({ message: "Időpont nem található vagy nincs hozzá jogosultságod" });
         }
 
-        // Check conflicting appointment only if time is updated
-        if (req.body.start_time && req.body.end_time) {
+        if (start_time && end_time) {
             const conflictingAppointment = await dbHandler.appointments.findOne({
                 where: {
                     barberID,
-                    start_time: { [Op.lt]: req.body.end_time },
-                    end_time: { [Op.gt]: req.body.start_time },
+                    start_time: { [Op.lt]: end_time },
+                    end_time: { [Op.gt]: start_time },
                     id: { [Op.ne]: Id },
                     status: { [Op.ne]: 'canceled' }
                 }
@@ -285,76 +287,18 @@ router.put('/appointmentUpdate/:id', Auth(), async (req, res) => {
                 return res.status(400).json({ message: "Ez a barber már foglalt az adott időintervallumban" });
             }
         }
-        
 
-        
-        
-       
+        await dbHandler.appointments.update(updateFields, {
+            where: { id: Id, barberID }
+        });
 
-    if(req.body.userID){
-        await dbHandler.appointments.update({
-            userID:req.body.userID
-        },{
-            where:{
-                id:Id, barberID
-            }
-        })
-    }
+        return res.json({ message: 'Sikeres módosítás' });
 
-    if(req.body.barberID){
-        await dbHandler.appointments.update({
-            barberID:req.body.barberID
-        },{
-            where:{
-                id:Id, barberID
-            }
-        })
-    }
-
-    if(req.body.start_time){
-        await dbHandler.appointments.update({
-            start_time:req.body.start_time
-        },{
-            where:{
-                id:Id, barberID
-            }
-        })
-    }
-    if(req.body.end_time){
-        await dbHandler.appointments.update({
-            end_time:req.body.end_time
-        },{
-            where:{
-                id:Id, barberID
-            }
-        })
-    }
-    if(req.body.status){
-        await dbHandler.appointments.update({
-            status:req.body.status
-        },{
-            where:{
-                id:Id, barberID
-            }
-        })
-    }
-    if(req.body.comment){
-        await dbHandler.appointments.update({
-            comment:req.body.comment
-        },{
-            where:{
-                id:Id, barberID
-            }
-        })
-    }
-    res.json({'message':'sikeres módosítás'})
     } catch (error) {
-        console.log(error);
-    return res.status(500).json({ message: 'Szerverhiba' });
+        console.error("Hiba az időpont frissítésekor:", error);
+        return res.status(500).json({ message: 'Szerverhiba' });
     }
-    
-
-})
+});
 
 
 const SK=process.env.SECRET_KEY
