@@ -8,6 +8,7 @@ using BarberManager.Models;
 using BarberManager.Services;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using System.Runtime.InteropServices;
 
 namespace BarberManager.ViewModels
 {
@@ -73,8 +74,18 @@ namespace BarberManager.ViewModels
             var data = await _api.GetMyAppointmentsAsync();
             var newList = new ObservableCollection<AppointmentCard>();
 
-            foreach (var dbApp in data)
+            // platform check
+            bool isMobile = RuntimeInformation.IsOSPlatform(OSPlatform.Create("ANDROID")) ||
+                            RuntimeInformation.IsOSPlatform(OSPlatform.Create("IOS"));
+
+            foreach (var dbApp in data) 
             {
+                
+                if (isMobile && dbApp.StartTime.Date != DateTime.Today)
+                {
+                    continue;
+                }
+
                 newList.Add(new AppointmentCard
                 {
                     Id = dbApp.Id,
@@ -93,6 +104,7 @@ namespace BarberManager.ViewModels
                     TimeString = $"{dbApp.StartTime:HH:mm} - {dbApp.EndTime:HH:mm}"
                 });
             }
+
             Appointments = newList;
         }
 
