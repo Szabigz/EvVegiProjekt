@@ -40,7 +40,7 @@ router.post("/barberReg", async(req,res)=>{
         isAdmin: isAdmin
     })
     dbHandler.barber.password = await bcrypt.hash(password,9)
-    res.status(200).json({message: 'sikeres regisztracio', id:newBarber.id}).end()
+    res.status(201).json({message: 'sikeres regisztracio', id:newBarber.id}).end()
 
 })
 
@@ -83,10 +83,18 @@ router.delete("/barberDelete/:id", Auth(), async (req, res) => {
     try {
         const Id = req.params.id
         const id = req.uid;
+
+        if (isNaN(Id)) {
+            return res.status(400).json({ message: 'Invalid ID' });
+        }
+
         const oneBarber = await dbHandler.barber.findOne({ where: { id:Id } });
 
         if (!oneBarber) {
-            return res.status(400).json({ message: "Nincs ilyen felhasználó" });
+            return res.status(404).json({ message: "Nincs ilyen felhasználó" });
+        }
+        if (!id) {
+            return res.status(401).json({ message: "Hiányzó Tool ID / jogosultság" });
         }
 
         await dbHandler.barber.destroy({ where: { id:Id } });
@@ -103,14 +111,24 @@ router.put('/barberUpdate/:id', Auth(), async(req,res) =>{
     try {
         const Id = req.params.id
         const id = req.uid
+
+        if (isNaN(Id)) {
+            return res.status(400).json({ message: 'Invalid ID' });
+        }
+
         const oneBarber = await dbHandler.barber.findOne({ where: { id:Id } });
 
-        if (!oneBarber) {
-            return res.status(400).json({ message: "Nincs ilyen felhasználó" });
+        if (!oneBarber) {   
+            return res.status(404).json({ message: "Nincs ilyen felhasználó" });
         }
-        if(!id){
-        return res.status(400).json({'message': 'Hiányzó ID'})
-    }
+        if (!id) {
+            return res.status(401).json({ message: "Hiányzó Tool ID / jogosultság" });
+        }
+        const { name, email, password, phoneNum } = req.body;
+
+        if (!name && !email && !password && !phoneNum) {
+            return res.status(400).json({ message: "Nincs módosítandó adat" });
+        }
 
     if(req.body.name){
         await dbHandler.barber.update({

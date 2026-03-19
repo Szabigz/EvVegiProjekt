@@ -56,10 +56,18 @@ router.delete("/workhoursDelete/:id", Auth(), async (req, res) => {
     try {
         const Id = req.params.id
         const barberID = req.uid;
+
+        if (isNaN(Id)) {
+            return res.status(400).json({ message: 'Invalid ID' });
+        }
+
         const oneWorkhour = await dbHandler.workhours.findOne({ where: { id:Id, barberID} });
 
         if (!oneWorkhour) {
-            return res.status(400).json({ message: "Nincs ilyen felhasználó" });
+            return res.status(404).json({ message: "Nincs ilyen felhasználó" });
+        }
+        if (!barberID) {
+            return res.status(401).json({ message: "Hiányzó Tool ID / jogosultság" });
         }
 
         await dbHandler.workhours.destroy({ where: { id:Id, barberID } });
@@ -76,14 +84,25 @@ router.put('/workhoursUpdate/:id', Auth(), async(req,res) =>{
     try {
         const Id = req.params.id
         const id = req.uid
-        const oneService = await dbHandler.workhours.findOne({ where: { id:Id } });
-
-        if (!oneService) {
-            return res.status(400).json({ message: "Nincs ilyen felhasználó" });
+        
+        if (isNaN(Id)) {
+            return res.status(400).json({ message: 'Invalid ID' });
         }
-        if(!id){
-        return res.status(400).json({'message': 'Hiányzó Tool ID'})
-    }
+
+        const oneWorkhours = await dbHandler.workhours.findOne({ where: { id:Id } });
+
+        if (!oneWorkhours) {
+            return res.status(404).json({ message: "Nincs ilyen bejegyzés" });
+        }
+        if (!id) {
+            return res.status(401).json({ message: "Hiányzó Tool ID / jogosultság" });
+        }
+        const { barberID, dayOfWeek, start_time, end_time } = req.body;
+        if (!barberID && !dayOfWeek && !start_time && !end_time) {
+            return res.status(400).json({ message: "Nincs módosítandó adat" });
+        }
+        
+    
 
 
     if(req.body.barberID){

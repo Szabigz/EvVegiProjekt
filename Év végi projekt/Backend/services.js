@@ -71,10 +71,19 @@ router.delete("/servicesDelete/:id", Auth(), async (req, res) => {
     try {
         const Id = req.params.id
         const barberID = req.uid;
+
+        if (isNaN(Id)) {
+            return res.status(400).json({ message: 'Invalid ID' });
+        }
+
         const oneService = await dbHandler.services.findOne({ where: { id:Id, barberID } });
 
         if (!oneService) {
-            return res.status(400).json({ message: "Nincs ilyen felhasználó" });
+            return res.status(404).json({ message: "Nincs ilyen felhasználó" });
+        }
+
+        if (!barberID) {
+            return res.status(401).json({ message: "Hiányzó Tool ID / jogosultság" });
         }
 
         await dbHandler.services.destroy({ where: { id:Id, barberID } });
@@ -91,10 +100,18 @@ router.put('/servicesUpdate/:id', Auth(), async(req,res) =>{
     try {
         const Id = req.params.id
         const barberID = req.uid
+
+        if (isNaN(Id)) {
+            return res.status(400).json({ message: 'Invalid ID' });
+        }
+
         const oneService = await dbHandler.services.findOne({ where: { id:Id, barberID } });
 
         if (!oneService) {
-            return res.status(400).json({ message: "Nincs ilyen felhasználó" });
+            return res.status(404).json({ message: "Nincs ilyen felhasználó" });
+        }
+        if (!barberID) {
+            return res.status(401).json({ message: "Hiányzó Tool ID / jogosultság" });
         }
         
 

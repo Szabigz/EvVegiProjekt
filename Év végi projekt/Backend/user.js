@@ -33,29 +33,42 @@ router.get("/usersAll", Auth(), async (req, res) => {
 });
 
 router.post("/userReg", async (req, res) => {
-    console.log(req.body)
+    console.log(req.body);
 
-    const { email, name, password, phoneNum } = req.body
+    const { email, name, password, phoneNum } = req.body;
 
-    const oneUser = await dbHandler.user.findOne({
-        where: { email: email }
-    })
-
-    if (oneUser) {
-        return res.status(400).json({ message: "Mar van ilyen" })
+    // 🔥 EZ HIÁNYZIK
+    if (!email || !name || !password || !phoneNum) {
+        return res.status(400).json({ message: "Missing fields" });
     }
 
-    const hashedPassword = await bcrypt.hash(password, 9)
+    try {
+        const oneUser = await dbHandler.user.findOne({
+            where: { email: email }
+        });
 
-    const newUser = await dbHandler.user.create({
-        email,
-        name,
-        password: hashedPassword,
-        phoneNum
-    })
+        if (oneUser) {
+            return res.status(400).json({ message: "Mar van ilyen" });
+        }
 
-    return res.status(200).json(newUser)
-})
+        const hashedPassword = await bcrypt.hash(password, 9);
+
+        const newUser = await dbHandler.user.create({
+            email,
+            name,
+            password: hashedPassword,
+            phoneNum
+        });
+
+        return res.status(201).json(newUser);
+
+    } catch (err) {
+        console.error(err);
+        return res.status(500).json({ message: "Server error" });
+    }
+});
+
+
 router.post('/userLogin', async(req,res)=>{
     try{
         const {email, name, password}=req.body
@@ -97,10 +110,15 @@ router.delete("/userDelete/:id", Auth(), async (req, res) => {
     try {
         const Id = req.params.id
         const id = req.uid;
+        
+        if (isNaN(Id)) {
+            return res.status(400).json({ message: "Invalid ID" });
+        }
+
         const oneUser = await dbHandler.user.findOne({ where: { id:Id } });
 
         if (!oneUser) {
-            return res.status(400).json({ message: "Nincs ilyen felhasználó" });
+            return res.status(404).json({ message: "Nincs ilyen felhasználó" });
         }
 
         await dbHandler.user.destroy({ where: { id:Id } });
@@ -118,12 +136,20 @@ router.put('/userUpdate/:id', Auth(), async(req,res) =>{
         const id = req.uid
         const oneUser = await dbHandler.user.findOne({ where: { id:Id } });
 
-        if (!oneUser) {
-            return res.status(400).json({ message: "Nincs ilyen felhasználó" });
+        if (isNaN(Id)) {
+            return res.status(400).json({ message: "Invalid ID" });
         }
-        if(!id){
-        return res.status(400).json({'message': 'Hiányzó Tool ID'})
-    }
+
+        if (!oneUser) {
+            return res.status(404).json({ message: "Nincs ilyen felhasználó" });
+        }
+        if (!id) {
+            return res.status(401).json({ message: "Unauthorized" });
+        }
+        if (!req.body.name && !req.body.email && !req.body.password && !req.body.phoneNum) {
+            return res.status(400).json({ message: "No data to update" });
+        }
+        
 
     if(req.body.name){
         await dbHandler.user.update({

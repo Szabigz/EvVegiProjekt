@@ -3,9 +3,10 @@ const router=express.Router()
 const { Op, where } = require("sequelize");
 const Auth=require('./Auth')
 const Log = require('./log') 
+
 const dbHandler=require('./dbHandler')
-const JWT= require('jsonwebtoken');
-const { sendBookingEmail } = require('./emailsender.js')
+const JWT= require('jsonwebtoken')
+
 
 
 router.get("/appointmentMyBarber", Auth(), async (req, res) => {
@@ -46,55 +47,54 @@ router.get("/appointmentMyUser", Auth(), async (req, res) => {
 
 
 router.get("/availableSlots/:barberID/:date", async (req,res)=>{
-    try{
-        const {barberID,date} = req.params
+    try {
+        const {barberID, date} = req.params;
 
-        const startDay = new Date(date+" 00:00:00")
-        const endDay = new Date(date+" 23:59:59")
-    
+        const startDay = new Date(date+" 00:00:00");
+        const endDay = new Date(date+" 23:59:59");
+
         const workhour = await dbHandler.workhours.findOne({
-            where:{
+            where: {
                 barberID,
-                dayOfWeek:new Date(date).getDay()
+                dayOfWeek: new Date(date).getDay()
             }
-        })
+        });
+
         if (!workhour) {
-            return res.status(404).json({message:"Nincs munkaidő ehez a fodrászhoz ezen a napon"})
+            // Ha nincs workhour, nincs slot
+            return res.status(200).json([]);
         }
+
         const appointments = await dbHandler.appointments.findAll({
             where:{
                 barberID,
                 status:"booked",
-                start_time:{
-                    [Op.between]:[startDay,endDay]
-                }   
-            }
-        })
-    
-        const slots=[]
-    
-        let start = new Date(date+" "+workhour.start_time)
-        let end = new Date(date+" "+workhour.end_time)
-    
+                start_time: { [Op.between]: [startDay, endDay] }
+            }   
+        });
+
+        const slots = [];
+        let start = new Date(date+" "+workhour.start_time);
+        let end = new Date(date+" "+workhour.end_time);
+
         while(start < end){
-    
             const booked = appointments.some(a =>
                 new Date(a.start_time).getTime() === start.getTime()
-            )
-    
+            );
+
             if(!booked){
-                slots.push(start)
+                slots.push(start);
             }
-    
-            start = new Date(start.getTime()+30*60000)
+
+            start = new Date(start.getTime() + 30*60000);
         }
-        res.status(200).json(slots)
+
+        res.status(200).json(slots);
+    } catch (error) {
+        console.log("Error in /availableSlots:", error);
+        res.status(500).json({ message: "Szerver hiba" });
     }
-    catch(err){
-        res.status(500).json({message:"Szerver hiba"})
-    }
-    
-})
+});
 
 
 
@@ -122,8 +122,8 @@ router.post("/appointmentPost", Auth(), async(req,res)=>{
         end_time:end_time,
         comment:comment
         
-    })
-    res.status(200).json({message: 'sikeres regisztracio', id:newAppointment.id}).end()
+    })      
+    return res.status(200).json({message: 'sikeres regisztracio', id:newAppointment.id}).end()
     } catch (error) {
         console.log(error)
         res.status(500).json(error)
@@ -159,27 +159,10 @@ router.post("/appointmentUserPost", Auth(), async (req, res) => {
             comment: comment,
             status: "booked"
         })
-        /*const user=await dbHandler.user.findByPk(userID)
-        const service= await dbHandler.services.findByPk(serviceID)
-        const barber= await dbHandler.barber.findByPk(barberID)
-        try{
-            await sendBookingEmail(
-                user.email,
-                barber.name,
-                service.name,
-                start_time,
-                end_time 
-            )
-        }
-        catch(err){
-            console.log("Email hiba: ",err);
-        }*/
         res.status(200).json({
             message: "Foglalás sikeres",
             id:newAppointment.id
-        }
-    )
-        
+        })
     }
     catch(error){
         console.log(error)
@@ -188,21 +171,36 @@ router.post("/appointmentUserPost", Auth(), async (req, res) => {
         })
     }
 })
+function ValidateId() {
+    return (req, res, next) => {
+        const rawId = req.params.id;
+        if (isNaN(rawId)) {
+            return res.status(400).json({ message: "Invalid ID" });
+        }
+        next();
+    }
+}
 
-
-router.delete("/appointmentDelete/:id", Auth(), Log(), async (req, res) => {
-    const Id = req.params.id;
-    const uid = req.uid;
+router.delete("/appointmentDelete/:id", Auth(), ValidateId(),Log(), async (req, res) => {
     try {
-        const appointment = await dbHandler.appointments.findOne({ where: { id: Id} });
+        const uid = req.uid;
+        const Id = req.params.id
+        
 
+        const appointment = await dbHandler.appointments.findOne({ where: { id: Id} });
         if (!appointment) {
             return res.status(404).send("Időpont nem található");
         }
+
+        if (!uid) return res.status(401).json({ message: 'No token' });
+
          if (appointment.barberID === uid) {
             await dbHandler.appointments.destroy({ where: { id: Id } });
             return res.status(200).send("Időpont teljesen törölve a barber által");
         }
+
+
+
          if (appointment.userID === uid) {
             
             await appointment.update({
@@ -212,7 +210,7 @@ router.delete("/appointmentDelete/:id", Auth(), Log(), async (req, res) => {
 
             return res.status(200).send("Időpont lemondva, újra foglalható");
         }
-        return res.status(403).send("Nincs jogosultságod lemondani ezt az időpontot");
+        return res.status(401).send("Nincs jogosultságod lemondani ezt az időpontot");
         
         
     } catch (err) {
@@ -245,33 +243,52 @@ router.put("/appointmentBook/:id", Auth(), async (req, res) => {
         { where: { id: Id } }
     )
 
-    res.status(200).send("Időpont sikeresen lefoglalva")
+   return res.status(200).send("Időpont sikeresen lefoglalva")
 })
 
 
-router.put('/appointmentUpdate/:id', Auth(), async(req,res) =>{
-
+router.put('/appointmentUpdate/:id', Auth(), async (req, res) => {
     try {
-        const Id = req.params.id
-        const barberID = req.uid
-        const conflictingAppointment = await dbHandler.appointments.findOne({
-            where: {
-                barberID: req.uid,
-                start_time: { [Op.lt]: req.body.end_time },
-                end_time: { [Op.gt]: req.body.start_time },
-                id: { [Op.ne]: Id },
-                status: { [Op.ne]: 'canceled' }
-            }
-        })
-        
-        if (conflictingAppointment) {
-            return res.status(400).json({ message: "Ez a barber már foglalt az adott időintervallumban" })
-        }
-        const oneAppointment = await dbHandler.appointments.findOne({ where: { id:Id, barberID  } });
+        const Id = req.params.id;
+        const barberID = req.uid;
 
-        if (!oneAppointment) {
-            return res.status(400).json({ message: "Nincs ilyen felhasználó" });
+        if (isNaN(Id)) {
+            return res.status(400).json({ message: 'Invalid ID' });
         }
+
+        if (!barberID) {
+            return res.status(401).json({ message: "Hiányzó Tool ID / jogosultság" });
+        }
+
+        if (!req.body.start_time && !req.body.end_time && !req.body.comment) {
+            return res.status(400).json({ message: 'Nincs frissítendő adat' });
+        }
+
+        const oneAppointment = await dbHandler.appointments.findOne({ where: { id: Id, barberID }});
+        if (!oneAppointment) {
+            return res.status(404).json({ message: "Appointment not found" });
+        }
+
+        // Check conflicting appointment only if time is updated
+        if (req.body.start_time && req.body.end_time) {
+            const conflictingAppointment = await dbHandler.appointments.findOne({
+                where: {
+                    barberID,
+                    start_time: { [Op.lt]: req.body.end_time },
+                    end_time: { [Op.gt]: req.body.start_time },
+                    id: { [Op.ne]: Id },
+                    status: { [Op.ne]: 'canceled' }
+                }
+            });
+
+            if (conflictingAppointment) {
+                return res.status(400).json({ message: "Ez a barber már foglalt az adott időintervallumban" });
+            }
+        }
+        
+
+        
+        
        
 
     if(req.body.userID){
