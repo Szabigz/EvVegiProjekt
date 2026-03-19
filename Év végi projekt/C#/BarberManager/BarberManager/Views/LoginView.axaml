@@ -1,13 +1,12 @@
-ï»¿<UserControl xmlns="https://github.com/avaloniaui"
+<UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             xmlns:vm="using:BarberManager.ViewModels"
-             mc:Ignorable="d" d:DesignWidth="400" d:DesignHeight="600"
-             x:DataType="vm:LoginViewModel"
-             x:Class="BarberManager.Views.LoginView">
-
-	<Grid Background="#222222">
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:Class="BarberManager.LoginView"
+			 xmlns:vm="using:BarberManager.ViewModels"
+x:DataType="vm:LoginViewModel">
+<Grid Background="#222222">
 
 		<Border Background="White"
                 Width="380"
@@ -33,14 +32,14 @@
 				
                 <!-- Nev -->
 				<StackPanel>
-					<TextBlock Text="NÃ©v" FontWeight="SemiBold" Margin="0,0,0,5"/>
-					<TextBox Text="{Binding Name}" Watermark="Ãrd be a neved..."/>
+					<TextBlock Text="Név" FontWeight="SemiBold" Margin="0,0,0,5"/>
+					<TextBox Text="{Binding Name}" Watermark="Írd be a neved..."/>
 				</StackPanel>
 
 				<!-- Email  -->
 				<StackPanel>
 					<TextBlock Text="Email" FontWeight="SemiBold" Margin="0,0,0,5"/>
-					<TextBox Text="{Binding Email}" Watermark="Ãrd be az email cÃ­med..."/>
+					<TextBox Text="{Binding Email}" Watermark="Írd be az email címed..."/>
 				</StackPanel>
 
 				<!-- Jelszo -->
@@ -48,7 +47,7 @@
 					<TextBox Text="{Binding Password}"
 							 PasswordChar="*"
 							 RevealPassword="{Binding IsPasswordVisible}"
-							 Watermark="Add meg a jelszÃ³t..."
+							 Watermark="Add meg a jelszót..."
 							 Padding="10,6,36,6"/>
 
 					<Button Command="{Binding TogglePasswordVisibilityCommand}"
@@ -76,7 +75,7 @@
 
 				<!-- Telefonszam -->
 				<StackPanel IsVisible="{Binding IsRegisterMode}">
-					<TextBlock Text="TelefonszÃ¡m" FontWeight="SemiBold" Margin="0,0,0,5"/>
+					<TextBlock Text="Telefonszám" FontWeight="SemiBold" Margin="0,0,0,5"/>
 					<TextBox Text="{Binding PhoneNum}" Watermark="Pl.: +36 20 123 4567"/>
 				</StackPanel>
 
@@ -99,5 +98,4 @@
                         Cursor="Hand"/>
 			</StackPanel>
 		</Border>
-	</Grid>
-</UserControl>
+	</Grid></UserControl>

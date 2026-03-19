@@ -1,12 +1,12 @@
 ﻿<UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:vm="using:BarberManager.ViewModels"
+             xmlns:models="using:BarberManager.Models"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              mc:Ignorable="d" d:DesignWidth="1000" d:DesignHeight="800"
-             x:DataType="vm:AppointmentsViewModel"
-             x:Class="BarberManager.Views.AppointmentsView">
-	
+             x:Class="BarberManager.Views.AppointmentsView"
+             x:DataType="vm:AppointmentsViewModel">
 	<Grid>
 		<!-- naptar -->
 		<Grid RowDefinitions="Auto, *">
@@ -23,13 +23,12 @@
 						<Path Fill="Black" Stretch="Uniform" Width="20" Height="20" 
 							  Data="M12 6C12.5523 6 13 6.44772 13 7V11H17C17.5523 11 18 11.4477 18 12C18 12.5523 17.5523 13 17 13H13V17C13 17.5523 12.5523 18 12 18C11.4477 18 11 17.5523 11 17V13H7C6.44772 13 6 12.5523 6 12C6 11.4477 6.44772 11 7 11H11V7C11 6.44772 11.4477 6 12 6Z M1 12C1 5.92487 5.92487 1 12 1C18.0751 1 23 5.92487 23 12C23 18.0751 18.0751 23 12 23C5.92487 23 1 18.0751 1 12ZM12 3C7.02944 3 3 7.02944 3 12C3 16.9706 7.02944 21 12 21C16.9706 21 21 16.9706 21 12C21 7.02944 16.9706 3 12 3Z"/>
 					</Button>
-					<StackPanel Grid.Column="1" HorizontalAlignment="Center"><TextBlock Text="Hétfő" FontWeight="Bold" FontSize="14" /><TextBlock Text="{Binding Mon}" FontSize="11" Foreground="Gray" HorizontalAlignment="Center"/></StackPanel>
-					<StackPanel Grid.Column="2" HorizontalAlignment="Center"><TextBlock Text="Kedd" FontWeight="Bold" FontSize="14" /><TextBlock Text="{Binding Tue}" FontSize="11" Foreground="Gray" HorizontalAlignment="Center"/></StackPanel>
-					<StackPanel Grid.Column="3" HorizontalAlignment="Center"><TextBlock Text="Szerda" FontWeight="Bold" FontSize="14" /><TextBlock Text="{Binding Wed}" FontSize="11" Foreground="Gray" HorizontalAlignment="Center"/></StackPanel>
-					<StackPanel Grid.Column="4" HorizontalAlignment="Center"><TextBlock Text="Csütörtök" FontWeight="Bold" FontSize="14" /><TextBlock Text="{Binding Thu}" FontSize="11" Foreground="Gray" HorizontalAlignment="Center"/></StackPanel>
-					<StackPanel Grid.Column="5" HorizontalAlignment="Center"><TextBlock Text="Péntek" FontWeight="Bold" FontSize="14" /><TextBlock Text="{Binding Fri}" FontSize="11" Foreground="Gray" HorizontalAlignment="Center"/></StackPanel>
-					<StackPanel Grid.Column="6" HorizontalAlignment="Center"><TextBlock Text="Szombat" FontWeight="Bold" FontSize="14" /><TextBlock Text="{Binding Sat}" FontSize="11" Foreground="Gray" HorizontalAlignment="Center"/></StackPanel>
-
+					<StackPanel Grid.Column="1" HorizontalAlignment="Center" x:CompileBindings="False"><TextBlock Text="Hétfő" FontWeight="Bold" FontSize="14" /><TextBlock Text="{Binding Mon}" FontSize="11" Foreground="Gray" HorizontalAlignment="Center"/></StackPanel>
+<StackPanel Grid.Column="2" HorizontalAlignment="Center" x:CompileBindings="False"><TextBlock Text="Kedd" FontWeight="Bold" FontSize="14" /><TextBlock Text="{Binding Tue}" FontSize="11" Foreground="Gray" HorizontalAlignment="Center"/></StackPanel>
+<StackPanel Grid.Column="3" HorizontalAlignment="Center" x:CompileBindings="False"><TextBlock Text="Szerda" FontWeight="Bold" FontSize="14" /><TextBlock Text="{Binding Wed}" FontSize="11" Foreground="Gray" HorizontalAlignment="Center"/></StackPanel>
+<StackPanel Grid.Column="4" HorizontalAlignment="Center" x:CompileBindings="False"><TextBlock Text="Csütörtök" FontWeight="Bold" FontSize="14" /><TextBlock Text="{Binding Thu}" FontSize="11" Foreground="Gray" HorizontalAlignment="Center"/></StackPanel>
+<StackPanel Grid.Column="5" HorizontalAlignment="Center" x:CompileBindings="False"><TextBlock Text="Péntek" FontWeight="Bold" FontSize="14" /><TextBlock Text="{Binding Fri}" FontSize="11" Foreground="Gray" HorizontalAlignment="Center"/></StackPanel>
+<StackPanel Grid.Column="6" HorizontalAlignment="Center" x:CompileBindings="False"><TextBlock Text="Szombat" FontWeight="Bold" FontSize="14" /><TextBlock Text="{Binding Sat}" FontSize="11" Foreground="Gray" HorizontalAlignment="Center"/></StackPanel>
 					<Button Grid.Column="7" Command="{Binding PrevWeekCommand}" Background="Transparent" Padding="10">
 						<Path Fill="Black" Stretch="Uniform" Width="14" Height="14" Data="M15.2071 6.29289C15.5976 6.68342 15.5976 7.31658 15.2071 7.70711L10.9142 12L15.2071 16.2929C15.5976 16.6834 15.5976 17.3166 15.2071 17.7071C14.8166 18.0976 14.1834 18.0976 13.7929 17.7071L8.79289 12.7071C8.40237 12.3166 8.40237 11.6834 8.79289 11.2929L13.7929 6.29289C14.1834 5.90237 14.8166 5.90237 15.2071 6.29289Z"/>
 					</Button>
@@ -173,7 +172,8 @@
 					<TextBlock Text="Vendég kiválasztása" FontWeight="SemiBold" Foreground="Gray"/>
 					<ComboBox ItemsSource="{Binding AllUsers}" SelectedItem="{Binding NewSelectedUser}" HorizontalAlignment="Stretch" PlaceholderText="Válassz vendéget (opcionális)...">
 						<ComboBox.ItemTemplate>
-							<DataTemplate>
+							<!-- EZT A SORT CSERÉLD LE: -->
+							<DataTemplate x:DataType="models:User">
 								<TextBlock Text="{Binding DisplayName}"/>
 							</DataTemplate>
 						</ComboBox.ItemTemplate>
@@ -185,7 +185,21 @@
 					<TextBlock Text="Szolgáltatás (Kötelező)" FontWeight="SemiBold" Foreground="Gray"/>
 					<ComboBox ItemsSource="{Binding AllServices}" SelectedItem="{Binding NewSelectedService}" HorizontalAlignment="Stretch" PlaceholderText="Válassz szolgáltatást...">
 						<ComboBox.ItemTemplate>
-							<DataTemplate>
+							<!-- EZT A SORT CSERÉLD LE: -->
+							<DataTemplate x:DataType="models:Service">
+								<TextBlock Text="{Binding Name}"/>
+							</DataTemplate>
+						</ComboBox.ItemTemplate>
+					</ComboBox>
+				</StackPanel>
+
+				<!-- service lista -->
+				<StackPanel Spacing="5">
+					<TextBlock Text="Szolgáltatás (Kötelező)" FontWeight="SemiBold" Foreground="Gray"/>
+					<ComboBox ItemsSource="{Binding AllServices}" SelectedItem="{Binding NewSelectedService}" HorizontalAlignment="Stretch" PlaceholderText="Válassz szolgáltatást...">
+						<ComboBox.ItemTemplate>
+							<!-- 3. JAVÍTÁS: Itt a DataTemplate-nek meg kell mondani, hogy ez egy Model.Service lista -->
+							<DataTemplate x:DataType="models:Service">
 								<TextBlock Text="{Binding Name}"/>
 							</DataTemplate>
 						</ComboBox.ItemTemplate>
