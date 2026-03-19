@@ -3,7 +3,9 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
-             x:Class="BarberManager.WorkHoursView">
+             x:Class="BarberManager.WorkHoursView"
+             xmlns:vm="using:BarberManager.ViewModels"
+x:DataType="vm:WorkHoursViewModel">
 <Grid Margin="20" RowDefinitions="Auto, Auto, *, Auto">
         <!-- Header -->
         <StackPanel Grid.Row="0" Orientation="Horizontal" Spacing="10" Margin="0,0,0,15">
@@ -17,7 +19,7 @@
         <!-- Napok listaja -->
         <ItemsControl Grid.Row="2" ItemsSource="{Binding Days}">
             <ItemsControl.ItemTemplate>
-                <DataTemplate>
+<DataTemplate x:DataType="vm:WorkDayDisplay">
                     <Border Background="#F9F9F9" Padding="15" CornerRadius="8" Margin="0,0,0,5">
                         <Grid ColumnDefinitions="150, *, *">
                             <TextBlock Text="{Binding DayName}" VerticalAlignment="Center" FontWeight="SemiBold"/>

@@ -3,7 +3,9 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
-             x:Class="BarberManager.ProfileView">
+             x:Class="BarberManager.ProfileView"
+			 xmlns:vm="using:BarberManager.ViewModels"
+x:DataType="vm:ProfileViewModel">
 <Grid Margin="40">
         <Border Background="White" CornerRadius="15" BoxShadow="0 4 20 0 #11000000" Padding="30" VerticalAlignment="Top" MaxWidth="500">
             <StackPanel Spacing="20">

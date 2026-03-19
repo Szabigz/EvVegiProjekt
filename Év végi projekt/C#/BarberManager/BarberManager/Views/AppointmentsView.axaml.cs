@@ -1,8 +1,10 @@
-using System.Linq;
+ï»¿using System.Linq;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Markup.Xaml;
 using Avalonia.Media;
+using BarberManager.ViewModels;
+
 
 namespace BarberManager;
 
@@ -99,7 +101,7 @@ public partial class AppointmentsView : UserControl
                     Command = vm.MarkAsDoneCommand,
                     CommandParameter = app
                 };
-                ToolTip.SetTip(completedBtn, "Megjelölés készként");
+                ToolTip.SetTip(completedBtn, "MegjelÃ¶lÃ©s kÃ©szkÃ©nt");
                 Grid.SetColumn(completedBtn, 1);
                 topGrid.Children.Add(completedBtn);
             }
@@ -124,7 +126,7 @@ public partial class AppointmentsView : UserControl
                 Command = vm.ViewDetailsCommand,
                 CommandParameter = app
             };
-            ToolTip.SetTip(detailsBtn, "Részletek");
+            ToolTip.SetTip(detailsBtn, "RÃ©szletek");
             Grid.SetColumn(detailsBtn, 2);
             topGrid.Children.Add(detailsBtn);
 
