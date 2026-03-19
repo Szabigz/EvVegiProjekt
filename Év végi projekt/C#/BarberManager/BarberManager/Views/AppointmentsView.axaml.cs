@@ -6,7 +6,7 @@ using Avalonia.Media;
 using BarberManager.ViewModels;
 
 
-namespace BarberManager;
+namespace BarberManager.Views;
 
 public partial class AppointmentsView : UserControl
 {
