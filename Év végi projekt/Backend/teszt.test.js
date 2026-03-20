@@ -124,6 +124,31 @@ describe('testing /servicesPost post route', () => {
         expect(response.statusCode).toBe(200)
         serviceId = response.body.id;
     })
+    test("servicesPost401 no token", async () => {
+        const res = await request(server)
+            .post('/servicesPost')
+            .send({ name: "asd" });
+
+        expect(res.statusCode).toBe(401);
+    })
+
+    test("servicesPost 400 no data", async () => {
+        const res = await request(server)
+            .post('/servicesPost')
+            .send({})
+            .set("Authorization", `Bearer ${barberToken}`);
+
+        expect(res.statusCode).toBe(400);
+    })
+
+    test("servicesPost 400/500 bad body", async () => {
+        const res = await request(server)
+            .post('/servicesPost')
+            .send("rossz")
+            .set("Authorization", `Bearer ${barberToken}`);
+
+        expect([400, 500]).toContain(res.statusCode);
+    })
 })
 
 
@@ -134,6 +159,30 @@ describe('testing /workhoursPost post route', () => {
         .set("Authorization", `Bearer ${barberToken}`)
         expect(response.statusCode).toBe(200)
         workhoursId = response.body.id;
+    })
+    test("workhoursPost 401 no token", async () => {
+        const res = await request(server)
+            .post('/workhoursPost')
+            .send({});
+        expect(res.statusCode).toBe(401);
+    });
+
+    test("workhoursPost 400 no data", async () => {
+        const res = await request(server)
+            .post('/workhoursPost')
+            .send({})
+            .set("Authorization", `Bearer ${barberToken}`);
+
+        expect(res.statusCode).toBe(400);
+    });
+
+    test("workhoursPost 400/500 bad body", async () => {
+        const res = await request(server)
+            .post('/workhoursPost')
+            .send("rossz adat")
+            .set("Authorization", `Bearer ${barberToken}`);
+
+        expect([400, 500]).toContain(res.statusCode);
     })
 })
 
@@ -154,15 +203,45 @@ describe('testing /appointmentPost post route', () => {
 
         expect(response.statusCode).toBe(200);
         appointmentId = response.body.id;
-    });
-});
+    })
+    test('appointmentPost 400 ', async () => {
+        const response = await request(server)
+            .post('/appointmentPost')
+            .send({
+                userID: userId,
+                barberID: barberId,
+                serviceID: serviceId,
+                start_time: "2026-03-18 10:00",
+                end_time: "2026-03-18 16:30",
+                comment: "ütközés"
+            })
+            .set("Authorization", `Bearer ${barberToken}`);
+    
+        expect(response.statusCode).toBe(400);
+    })
+    test("appointmentPost 401 no token", async () => {
+        const res = await request(server)
+            .post('/appointmentPost')
+            .send({});
+        expect(res.statusCode).toBe(401);
+    })
+
+    test("appointmentPost 400/500 bad body", async () => {
+        const res = await request(server)
+            .post('/appointmentPost')
+            .send("rossz adat")
+            .set("Authorization", `Bearer ${barberToken}`);
+
+        expect([400, 500]).toContain(res.statusCode);
+    })
+})
 
 describe('testing /appointmentUserPost post route', () => {
     test('should return 200 status code', async () => {
         const start_time = "2026-03-20 10:00"
         const end_time = "2026-03-20 11:00"
         const response = await request(server)
-            .post('/appointmentUserPost') // <<< itt a helyes endpoint
+            .post('/appointmentUserPost')
             .send({ 
                 barberID:barberId,
                 serviceID: serviceId, 
@@ -173,12 +252,40 @@ describe('testing /appointmentUserPost post route', () => {
             })
             .set("Authorization", `Bearer ${userToken}`);
 
-        console.log("APPOINTMENT POST RESPONSE:", response.body);
-        expect(response.body.id).toBeDefined();  // biztos, hogy van ID
-        appointmentId = response.body.id;         // eltároljuk a későbbi tesztekhez
+        expect(response.body.id).toBeDefined();  
+        appointmentId = response.body.id        
         expect(response.statusCode).toBe(200);
+    })
+    test("appointmentUserPost 401 no token", async () => {
+        const res = await request(server)
+            .post('/appointmentUserPost')
+            .send({});
+        expect(res.statusCode).toBe(401);
     });
-});;
+
+    test("appointmentUserPost 400 booked appointment", async () => {
+        const res = await request(server)
+            .post('/appointmentUserPost')
+            .send({
+                barberID: barberId,
+                serviceID: serviceId,
+                start_time: "2026-03-20 10:00",
+                end_time: "2026-03-20 11:00"
+            })
+            .set("Authorization", `Bearer ${userToken}`);
+
+        expect(res.statusCode).toBe(400);
+    });
+
+    test("appointmentUserPost 400/500 bad body", async () => {
+        const res = await request(server)
+            .post('/appointmentUserPost')
+            .send("rossz")
+            .set("Authorization", `Bearer ${userToken}`)
+
+        expect([400, 500]).toContain(res.statusCode)
+    })
+})
 
 //Get testek
 
@@ -247,6 +354,10 @@ describe("testing /appointmentMyBarber get route", () =>{
         expect(response.statusCode).toBe(200)
         
     })
+    test("appointmentMyBarber 401 no token", async () => {
+        const res = await request(server).get('/appointmentMyBarber');
+        expect(res.statusCode).toBe(401);
+    })
 })
 
 
@@ -255,6 +366,10 @@ describe("testing /appointmentMyUser get route", () =>{
         const response = await request(server).get('/appointmentMyUser').set("Authorization", `Bearer ${userToken}`)
         expect(response.statusCode).toBe(200)
         
+    })
+    test("appointmentMyUser 401 no token", async () => {
+        const res = await request(server).get('/appointmentMyUser');
+        expect(res.statusCode).toBe(401);
     })
 })
 
@@ -276,18 +391,23 @@ describe('GET /availableSlots/:barberID/:date', () => {
 
         expect(Array.isArray(response.body)).toBe(true);
 
-        // Minden slot érvényes dátum
         response.body.forEach(slot => {
             expect(!isNaN(new Date(slot).getTime())).toBe(true);
-        });
+        })
 
         const hasTenOClock = response.body.some(slot => {
             const d = new Date(slot);
             return d.getHours() === 10;
-        });
+        })
 
         expect(hasTenOClock).toBe(true);
-    });
+    })
+    test("400/500 - bad date", async () => {
+        const res = await request(server)
+            .get(`/availableSlots/${barberId}/ROSSZ_DATUM`);
+
+        expect([400, 500]).toContain(res.statusCode);
+    })
 });
 
 
@@ -301,7 +421,7 @@ describe('testing /barberUpdate/:id put route', () => {
         .set("Authorization", `Bearer ${barberToken}`)
         expect(response.statusCode).toBe(200)
     })
-    test('400 - no data', async () => {
+    test('barberUpdate 400 no data', async () => {
         const res = await request(server)
             .put(`/barberUpdate/${barberId}`)
             .send({})
@@ -309,14 +429,14 @@ describe('testing /barberUpdate/:id put route', () => {
         expect(res.statusCode).toBe(400)
     })
 
-    test('401 - no token', async () => {
+    test('barberUpdate 401 no token', async () => {
         const res = await request(server)
             .put(`/barberUpdate/${barberId}`)
             .send({ name: "test" })
         expect(res.statusCode).toBe(401)
     })
 
-    test('404 - barber not found', async () => {
+    test('barberUpdate 404 not found', async () => {
         const res = await request(server)
             .put(`/barberUpdate/999999`)
             .set("Authorization", `Bearer ${barberToken}`)
@@ -340,7 +460,7 @@ test('should return 200 status code', async () => {
         expect(res.statusCode).toBe(401)
     })
     
-    test('404 - user not found', async () => {
+    test('userUpdate not found', async () => {
         const res = await request(server)
             .put(`/userUpdate/999999`)
             .set("Authorization", `Bearer ${userToken}`)
@@ -348,7 +468,7 @@ test('should return 200 status code', async () => {
         expect(res.statusCode).toBe(404)
     })
     
-    test('400 - invalid id', async () => {
+    test('userUpdate 400 invalid id', async () => {
         const res = await request(server)
             .put(`/userUpdate/abc`)
             .send({ name: "test" })
@@ -366,20 +486,20 @@ test('should return 200 status code', async () => {
     .set("Authorization", `Bearer ${barberToken}`)
     expect(response.statusCode).toBe(200)
     })
-    test('401 - no token', async () => {
+    test('servicesUpdate 401 no token', async () => {
         const res = await request(server)
         .put(`/servicesUpdate/${workhoursId}`)
         expect(res.statusCode).toBe(401)
     })
 
-    test('400 - invalid id', async () => {
+    test('servicesUpdate 400 invalid id', async () => {
         const res = await request(server)
             .put(`/servicesUpdate/abc`)
             .set("Authorization", `Bearer ${barberToken}`)
         expect(res.statusCode).toBe(400)
     })
 
-    test('404 - not found', async () => {
+    test('servicesUpdate 404 not found', async () => {
         const res = await request(server)
             .put(`/servicesUpdate/999999`)
             .send({ description: "ffffff" })
@@ -397,20 +517,21 @@ test('should return 200 status code', async () => {
     .set("Authorization", `Bearer ${barberToken}`)
     expect(response.statusCode).toBe(200)
     })
-    test('401 - no token', async () => {
+    test('appointmentUpdate 401 no token', async () => {
         const res = await request(server)
             .put(`/appointmentUpdate/${appointmentId}`)
         expect(res.statusCode).toBe(401)
     })
 
-    test('400 - invalid id', async () => {
+    test('appointmentUpdate 400 invalid id', async () => {
         const res = await request(server)
             .put(`/appointmentUpdate/abc`)
-            .set("Authorization", `Bearer ${barberToken}`)
+            .set("Authorization", `Bearer ${barberToken}`);
+    
         expect(res.statusCode).toBe(400)
     })
 
-    test('404 - not found', async () => {
+    test('appointmentUpdate 404 not found', async () => {
         const res = await request(server)
             .put(`/appointmentUpdate/999999`)
             .send({ start_time: "2026-03-10 10:00" })
@@ -428,7 +549,7 @@ test('should return 200 status code', async () => {
     .set("Authorization", `Bearer ${barberToken}`)
     expect(response.statusCode).toBe(200)
     })
-    test('400 - invalid id', async () => {
+    test('workhoursUpdate 400 invalid id', async () => {
         const res = await request(server)
             .put(`/workhoursUpdate/abc`)
             .send({ end_time: "20:00" })
@@ -436,7 +557,7 @@ test('should return 200 status code', async () => {
         expect(res.statusCode).toBe(400)
     })
 
-    test('400 - no data', async () => {
+    test('workhoursUpdate 400 no data', async () => {
         const res = await request(server)
             .put(`/workhoursUpdate/${workhoursId}`)
             .send({})
@@ -444,14 +565,14 @@ test('should return 200 status code', async () => {
         expect(res.statusCode).toBe(400)
     })
 
-    test('401 - no token', async () => {
+    test('workhoursUpdate 401 no token', async () => {
         const res = await request(server)
             .put(`/workhoursUpdate/${workhoursId}`)
             .send({ end_time: "20:00" })
         expect(res.statusCode).toBe(401)
     })
 
-    test('404 - not found', async () => {
+    test('workhoursUpdate 404 not found', async () => {
         const res = await request(server)
             .put(`/workhoursUpdate/999999`)
             .send({ dayOfWeek: 4 })
@@ -467,30 +588,30 @@ describe('testing /appointmentDelete/:id delete route', () => {
     test('should return 200 status code', async () => {
         const response = await request(server)
             .delete(`/appointmentDelete/${appointmentId}`)
-            .set("Authorization", `Bearer ${barberToken}`); // vagy barberToken
+            .set("Authorization", `Bearer ${barberToken}`)
 
         expect(response.statusCode).toBe(200);
     })
-    test('400 - invalid id', async () => {
+    test('appointmentDelete 400 invalid id', async () => {
         const res = await request(server)
             .delete(`/appointmentDelete/abc`)
-            .set("Authorization", `Bearer ${barberToken}`);
+            .set("Authorization", `Bearer ${barberToken}`)
         console.log("Test response:", res.body);
         expect(res.statusCode).toBe(400);
-    });
-    test('401 - no token', async () => {
+    })
+    test('appointmentDelete 401 no token', async () => {
         const res = await request(server)
             .delete(`/appointmentDelete/${appointmentId}`)
         expect(res.statusCode).toBe(401)
     })
 
-    test('404 - not found', async () => {
+    test('appointmentDelete 404 not found', async () => {
         const res = await request(server)
             .delete(`/appointmentDelete/999999`)
             .set("Authorization", `Bearer ${barberToken}`)
         expect(res.statusCode).toBe(404)
     })
-});
+})
 
 describe('testing /servicesDelete/:id delete route', () => {
 test('should return 200 status code', async () => {
@@ -499,20 +620,20 @@ test('should return 200 status code', async () => {
     .set("Authorization", `Bearer ${barberToken}`)
     expect(response.statusCode).toBe(200)
     })
-    test('401 - no token', async () => {
+    test('servicesDelete 401 no token', async () => {
         const res = await request(server)
             .delete(`/servicesDelete/${serviceId}`)
         expect(res.statusCode).toBe(401)
     })
 
-    test('400 - invalid id', async () => {
+    test('servicesDelete 400 invalid id', async () => {
         const res = await request(server)
             .delete(`/servicesDelete/abc`)
             .set("Authorization", `Bearer ${barberToken}`)
         expect(res.statusCode).toBe(400)
     })
 
-    test('404 - not found', async () => {
+    test('servicesDelete 404 not found', async () => {
         const res = await request(server)
             .delete(`/servicesDelete/999999`)
             .set("Authorization", `Bearer ${barberToken}`)
@@ -530,20 +651,20 @@ test('should return 200 status code', async () => {
     .set("Authorization", `Bearer ${barberToken}`)
     expect(response.statusCode).toBe(200)
     })
-    test('401 - no token', async () => {
+    test('workhoursDelete 401 no token', async () => {
         const res = await request(server)
             .delete(`/workhoursDelete/${workhoursId}`)
         expect(res.statusCode).toBe(401)
     })
 
-    test('400 - invalid id', async () => {
+    test('workhoursDelete 400 invalid id', async () => {
         const res = await request(server)
             .delete(`/workhoursDelete/abc`)
             .set("Authorization", `Bearer ${barberToken}`)
         expect(res.statusCode).toBe(400)
     })
 
-    test('404 - not found', async () => {
+    test('workhoursDelete 404 not found', async () => {
         const res = await request(server)
             .delete(`/workhoursDelete/999999`)
             .set("Authorization", `Bearer ${barberToken}`)
@@ -559,20 +680,20 @@ describe('testing /barberDelete/:id delete route', () => {
         .set("Authorization", `Bearer ${barberToken}`)
         expect(response.statusCode).toBe(200)
     })
-    test('401 - no token', async () => {
+    test('barberDelete 401 no token', async () => {
         const res = await request(server)
             .delete(`/barberDelete/${barberId}`)
         expect(res.statusCode).toBe(401)
     })
 
-    test('400 - invalid id', async () => {
+    test('barberDelete 400 invalid id', async () => {
         const res = await request(server)
             .delete(`/barberDelete/abc`)
             .set("Authorization", `Bearer ${barberToken}`)
         expect(res.statusCode).toBe(400)
     })
 
-    test('404 - barber not found', async () => {
+    test('barberDelete not found', async () => {
         const res = await request(server)
             .delete(`/barberDelete/999999`)
             .set("Authorization", `Bearer ${barberToken}`)
@@ -588,20 +709,20 @@ describe('testing /userDelete/:id delete route', () => {
         .set("Authorization", `Bearer ${userToken}`)
         expect(response.statusCode).toBe(200)
     })
-    test('401 - no token', async () => {
+    test('userDelete 401 no token', async () => {
         const res = await request(server)
             .delete(`/userDelete/${userId}`)
         expect(res.statusCode).toBe(401)
     })
 
-    test('400 - invalid id', async () => {
+    test('userDelete 400 invalid id', async () => {
         const res = await request(server)
             .delete(`/userDelete/abc`)
             .set("Authorization", `Bearer ${userToken}`)
         expect(res.statusCode).toBe(400)
     })
 
-    test('404 - user not found', async () => {
+    test('userDelete 404 not found', async () => {
         const res = await request(server)
             .delete(`/userDelete/999999`)
             .set("Authorization", `Bearer ${userToken}`)

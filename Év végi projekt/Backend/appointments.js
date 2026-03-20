@@ -246,7 +246,7 @@ router.put("/appointmentBook/:id", Auth(), async (req, res) => {
    return res.status(200).send("Időpont sikeresen lefoglalva")
 })
 
-router.put('/appointmentUpdate/:id', Auth(), async (req, res) => {
+router.put('/appointmentUpdate/:id', Auth(), ValidateId(), async (req, res) => {
     try {
         const Id = req.params.id;
         const barberID = req.uid;
@@ -254,6 +254,7 @@ router.put('/appointmentUpdate/:id', Auth(), async (req, res) => {
         // frissiteni valo mezok
         const updateFields = {};
         const { userID, start_time, end_time, status, comment } = req.body;
+        
 
         if (userID !== undefined) updateFields.userID = userID;
         if (start_time !== undefined) updateFields.start_time = start_time;

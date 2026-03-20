@@ -28,28 +28,38 @@ router.get("/workhoursMy", Auth(), async (req, res) => {
 
 router.post("/workhoursPost", Auth(), async(req,res)=>{
     const { dayOfWeek, start_time, end_time} = req.body
-    const onewhour = await dbHandler.workhours.findOne({
-        where:{
-            barberID:req.uid,
-            dayOfWeek: dayOfWeek,
-            start_time: { [Op.lt]: end_time },
-            end_time: { [Op.gt]: start_time }
+
+    if (!dayOfWeek || !start_time || !end_time) {
+        return res.status(400).json({ message: "Hiányzó adatok" });
+    }
+
+    try {
+        const onewhour = await dbHandler.workhours.findOne({
+            where:{
+                barberID:req.uid,
+                dayOfWeek: dayOfWeek,
+                start_time: { [Op.lt]: end_time },
+                end_time: { [Op.gt]: start_time }
+            }
+        })
+        
+        if(onewhour){
+            return res.status(400).json({message:"Mar van ilyen"})
         }
         
-    })
-    if(onewhour){
-        return res.status(400).json({message:"Mar van ilyen"})
-    }
-    
-    const workhours = await dbHandler.workhours.create({
-        barberID:req.uid,
-        dayOfWeek:dayOfWeek,
-        start_time:start_time,
-        end_time:end_time
-        
-    })
-    res.status(200).json({message: 'sikeres regisztracio', id:workhours.id}).end()
+        const workhours = await dbHandler.workhours.create({
+            barberID:req.uid,
+            dayOfWeek:dayOfWeek,
+            start_time:start_time,
+            end_time:end_time
+        })
 
+        return res.status(200).json({message: 'sikeres regisztracio',id:workhours.id});
+
+    } catch(error) {
+        console.log(error)
+        res.status(500).json({message:"Szerver hiba"})
+    }
 })
 
 router.delete("/workhoursDelete/:id", Auth(), async (req, res) => {

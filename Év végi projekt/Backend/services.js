@@ -47,25 +47,36 @@ router.get("/servicesMy", Auth(), async (req, res) => {
 
 router.post("/servicesPost", Auth(), async(req,res)=>{
     const {description, name, duration_minutes,price} = req.body
-    const oneService = await dbHandler.services.findOne({
-        where:{
-            name:name,
-            barberID: req.uid
+
+
+    if (!name || !description || !duration_minutes || !price) {
+        return res.status(400).json({ message: "Hiányzó adatok" });
+    }
+    try {
+        const oneService = await dbHandler.services.findOne({
+            where:{
+                name:name,
+                barberID: req.uid
+            }
+            
+        })
+        if(oneService){
+            return res.status(400).json({message:"Mar van ilyen"})
         }
         
-    })
-    if(oneService){
-        return res.status(400).json({message:"Mar van ilyen"})
+       const newService =  await dbHandler.services.create({
+            name:name,
+            description:description,
+            duration_minutes:duration_minutes,
+            price:price,
+            barberID:req.uid
+        })
+        res.status(200).json({message: 'sikeres regisztracio', id: newService.id}).end() 
+    } catch (error) {
+        console.log(error)
+        res.status(500).json({message:"Szerver hiba"})
     }
     
-   const newService =  await dbHandler.services.create({
-        name:name,
-        description:description,
-        duration_minutes:duration_minutes,
-        price:price,
-        barberID:req.uid
-    })
-    res.status(200).json({message: 'sikeres regisztracio', id: newService.id}).end()
 
 })
 
