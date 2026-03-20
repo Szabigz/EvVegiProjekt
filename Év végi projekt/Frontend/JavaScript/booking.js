@@ -133,7 +133,11 @@ async function generateTimeSlots() {
     timeSlotsContainer.innerHTML = ""
     if (!selectedBarber || !selectedDate) return
 
-    const formattedDate = selectedDate.toISOString().split("T")[0]
+    const year = selectedDate.getFullYear()
+    const month = String(selectedDate.getMonth() + 1).padStart(2, '0')
+    const day = String(selectedDate.getDate()).padStart(2, '0')
+    const formattedDate = `${year}-${month}-${day}`
+
     const res = await fetch(`/availableSlots/${selectedBarber}/${formattedDate}`)
     if (!res.ok) return
     const slots = await res.json()
