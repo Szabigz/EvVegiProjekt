@@ -46,56 +46,67 @@ router.get("/appointmentMyUser", Auth(), async (req, res) => {
 });
 
 
-router.get("/availableSlots/:barberID/:date", async (req,res)=>{
+router.get("/availableSlots/:barberID/:date", async (req, res) => {
     try {
-        const {barberID, date} = req.params;
+        const { barberID, date } = req.params
+        const dateParts = date.split('-')
+        const jsDate = new Date(dateParts[0], dateParts[1] - 1, dateParts[2])
+        const dayIndex = jsDate.getDay()
 
-        const startDay = new Date(date+" 00:00:00");
-        const endDay = new Date(date+" 23:59:59");
-
+        //Munkaido keresese
         const workhour = await dbHandler.workhours.findOne({
             where: {
                 barberID,
-                dayOfWeek: new Date(date).getDay()
+                dayOfWeek: dayIndex
             }
-        });
+        })
 
         if (!workhour) {
-            // Ha nincs workhour, nincs slot
-            return res.status(200).json([]);
+            return res.status(200).json([])
         }
 
+        //Foglalasok lekerese
         const appointments = await dbHandler.appointments.findAll({
-            where:{
+            where: {
                 barberID,
-                status:"booked",
-                start_time: { [Op.between]: [startDay, endDay] }
-            }   
-        });
-
-        const slots = [];
-        let start = new Date(date+" "+workhour.start_time);
-        let end = new Date(date+" "+workhour.end_time);
-
-        while(start < end){
-            const booked = appointments.some(a =>
-                new Date(a.start_time).getTime() === start.getTime()
-            );
-
-            if(!booked){
-                slots.push(start);
+                status: "booked",
+                start_time: {
+                    [Op.between]: [`${date} 00:00:00`, `${date} 23:59:59`]
+                }
             }
+        })
 
-            start = new Date(start.getTime() + 30*60000);
+        const bookedSlots = appointments.map(a => {
+            const timePart = a.start_time.includes(" ") ? a.start_time.split(" ")[1] : a.start_time
+            return timePart.substring(0, 5)
+        })
+
+        //Slotok generalasa
+        const slots = []
+        const toMin = (t) => {
+            const [h, m] = t.split(':').map(Number)
+            return h * 60 + m
         }
 
-        res.status(200).json(slots);
-    } catch (error) {
-        console.log("Error in /availableSlots:", error);
-        res.status(500).json({ message: "Szerver hiba" });
-    }
-});
+        let current = toMin(workhour.start_time.substring(0, 5))
+        const end = toMin(workhour.end_time.substring(0, 5))
 
+        while (current < end) {
+            const h = Math.floor(current / 60).toString().padStart(2, '0')
+            const m = (current % 60).toString().padStart(2, '0')
+            const timeStr = `${h}:${m}`
+
+            if (!bookedSlots.includes(timeStr)) {
+                slots.push(new Date(`${date} ${timeStr}:00`))
+            }
+            current += 30
+        }
+
+        res.status(200).json(slots)
+    } catch (error) {
+        res.status(500).json({ message: "Szerverhiba" })
+    }
+})
 
 
 
