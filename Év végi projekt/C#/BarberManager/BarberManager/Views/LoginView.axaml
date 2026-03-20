@@ -5,7 +5,8 @@
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="BarberManager.Views.LoginView"
 			 xmlns:vm="using:BarberManager.ViewModels"
-x:DataType="vm:LoginViewModel">
+             Background="White"
+             x:DataType="vm:LoginViewModel">
 <Grid Background="#222222">
 
 		<Border Background="White"
@@ -44,34 +45,34 @@ x:DataType="vm:LoginViewModel">
 
 				<!-- Jelszo -->
 				<StackPanel>
-    <TextBlock Text="Jelszó" FontWeight="SemiBold" Margin="0,0,0,5"/>
-    <Grid>
-        <TextBox Text="{Binding Password}"
-                 PasswordChar="*"
-                 RevealPassword="{Binding IsPasswordVisible}"
-                 Watermark="Add meg a jelszót..."
-                 Padding="10,6,36,6"/>
+                    <TextBlock Text="Jelszó" FontWeight="SemiBold" Margin="0,0,0,5"/>
+                    <Grid>
+                        <TextBox Text="{Binding Password}"
+                                 PasswordChar="*"
+                                 RevealPassword="{Binding IsPasswordVisible}"
+                                 Watermark="Add meg a jelszót..."
+                                 Padding="10,6,36,6"/>
 
-        <Button Command="{Binding TogglePasswordVisibilityCommand}"
-                Width="30" Height="30"
-                HorizontalAlignment="Right" VerticalAlignment="Center"
-                Background="Transparent"
-                BorderBrush="{x:Null}"
-                Padding="0"
-                Cursor="Hand">
-            <Button.Styles>
-                <Style Selector="Button:hover">
-                    <Setter Property="Background" Value="#22000000"/>
-                </Style>
-            </Button.Styles>
-            <Path Data="{Binding PasswordIcon}"
-                  Fill="Gray"
-                  Stretch="Uniform"
-                  Width="20" Height="20"
-                  VerticalAlignment="Center"/>
-        </Button>
-    </Grid>
-</StackPanel>
+                        <Button Command="{Binding TogglePasswordVisibilityCommand}"
+                                Width="30" Height="30"
+                                HorizontalAlignment="Right" VerticalAlignment="Center"
+                                Background="Transparent"
+                                BorderBrush="{x:Null}"
+                                Padding="0"
+                                Cursor="Hand">
+                            <Button.Styles>
+                                <Style Selector="Button:hover">
+                                    <Setter Property="Background" Value="#22000000"/>
+                                </Style>
+                            </Button.Styles>
+                            <Path Data="{Binding PasswordIcon}"
+                                  Fill="Gray"
+                                  Stretch="Uniform"
+                                  Width="20" Height="20"
+                                  VerticalAlignment="Center"/>
+                        </Button>
+                    </Grid>
+                </StackPanel>
 
 				<!-- Telefonszam -->
 				<StackPanel IsVisible="{Binding IsRegisterMode}">
@@ -98,4 +99,5 @@ x:DataType="vm:LoginViewModel">
                         Cursor="Hand"/>
 			</StackPanel>
 		</Border>
-	</Grid></UserControl>
+	</Grid>
+</UserControl>

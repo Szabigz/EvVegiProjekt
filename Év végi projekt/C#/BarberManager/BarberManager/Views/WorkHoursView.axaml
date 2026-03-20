@@ -5,7 +5,8 @@
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="BarberManager.Views.WorkHoursView"
              xmlns:vm="using:BarberManager.ViewModels"
-x:DataType="vm:WorkHoursViewModel">
+             x:DataType="vm:WorkHoursViewModel"
+             Background="White">
 <Grid Margin="20" RowDefinitions="Auto, Auto, *, Auto">
         <!-- Header -->
         <StackPanel Grid.Row="0" Orientation="Horizontal" Spacing="10" Margin="0,0,0,15">
@@ -19,7 +20,7 @@ x:DataType="vm:WorkHoursViewModel">
         <!-- Napok listaja -->
         <ItemsControl Grid.Row="2" ItemsSource="{Binding Days}">
             <ItemsControl.ItemTemplate>
-<DataTemplate x:DataType="vm:WorkDayDisplay">
+                <DataTemplate x:DataType="vm:WorkDayDisplay">
                     <Border Background="#F9F9F9" Padding="15" CornerRadius="8" Margin="0,0,0,5">
                         <Grid ColumnDefinitions="150, *, *">
                             <TextBlock Text="{Binding DayName}" VerticalAlignment="Center" FontWeight="SemiBold"/>
@@ -39,4 +40,5 @@ x:DataType="vm:WorkHoursViewModel">
                 <TextBlock Text="Beállítások mentése"/>
             </StackPanel>
         </Button>
-    </Grid></UserControl>
+    </Grid>
+</UserControl>

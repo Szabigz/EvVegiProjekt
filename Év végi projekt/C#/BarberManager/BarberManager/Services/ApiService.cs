@@ -15,12 +15,21 @@ namespace BarberManager.Services
 {
     public class ApiService
     {
-        private const string BaseUrl = "http://127.0.0.1:3000";
+        private readonly string BaseUrl;
         private readonly HttpClient _httpClient;
         private string _jwtToken = string.Empty;
 
         public ApiService()
         {
+            if (OperatingSystem.IsAndroid())
+            {
+                BaseUrl = "http://10.0.2.2:3000";
+            }
+            else
+            {
+                BaseUrl = "http://127.0.0.1:3000";
+            }
+
             _httpClient = new HttpClient { BaseAddress = new Uri(BaseUrl) };
         }
 
@@ -70,7 +79,7 @@ namespace BarberManager.Services
                 }
                 return (false, result?.Message ?? "Hibás hitelesítés!");
             }
-            catch { return (false, "Hálózati hiba"); }
+            catch (Exception ex) { return (false, $"Hiba: {ex.Message}"); }
         }
 
         // --- barber lekeres ---
