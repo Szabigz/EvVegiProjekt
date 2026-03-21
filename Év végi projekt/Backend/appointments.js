@@ -54,7 +54,6 @@ router.get("/appointmentMyUser", Auth(), async (req, res) => {
     }
 })
 
-// --- available slots get ---
 router.get("/availableSlots/:barberID/:date", async (req, res) => {
     try {
         const {
@@ -66,6 +65,7 @@ router.get("/availableSlots/:barberID/:date", async (req, res) => {
         })
         const jsDate = new Date(date)
         const dayIndex = jsDate.getDay()
+
         const workhour = await dbHandler.workhours.findOne({
             where: {
                 barberID,
@@ -73,6 +73,7 @@ router.get("/availableSlots/:barberID/:date", async (req, res) => {
             }
         })
         if (!workhour) return res.status(200).json([])
+
         const appointments = await dbHandler.appointments.findAll({
             where: {
                 barberID,
@@ -84,23 +85,27 @@ router.get("/availableSlots/:barberID/:date", async (req, res) => {
                 }
             }
         })
+
         const slots = []
         const toMin = (t) => {
-            const [h, m] = t.split(':').map(Number);
-            return h * 60 + m;
+            const [h, m] = t.split(':').map(Number) 
+            return h * 60 + m 
         }
         let current = toMin(workhour.start_time.substring(0, 5))
         const end = toMin(workhour.end_time.substring(0, 5))
+
         while (current < end) {
             const h = Math.floor(current / 60).toString().padStart(2, '0')
             const m = (current % 60).toString().padStart(2, '0')
             const slotStart = new Date(`${date} ${h}:${m}:00`)
             const slotEnd = new Date(slotStart.getTime() + 60 * 60 * 1000)
+
             const isBusy = appointments.some(a => {
-                const aStart = new Date(a.start_time);
+                const aStart = new Date(a.start_time) 
                 const aEnd = new Date(a.end_time)
                 return slotStart < aEnd && slotEnd > aStart
             })
+
             if (!isBusy) slots.push(slotStart)
             current += 30
         }
@@ -112,7 +117,6 @@ router.get("/availableSlots/:barberID/:date", async (req, res) => {
     }
 })
 
-// --- appointments post ---
 router.post("/appointmentPost", Auth(), async (req, res) => {
     const {
         serviceID,
@@ -126,6 +130,7 @@ router.post("/appointmentPost", Auth(), async (req, res) => {
             message: "Missing data"
         })
     }
+
     const oneAppointment = await dbHandler.appointments.findOne({
         where: {
             barberID: req.uid,
@@ -143,6 +148,7 @@ router.post("/appointmentPost", Auth(), async (req, res) => {
     if (oneAppointment) return res.status(400).json({
         message: "Ez a barber már foglalt az adott időintervallumban"
     })
+
     try {
         const newAppointment = await dbHandler.appointments.create({
             barberID: req.uid,
@@ -161,7 +167,6 @@ router.post("/appointmentPost", Auth(), async (req, res) => {
     }
 })
 
-// --- appointment user post ---
 router.post("/appointmentUserPost", Auth(), async (req, res) => {
     try {
         const {
@@ -174,7 +179,7 @@ router.post("/appointmentUserPost", Auth(), async (req, res) => {
         if (!barberID || !serviceID || !start_time || !end_time || !comment) return res.status(400).json({
             message: "Missing data"
         })
-        if (typeof barberID !== "number" || typeof serviceID !== "number") return res.status(400).json({
+        if (isNaN(parseInt(barberID)) || isNaN(parseInt(serviceID))) return res.status(400).json({
             message: "Invalid IDs"
         })
         if (isNaN(new Date(start_time)) || isNaN(new Date(end_time))) return res.status(400).json({
@@ -198,9 +203,10 @@ router.post("/appointmentUserPost", Auth(), async (req, res) => {
         if (existingAppointment) return res.status(400).json({
             message: "Ez az időpont már foglalt"
         })
+
         const newAppointment = await dbHandler.appointments.create({
-            barberID,
-            serviceID,
+            barberID: parseInt(barberID),
+            serviceID: parseInt(serviceID),
             userID: req.uid,
             start_time,
             end_time,
@@ -222,8 +228,8 @@ function ValidateId() {
     return (req, res, next) => {
         if (isNaN(req.params.id)) return res.status(400).json({
             message: "Invalid ID"
-        });
-        next();
+        }) 
+        next() 
     }
 }
 
@@ -235,6 +241,7 @@ router.delete("/appointmentDelete/:id", Auth(), ValidateId(), Log(), async (req,
             }
         })
         if (!appointment) return res.status(404).send("Időpont nem található")
+
         if (appointment.barberID === req.uid) {
             await dbHandler.appointments.destroy({
                 where: {
@@ -255,31 +262,26 @@ router.delete("/appointmentDelete/:id", Auth(), ValidateId(), Log(), async (req,
     }
 })
 
-router.put('/appointmentUpdate/:id', Auth(), ValidateId(), async (req, res) => {
+router.put('/appointmentUpdate/:id', Auth(), ValidateId(), Log(), async (req, res) => {
     try {
-        const Id = req.params.id;
-        const barberID = req.uid;
-
         const oneAppointment = await dbHandler.appointments.findOne({
             where: {
-                id: Id,
-                barberID
+                id: req.params.id,
+                barberID: req.uid
             }
-        });
-        if (!oneAppointment) {
-            return res.status(404).json({
-                message: "Időpont nem található"
-            });
-        }
+        }) 
+        if (!oneAppointment) return res.status(404).json({
+            message: "Időpont nem található"
+        }) 
 
         const {
             start_time,
             end_time
-        } = req.body;
+        } = req.body 
         if (start_time && end_time) {
-            const conflictingAppointment = await dbHandler.appointments.findOne({
+            const conflict = await dbHandler.appointments.findOne({
                 where: {
-                    barberID,
+                    barberID: req.uid,
                     start_time: {
                         [Op.lt]: end_time
                     },
@@ -287,32 +289,32 @@ router.put('/appointmentUpdate/:id', Auth(), ValidateId(), async (req, res) => {
                         [Op.gt]: start_time
                     },
                     id: {
-                        [Op.ne]: Id
+                        [Op.ne]: req.params.id
                     },
                     status: {
                         [Op.ne]: 'canceled'
                     }
                 }
-            });
-            if (conflictingAppointment) return res.status(400).json({
+            })
+            if (conflict) return res.status(400).json({
                 message: "Ez a barber már foglalt"
-            });
+            })
         }
 
         await dbHandler.appointments.update(req.body, {
             where: {
-                id: Id,
-                barberID
+                id: req.params.id,
+                barberID: req.uid
             }
-        });
-        return res.json({
+        })
+        res.json({
             message: 'Sikeres módosítás'
-        });
+        })
     } catch (error) {
-        return res.status(500).json({
+        res.status(500).json({
             message: 'Szerverhiba'
-        });
+        })
     }
-});
+})
 
 module.exports = router

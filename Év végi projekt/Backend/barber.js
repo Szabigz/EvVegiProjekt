@@ -3,8 +3,7 @@ const router = express.Router()
 const bcrypt = require("bcrypt")
 const {
     Op
-} = require("sequelize");
-
+} = require("sequelize")
 const Auth = require('./Auth')
 const dbHandler = require('./dbHandler')
 const JWT = require('jsonwebtoken')
@@ -12,7 +11,6 @@ const JWT = require('jsonwebtoken')
 const SK = process.env.SECRET_KEY
 const EI = process.env.EXPIRES_IN
 
-// --- barber get ---
 router.get("/barberGet", Auth(), async (req, res) => {
     return res.json(await dbHandler.barber.findAll({
         where: {
@@ -21,7 +19,6 @@ router.get("/barberGet", Auth(), async (req, res) => {
     }))
 })
 
-// --- barber reg ---
 router.post("/barberReg", async (req, res) => {
     const {
         email,
@@ -30,21 +27,17 @@ router.post("/barberReg", async (req, res) => {
         phoneNum,
         isAdmin
     } = req.body
-    if (!email || !name || !password || !phoneNum) {
-        return res.status(400).json({
-            message: "Missing data"
-        })
-    }
+    if (!email || !name || !password || !phoneNum) return res.status(400).json({
+        message: "Missing data"
+    })
     const oneBarber = await dbHandler.barber.findOne({
         where: {
             email
         }
     })
-    if (oneBarber) {
-        return res.status(400).json({
-            message: "Mar van ilyen"
-        })
-    }
+    if (oneBarber) return res.status(400).json({
+        message: "Mar van ilyen"
+    })
     const hashedPassword = await bcrypt.hash(password, 9)
     const newBarber = await dbHandler.barber.create({
         name,
@@ -59,7 +52,6 @@ router.post("/barberReg", async (req, res) => {
     })
 })
 
-// --- login ---
 router.post('/barberLogin', async (req, res) => {
     try {
         const {
@@ -67,32 +59,24 @@ router.post('/barberLogin', async (req, res) => {
             name,
             password
         } = req.body
-        if (!email || !name || !password) {
-            return res.status(400).json({
-                message: "Missing data"
-            })
-        }
+        if (!email || !name || !password) return res.status(400).json({
+            message: "Missing data"
+        })
         const oneBarber = await dbHandler.barber.findOne({
             where: {
                 email
             }
         })
-        if (!oneBarber) {
-            return res.status(401).json({
-                "message": "Nem letezik ilyen felhasznalo"
-            })
-        }
-        if (oneBarber.name != name) {
-            return res.status(400).json({
-                "message": "Hibas nev"
-            })
-        }
+        if (!oneBarber) return res.status(401).json({
+            "message": "Nem letezik ilyen felhasznalo"
+        })
+        if (oneBarber.name != name) return res.status(400).json({
+            "message": "Hibas nev"
+        })
         const validPassword = await bcrypt.compare(password, oneBarber.password)
-        if (!validPassword) {
-            return res.status(400).json({
-                message: "Hibás jelszó"
-            })
-        }
+        if (!validPassword) return res.status(400).json({
+            message: "Hibás jelszó"
+        })
         const token = JWT.sign({
             uid: oneBarber.id
         }, SK, {
@@ -100,16 +84,15 @@ router.post('/barberLogin', async (req, res) => {
         })
         return res.status(201).json({
             "message": "Sikeres bejelentkezés",
-            token: token
+            token
         })
     } catch (err) {
-        return res.status(500).json({
+        res.status(500).json({
             message: "Szerverhiba"
         })
     }
 })
 
-// --- logs get ---
 router.get("/logsMy", Auth(), async (req, res) => {
     try {
         const logs = await dbHandler.log.findAll({
@@ -132,7 +115,6 @@ router.get("/logsMy", Auth(), async (req, res) => {
     }
 })
 
-// --- logs cleanup ---
 router.delete("/logsCleanup", Auth(), async (req, res) => {
     try {
         const thirtyDaysAgo = new Date(new Date().setDate(new Date().getDate() - 30))
@@ -154,7 +136,6 @@ router.delete("/logsCleanup", Auth(), async (req, res) => {
     }
 })
 
-// --- barber delete ---
 router.delete("/barberDelete/:id", Auth(), async (req, res) => {
     try {
         const Id = req.params.id
@@ -184,31 +165,33 @@ router.delete("/barberDelete/:id", Auth(), async (req, res) => {
     }
 })
 
-// --- barber update ---
 router.put('/barberUpdate/:id', Auth(), async (req, res) => {
     try {
-        const Id = req.params.id;
+        const Id = req.params.id
+        if (isNaN(Id)) return res.status(400).json({
+            message: 'Invalid ID'
+        })
+
         const oneBarber = await dbHandler.barber.findOne({
             where: {
                 id: Id
             }
-        });
-
-        if (!oneBarber) {
-            return res.status(404).json({
-                message: "Nincs ilyen felhasználó"
-            });
-        }
+        })
+        if (!oneBarber) return res.status(404).json({
+            message: "Nincs ilyen felhasználó"
+        })
 
         const {
             name,
             email,
             password,
             phoneNum
-        } = req.body;
-        if (!name && !email && !password && !phoneNum) return res.status(400).json({
-            message: "Nincs adat"
-        });
+        } = req.body
+        if (!name && !email && !password && !phoneNum) {
+            return res.status(400).json({
+                message: "Nincs módosítandó adat"
+            })
+        }
 
         if (name) await dbHandler.barber.update({
             name
@@ -216,7 +199,7 @@ router.put('/barberUpdate/:id', Auth(), async (req, res) => {
             where: {
                 id: Id
             }
-        });
+        })
         if (email) await dbHandler.barber.update({
             email
         }, {
@@ -241,14 +224,15 @@ router.put('/barberUpdate/:id', Auth(), async (req, res) => {
                 id: Id
             }
         })
+
         res.json({
             'message': 'sikeres módosítás'
-        });
+        })
     } catch (error) {
-        return res.status(500).json({
+        res.status(500).json({
             message: 'Szerverhiba'
-        });
+        })
     }
-});
+})
 
 module.exports = router
