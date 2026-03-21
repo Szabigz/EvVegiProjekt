@@ -1,6 +1,7 @@
 const express = require('express')
 const router=express.Router()
 const bcrypt = require("bcrypt")
+const { Op } = require("sequelize"); // JAVÍTVA: Beimportáltuk az Op-ot!
 
 
 const Auth=require('./Auth')
@@ -68,7 +69,7 @@ router.post('/barberLogin', async(req,res)=>{
         }
         const token=JWT.sign({uid:oneBarber.id},SK,{expiresIn: EI})
             
-        return res.status(201).json({"message": "Sikeres bejelentkezes",token:token});
+        return res.status(201).json({"message": "Sikeres bejelentkezés",token:token});
         
         
         
@@ -77,6 +78,40 @@ router.post('/barberLogin', async(req,res)=>{
         console.log(err)
     }
 })
+
+// --- ÚJ: NAPLÓ ADATOK LEKÉRÉSE ---
+router.get("/logsMy", Auth(), async (req, res) => {
+    try {
+        const logs = await dbHandler.log.findAll({
+            where: { barberID: req.uid },
+            include: [{ model: dbHandler.user, attributes: ['name'] }], // Vendég nevének bekötése
+            order: [['createdAt', 'DESC']]
+        });
+        res.json(logs);
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({ message: "Hiba a napló lekérésekor" });
+    }
+});
+
+// --- ÚJ: 30 NAPNÁL RÉGEBBI LOGOK TÖRLÉSE ---
+router.delete("/logsCleanup", Auth(), async (req, res) => {
+    try {
+        const thirtyDaysAgo = new Date();
+        thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+
+        await dbHandler.log.destroy({
+            where: { 
+                barberID: req.uid, 
+                createdAt: { [Op.lt]: thirtyDaysAgo } 
+            }
+        });
+        res.json({ message: "Sikeres takarítás" });
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({ message: "Hiba a takarításkor" });
+    }
+});
 
 
 router.delete("/barberDelete/:id", Auth(), async (req, res) => {

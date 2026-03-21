@@ -1,11 +1,11 @@
-﻿<UserControl xmlns="https://github.com/avaloniaui"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:vm="using:BarberManager.ViewModels"
-             xmlns:models="using:BarberManager.Models"
+﻿<UserControl
+	xmlns="https://github.com/avaloniaui"
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	xmlns:vm="using:BarberManager.ViewModels"
+	xmlns:models="using:BarberManager.Models"
              x:Class="BarberManager.Views.AppointmentsViewMobile"
              x:DataType="vm:AppointmentsViewModel"
              Background="White">
-
 	<Grid>
 		<Grid RowDefinitions="Auto, *">
 			<Grid.IsVisible>
@@ -14,7 +14,6 @@
 					<Binding Path="!IsViewingDetails"/>
 				</MultiBinding>
 			</Grid.IsVisible>
-
 			<!-- header-->
 			<Border Grid.Row="0" Background="White" Padding="15,20" BorderThickness="0,0,0,1" BorderBrush="#EEEEEE">
 				<Grid ColumnDefinitions="*, Auto">
@@ -22,35 +21,42 @@
 						<TextBlock Text="Mai Foglalások" FontSize="22" FontWeight="Bold" Foreground="Black"/>
 						<TextBlock Text="Csak a mai napi időpontok" FontSize="14" Foreground="Gray"/>
 					</StackPanel>
-					
 					<Button Grid.Column="1" Command="{Binding ShowAddPanelCommand}" Background="Black" CornerRadius="10" Padding="15">
 						<Path Fill="White" Stretch="Uniform" Width="24" Height="24" 
-							  Data="M12 6C12.5523 6 13 6.44772 13 7V11H17C17.5523 11 18 11.4477 18 12C18 12.5523 17.5523 13 17 13H13V17C13 17.5523 12.5523 18 12 18C11.4477 18 11 17.5523 11 17V13H7C6.44772 13 6 12.5523 6 12C6 11.4477 6.44772 11 7 11H11V7C11 6.44772 11.4477 6 12 6Z"/>
+							  Data="M12 6V18 M6 12H18" Stroke="White" StrokeThickness="2"/>
 					</Button>
 				</Grid>
 			</Border>
-
 			<!-- naptar -->
 			<ScrollViewer Grid.Row="1">
 				<Grid x:Name="CalendarContentGrid">
 					<Grid.ColumnDefinitions>
-						<ColumnDefinition Width="70" /> 
-						<ColumnDefinition Width="*" />  
+						<ColumnDefinition Width="70" />
+						<ColumnDefinition Width="*" />
 					</Grid.ColumnDefinitions>
 					<Grid.RowDefinitions>
-						<RowDefinition Height="Auto" MinHeight="80" /><RowDefinition Height="Auto" MinHeight="80" />
-						<RowDefinition Height="Auto" MinHeight="80" /><RowDefinition Height="Auto" MinHeight="80" />
-						<RowDefinition Height="Auto" MinHeight="80" /><RowDefinition Height="Auto" MinHeight="80" />
-						<RowDefinition Height="Auto" MinHeight="80" /><RowDefinition Height="Auto" MinHeight="80" />
-						<RowDefinition Height="Auto" MinHeight="80" /><RowDefinition Height="Auto" MinHeight="80" />
-						<RowDefinition Height="Auto" MinHeight="80" /><RowDefinition Height="Auto" MinHeight="80" />
-						<RowDefinition Height="Auto" MinHeight="80" /><RowDefinition Height="Auto" MinHeight="80" />
-						<RowDefinition Height="Auto" MinHeight="80" /><RowDefinition Height="Auto" MinHeight="80" />
-						<RowDefinition Height="Auto" MinHeight="80" /><RowDefinition Height="Auto" MinHeight="80" />
-						<RowDefinition Height="Auto" MinHeight="80" /><RowDefinition Height="Auto" MinHeight="80" />
+						<RowDefinition Height="Auto" MinHeight="80" />
+						<RowDefinition Height="Auto" MinHeight="80" />
+						<RowDefinition Height="Auto" MinHeight="80" />
+						<RowDefinition Height="Auto" MinHeight="80" />
+						<RowDefinition Height="Auto" MinHeight="80" />
+						<RowDefinition Height="Auto" MinHeight="80" />
+						<RowDefinition Height="Auto" MinHeight="80" />
+						<RowDefinition Height="Auto" MinHeight="80" />
+						<RowDefinition Height="Auto" MinHeight="80" />
+						<RowDefinition Height="Auto" MinHeight="80" />
+						<RowDefinition Height="Auto" MinHeight="80" />
+						<RowDefinition Height="Auto" MinHeight="80" />
+						<RowDefinition Height="Auto" MinHeight="80" />
+						<RowDefinition Height="Auto" MinHeight="80" />
+						<RowDefinition Height="Auto" MinHeight="80" />
+						<RowDefinition Height="Auto" MinHeight="80" />
+						<RowDefinition Height="Auto" MinHeight="80" />
+						<RowDefinition Height="Auto" MinHeight="80" />
+						<RowDefinition Height="Auto" MinHeight="80" />
+						<RowDefinition Height="Auto" MinHeight="80" />
 						<RowDefinition Height="Auto" MinHeight="80" />
 					</Grid.RowDefinitions>
-
 					<!-- Órák -->
 					<TextBlock Grid.Row="0" Text="8:00" Margin="0,-10,10,0" HorizontalAlignment="Right" VerticalAlignment="Top" FontWeight="Bold" FontSize="14"/>
 					<TextBlock Grid.Row="2" Text="9:00" Margin="0,-10,10,0" HorizontalAlignment="Right" VerticalAlignment="Top" FontWeight="Bold" FontSize="14"/>
@@ -63,7 +69,6 @@
 					<TextBlock Grid.Row="16" Text="16:00" Margin="0,-10,10,0" HorizontalAlignment="Right" VerticalAlignment="Top" FontWeight="Bold" FontSize="14"/>
 					<TextBlock Grid.Row="18" Text="17:00" Margin="0,-10,10,0" HorizontalAlignment="Right" VerticalAlignment="Top" FontWeight="Bold" FontSize="14"/>
 					<TextBlock Grid.Row="20" Text="18:00" Margin="0,-10,10,0" HorizontalAlignment="Right" VerticalAlignment="Top" FontWeight="Bold" FontSize="14"/>
-
 					<!-- Rácsvonalak -->
 					<Border Grid.Row="1" Grid.Column="1" BorderThickness="0,0,0,1" BorderBrush="#EEEEEE"/>
 					<Border Grid.Row="3" Grid.Column="1" BorderThickness="0,0,0,1" BorderBrush="#EEEEEE"/>
@@ -79,35 +84,24 @@
 				</Grid>
 			</ScrollViewer>
 		</Grid>
-
-		<!-- reszletek -->
+		<!-- Részletek ablak -->
 		<Border IsVisible="{Binding IsViewingDetails}" Background="White" Padding="25" CornerRadius="20" Margin="20" BoxShadow="0 10 40 0 #55000000" VerticalAlignment="Center" HorizontalAlignment="Stretch" MaxHeight="700">
 			<ScrollViewer>
 				<StackPanel Spacing="15" Margin="0,0,0,10">
-					
-					<!-- header -->
 					<Grid ColumnDefinitions="*, Auto, Auto">
 						<TextBlock Grid.Column="0" Text="Részletek" FontSize="22" FontWeight="Bold" VerticalAlignment="Center"/>
-						
-						<!-- status -->
 						<Border Grid.Column="1" Background="#EEEEEE" Padding="10,5" CornerRadius="8" Margin="0,0,10,0" VerticalAlignment="Center">
 							<TextBlock Text="{Binding SelectedAppointment.Status}" FontWeight="Bold" Foreground="Gray" FontSize="14"/>
 						</Border>
-						
-						<!-- close btn -->
 						<Button Grid.Column="2" Command="{Binding CloseDetailsCommand}" Background="#F5F5F5" CornerRadius="20" Padding="8">
 							<Path Fill="Black" Stretch="Uniform" Width="16" Height="16" Data="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41Z"/>
 						</Button>
 					</Grid>
-					
 					<Separator Background="#EEEEEE"/>
-					
 					<StackPanel Spacing="5">
 						<TextBlock Text="Vendég neve:" FontWeight="Bold" Foreground="Gray" FontSize="14"/>
 						<TextBlock Text="{Binding SelectedAppointment.GuestName}" FontSize="22" FontWeight="SemiBold"/>
 					</StackPanel>
-
-					<!-- phone num es mail -->
 					<StackPanel Spacing="10">
 						<StackPanel Spacing="5">
 							<TextBlock Text="Telefonszám:" FontWeight="Bold" Foreground="Gray" FontSize="14"/>
@@ -115,40 +109,35 @@
 						</StackPanel>
 						<StackPanel Spacing="5">
 							<TextBlock Text="Email cím:" FontWeight="Bold" Foreground="Gray" FontSize="14"/>
-							<TextBlock Text="{Binding SelectedAppointment.GuestEmail}" FontSize="18" TextTrimming="CharacterEllipsis"/>
+							<TextBlock Text="{Binding SelectedAppointment.GuestEmail}" FontSize="18"/>
 						</StackPanel>
 					</StackPanel>
-
 					<StackPanel Spacing="5">
 						<TextBlock Text="Szolgáltatás:" FontWeight="Bold" Foreground="Gray" FontSize="14"/>
 						<TextBlock Text="{Binding SelectedAppointment.ServiceName}" FontSize="18"/>
 						<TextBlock Text="{Binding SelectedAppointment.ServicePrice}" FontSize="16" Foreground="DarkGreen" FontWeight="Bold"/>
 					</StackPanel>
-					
 					<StackPanel Spacing="5" IsVisible="{Binding SelectedAppointment.HasComment}">
 						<TextBlock Text="Vendég megjegyzése:" FontWeight="Bold" Foreground="Gray" FontSize="14"/>
 						<Border Background="#F9F9F9" Padding="15" CornerRadius="8" BorderBrush="#EEEEEE" BorderThickness="1">
 							<TextBlock Text="{Binding SelectedAppointment.Comment}" FontStyle="Italic" TextWrapping="Wrap" FontSize="16"/>
 						</Border>
 					</StackPanel>
-
 					<Button Command="{Binding ExecuteActionCommand}" Background="#FFF0F0" BorderBrush="Red" BorderThickness="1" Foreground="Red" FontWeight="Bold" FontSize="16" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" Padding="20" Margin="0,15,0,0">
 						<TextBlock Text="{Binding ActionButtonText}"/>
 					</Button>
 				</StackPanel>
 			</ScrollViewer>
 		</Border>
-
-		<!-- hozzadas ablak (ha IsAddingAppointment true) -->
+		<!-- Hozzáadás ablak -->
 		<Border IsVisible="{Binding IsAddingAppointment}" Background="White" Padding="20" CornerRadius="20" Margin="15" BoxShadow="0 10 40 0 #55000000" VerticalAlignment="Center" HorizontalAlignment="Stretch" MaxHeight="700">
 			<ScrollViewer>
 				<StackPanel Spacing="15" Margin="0,0,0,10">
 					<TextBlock Text="Új Foglalás" FontSize="24" FontWeight="Bold" HorizontalAlignment="Center" Margin="0,0,0,5"/>
 					<TextBlock Text="{Binding AddErrorMessage}" Foreground="Red" FontSize="14" HorizontalAlignment="Center" IsVisible="{Binding AddErrorMessage, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"/>
-
 					<StackPanel Spacing="5">
 						<TextBlock Text="Vendég kiválasztása" FontWeight="SemiBold" FontSize="16" Foreground="Gray"/>
-						<ComboBox ItemsSource="{Binding AllUsers}" SelectedItem="{Binding NewSelectedUser}" HorizontalAlignment="Stretch" Height="45" PlaceholderText="Válassz vendéget (opcionális)...">
+						<ComboBox ItemsSource="{Binding AllUsers}" SelectedItem="{Binding NewSelectedUser}" HorizontalAlignment="Stretch" Height="45">
 							<ComboBox.ItemTemplate>
 								<DataTemplate x:DataType="models:User">
 									<TextBlock Text="{Binding DisplayName}" FontSize="16"/>
@@ -156,10 +145,9 @@
 							</ComboBox.ItemTemplate>
 						</ComboBox>
 					</StackPanel>
-
 					<StackPanel Spacing="5">
-						<TextBlock Text="Szolgáltatás (Kötelező)" FontWeight="SemiBold" FontSize="16" Foreground="Gray"/>
-						<ComboBox ItemsSource="{Binding AllServices}" SelectedItem="{Binding NewSelectedService}" HorizontalAlignment="Stretch" Height="45" PlaceholderText="Válassz szolgáltatást...">
+						<TextBlock Text="Szolgáltatás" FontWeight="SemiBold" FontSize="16" Foreground="Gray"/>
+						<ComboBox ItemsSource="{Binding AllServices}" SelectedItem="{Binding NewSelectedService}" HorizontalAlignment="Stretch" Height="45">
 							<ComboBox.ItemTemplate>
 								<DataTemplate x:DataType="models:Service">
 									<TextBlock Text="{Binding Name}" FontSize="16"/>
@@ -167,22 +155,18 @@
 							</ComboBox.ItemTemplate>
 						</ComboBox>
 					</StackPanel>
-
 					<StackPanel Spacing="5">
 						<TextBlock Text="Dátum" FontWeight="SemiBold" FontSize="16" Foreground="Gray"/>
 						<DatePicker SelectedDate="{Binding NewDate}" HorizontalAlignment="Stretch" Height="45"/>
 					</StackPanel>
-
 					<StackPanel Spacing="5">
-						<TextBlock Text="Időpont (HH:mm)" FontWeight="SemiBold" FontSize="16" Foreground="Gray"/>
-						<TextBox Text="{Binding NewTime}" Watermark="Pl.: 14:30" HorizontalAlignment="Stretch" Height="45" FontSize="16"/>
+						<TextBlock Text="Szabad időpontok" FontWeight="SemiBold" FontSize="16" Foreground="Gray"/>
+						<ComboBox ItemsSource="{Binding AvailableTimeSlots}" SelectedItem="{Binding NewTime}" HorizontalAlignment="Stretch" Height="45"/>
 					</StackPanel>
-
 					<StackPanel Spacing="5">
 						<TextBlock Text="Megjegyzés" FontWeight="SemiBold" FontSize="16" Foreground="Gray"/>
 						<TextBox Text="{Binding NewComment}" Height="80" TextWrapping="Wrap" AcceptsReturn="True" Watermark="Telefonos foglalás, stb..." FontSize="16"/>
 					</StackPanel>
-
 					<Grid ColumnDefinitions="*, *" Margin="0,10,0,0">
 						<Button Grid.Column="0" Command="{Binding CloseAddPanelCommand}" Content="Mégse" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" Margin="5" Padding="15" FontSize="16"/>
 						<Button Grid.Column="1" Command="{Binding SaveAppointmentCommand}" Content="Mentés" Background="Black" Foreground="White" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" Margin="5" Padding="15" FontSize="16" IsEnabled="{Binding !IsSaving}"/>

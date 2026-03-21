@@ -45,12 +45,11 @@ router.get("/appointmentMyUser", Auth(), async (req, res) => {
     }
 });
 
-
+// --- JAVÍTOTT: SZABAD IDŐPONT SZÁMÍTÁS (FIX 1 ÓRÁS FRONTEND SZINKRON) ---
 router.get("/availableSlots/:barberID/:date", async (req, res) => {
     try {
         const { barberID, date } = req.params
-        const dateParts = date.split('-')
-        const jsDate = new Date(dateParts[0], dateParts[1] - 1, dateParts[2])
+        const jsDate = new Date(date)
         const dayIndex = jsDate.getDay()
 
         //Munkaido keresese
@@ -65,20 +64,15 @@ router.get("/availableSlots/:barberID/:date", async (req, res) => {
             return res.status(200).json([])
         }
 
-        //Foglalasok lekerese
+        //Foglalasok lekerese (Booked és Completed is számít!)
         const appointments = await dbHandler.appointments.findAll({
             where: {
                 barberID,
-                status: "booked",
+                status: { [Op.ne]: 'canceled' },
                 start_time: {
                     [Op.between]: [`${date} 00:00:00`, `${date} 23:59:59`]
                 }
             }
-        })
-
-        const bookedSlots = appointments.map(a => {
-            const timePart = a.start_time.includes(" ") ? a.start_time.split(" ")[1] : a.start_time
-            return timePart.substring(0, 5)
         })
 
         //Slotok generalasa
@@ -95,9 +89,21 @@ router.get("/availableSlots/:barberID/:date", async (req, res) => {
             const h = Math.floor(current / 60).toString().padStart(2, '0')
             const m = (current % 60).toString().padStart(2, '0')
             const timeStr = `${h}:${m}`
+            
+            const slotStart = new Date(`${date} ${timeStr}:00`)
+            // Mivel minden foglalás 1 órás a frontendben, itt is azzal számolunk:
+            const slotEnd = new Date(slotStart.getTime() + 60 * 60 * 1000)
 
-            if (!bookedSlots.includes(timeStr)) {
-                slots.push(new Date(`${date} ${timeStr}:00`))
+            // Ütközés vizsgálat: a slot 1 órás sávja átfedi-e bármelyik létező foglalást
+            const isBusy = appointments.some(a => {
+                const aStart = new Date(a.start_time)
+                const aEnd = new Date(a.end_time)
+                // Átfedés ha: (KezdésA < VégeB) ÉS (VégeA > KezdésB)
+                return slotStart < aEnd && slotEnd > aStart
+            })
+
+            if (!isBusy) {
+                slots.push(slotStart)
             }
             current += 30
         }
@@ -165,8 +171,8 @@ router.post("/appointmentUserPost", Auth(), async (req, res) => {
             barberID: barberID,
             serviceID: serviceID,
             userID: userID,
-            start_time: start_time, //ezek mostmar stringek  - Csongor 03.17
-            end_time: end_time, //ezek mostmar stringek  - Csongor 03.17
+            start_time: start_time, 
+            end_time: end_time, 
             comment: comment,
             status: "booked"
         })

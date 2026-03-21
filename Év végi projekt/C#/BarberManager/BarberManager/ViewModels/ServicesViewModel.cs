@@ -15,18 +15,29 @@ namespace BarberManager.ViewModels
     {
         private readonly ApiService _api;
 
-        [ObservableProperty] private ObservableCollection<Service> _services = new();
-        [ObservableProperty] private bool _isLoading;
-        [ObservableProperty] private string _errorMessage = string.Empty;
+        [ObservableProperty]
+        private ObservableCollection<Service> _services = new();
+        [ObservableProperty]
+        private bool _isLoading;
+        [ObservableProperty]
+        private string _errorMessage = string.Empty;
 
-        [ObservableProperty] private bool _isEditing;
-        [ObservableProperty] private Service? _selectedService;
+        [ObservableProperty]
+        private bool _isEditing;
+        [ObservableProperty]
+        private Service? _selectedService;
 
         public ServicesViewModel(ApiService api)
         {
             _api = api;
-            SelectedService = new Service { Name = "", Price = 0, Description = "", DurationMinutes = 30 };
-            _ = LoadServicesAsync(); // toltse be ha megnyitjuk
+            SelectedService = new Service
+            {
+                Name = "",
+                Price = 0,
+                Description = "",
+                DurationMinutes = 30
+            };
+            _ = LoadServicesAsync();
         }
 
         [RelayCommand]
@@ -39,13 +50,23 @@ namespace BarberManager.ViewModels
                 Services.Clear();
                 foreach (var item in list) Services.Add(item);
             }
-            finally { IsLoading = false; }
+            finally
+            {
+                IsLoading = false;
+            }
         }
 
         [RelayCommand]
         public void ShowAddWindow()
         {
-            SelectedService = new Service { Id = 0, Name = "", Price = 0, Description = "", DurationMinutes = 30 };
+            SelectedService = new Service
+            {
+                Id = 0,
+                Name = "",
+                Price = 0,
+                Description = "",
+                DurationMinutes = 30
+            };
             IsEditing = true;
             ErrorMessage = string.Empty;
         }
@@ -53,9 +74,8 @@ namespace BarberManager.ViewModels
         [RelayCommand]
         public void EditService(Service service)
         {
-            if (service == null) return;
-
-
+            if (service == null)
+                return;
             SelectedService = new Service
             {
                 Id = service.Id,
@@ -72,15 +92,21 @@ namespace BarberManager.ViewModels
         [RelayCommand]
         public async Task DeleteService(Service service)
         {
-            if (service == null) return;
+            if (service == null)
+                return;
             IsLoading = true;
             try
             {
                 var result = await _api.DeleteServiceAsync(service.Id);
-                if (result.IsSuccess) await LoadServicesAsync();
-                else ErrorMessage = result.Message;
+                if (result.IsSuccess)
+                    await LoadServicesAsync();
+                else
+                    ErrorMessage = result.Message;
             }
-            finally { IsLoading = false; }
+            finally
+            {
+                IsLoading = false;
+            }
         }
 
         [RelayCommand]
@@ -92,11 +118,19 @@ namespace BarberManager.ViewModels
         [RelayCommand]
         public async Task SaveService()
         {
-            if (SelectedService == null) return;
+            if (SelectedService == null)
+                return;
 
-            if (string.IsNullOrWhiteSpace(SelectedService.Name) || SelectedService.Price <= 0)
+            if (string.IsNullOrWhiteSpace(SelectedService.Name) ||
+                SelectedService.Price <= 0)
             {
                 ErrorMessage = "Kérlek töltsd ki a nevet és az árat!";
+                return;
+            }
+
+            if (SelectedService.DurationMinutes < 30)
+            {
+                ErrorMessage = "A szolgáltatás minimum 30 perces kell legyen!";
                 return;
             }
 
@@ -110,14 +144,12 @@ namespace BarberManager.ViewModels
 
                 if (SelectedService.Id == 0)
                 {
-                    // ID 0 = nincs az adatbazisban -> letrehozas
                     var result = await _api.CreateServiceAsync(SelectedService);
                     isSuccess = result.IsSuccess;
                     message = result.Message;
                 }
                 else
                 {
-                    // ID > 0 = mar letezik a dbben -> modositas
                     var result = await _api.UpdateServiceAsync(SelectedService);
                     isSuccess = result.IsSuccess;
                     message = result.Message;
@@ -126,7 +158,7 @@ namespace BarberManager.ViewModels
                 if (isSuccess)
                 {
                     IsEditing = false;
-                    await LoadServicesAsync(); // lista frissites
+                    await LoadServicesAsync();
                 }
                 else
                 {
@@ -137,8 +169,6 @@ namespace BarberManager.ViewModels
             {
                 ErrorMessage = "Hiba történt a mentés során.";
             }
-
-            // ha sikerul a try akkor ez lefut utana tulajdonkeppen nem fut le
             finally
             {
                 IsLoading = false;

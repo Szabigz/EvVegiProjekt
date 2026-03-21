@@ -1,9 +1,43 @@
-﻿<UserControl xmlns="https://github.com/avaloniaui"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+﻿<UserControl
+	xmlns="https://github.com/avaloniaui"
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	xmlns:vm="using:BarberManager.ViewModels"
+	xmlns:models="using:BarberManager.Models"
              x:Class="BarberManager.Views.LogsView"
+             x:DataType="vm:LogsViewModel"
              Background="White">
-	<TextBlock Grid.Row="0" Text="Napló" FontSize="24" FontWeight="Bold" Margin="0,0,0,10"/>
+	<Grid RowDefinitions="Auto, Auto, *">
+		<Border Grid.Row="0" Background="#F7F7F7" Padding="20" BorderThickness="0,0,0,1" BorderBrush="#EEEEEE">
+			<Grid ColumnDefinitions="*, Auto, Auto">
+				<StackPanel Grid.Column="0">
+					<TextBlock Text="Rendszernapló" FontSize="26" FontWeight="Bold"/>
+					<TextBlock Text="Minden esemény nyomon követése" FontSize="14" Foreground="Gray"/>
+				</StackPanel>
+				<Button Grid.Column="1" Command="{Binding CleanupLogsCommand}" Background="#FFF0F0" Foreground="Red" BorderBrush="Red" BorderThickness="1" Margin="0,0,10,0" Padding="15,8" Content="30 napnál régebbi törlése"/>
+				<Button Grid.Column="2" Command="{Binding LoadLogsCommand}" Background="Black" Foreground="White" Padding="15,8" Content="Frissítés"/>
+			</Grid>
+		</Border>
+		<TextBlock Grid.Row="1" Text="{Binding StatusMessage}" IsVisible="{Binding StatusMessage, Converter={x:Static StringConverters.IsNotNullOrEmpty}}" Foreground="Blue" Margin="20,5"/>
+		<ScrollViewer Grid.Row="2" Padding="20">
+			<ItemsControl ItemsSource="{Binding Logs}">
+				<ItemsControl.ItemTemplate>
+					<DataTemplate x:DataType="models:LogEntry">
+						<Border Background="#F9F9F9" BorderBrush="#EEEEEE" BorderThickness="1" CornerRadius="12" Padding="15" Margin="0,0,0,10">
+							<Grid ColumnDefinitions="110, *">
+								<StackPanel Grid.Column="0" VerticalAlignment="Center">
+									<TextBlock Text="{Binding CreatedAt, StringFormat='yyyy.MM.dd.'}" FontSize="12" Foreground="Gray"/>
+									<TextBlock Text="{Binding CreatedAt, StringFormat='HH:mm'}" FontSize="18" FontWeight="Bold"/>
+								</StackPanel>
+								<StackPanel Grid.Column="1" Margin="20,0,0,0">
+									<TextBlock Text="{Binding Activity}" FontSize="16" FontWeight="Bold"/>
+									<TextBlock Text="{Binding User.Name, StringFormat='Vendég: {0}'}" FontSize="13" Foreground="Gray" IsVisible="{Binding User, Converter={x:Static ObjectConverters.IsNotNull}}"/>
+								</StackPanel>
+							</Grid>
+						</Border>
+					</DataTemplate>
+				</ItemsControl.ItemTemplate>
+			</ItemsControl>
+		</ScrollViewer>
+		<ProgressBar Grid.Row="2" IsIndeterminate="True" IsVisible="{Binding IsLoading}" VerticalAlignment="Top"/>
+	</Grid>
 </UserControl>
