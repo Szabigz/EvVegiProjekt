@@ -3,7 +3,6 @@ const { Sequelize, DataTypes } = require("sequelize");
 const dbHandler = new Sequelize("barberShop", "root", "", {
   dialect: "mysql",
   host: "localhost",
-  port:"3307",
   timezone: '+01:00', // +1 idozona
   dialectOptions: {
     dateStrings: true, // ezzel stringkent kezeli a datumokat :)

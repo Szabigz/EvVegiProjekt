@@ -6,110 +6,126 @@ let barberId;
 let barberToken;
 let userId;
 let userToken;
-let serviceId;
-let appointmentId;  
+let serviceId
+let appointmentId  
 
 //Barber Reg és Login
 
 describe("testing /barberReg post route", () =>{
-    test("should return 200 status code", async()=>{
+    test("should return 201 status code on successful registration", async()=>{
         const response = await request(server)
         .post("/barberReg")
-        .send({email : 'valamiemail', name : 'nev', password : 'asd', phoneNum : 1234567, isAdmin : 0})
+        .send({email : 'testEmail', name : 'testName', password : 'testPass', phoneNum : 12345, isAdmin : 0})
         .set('Content-Type', 'application/json')
         expect(response.statusCode).toBe(201    )
-        barberId = response.body.id; 
+        barberId = response.body.id
         
     })
-    test("should return 400 for missing fields", async () => {
+    test("should return 400 for missing data", async () => {
         const response = await request(server)
             .post("/barberReg")
-            .send({ email: "valamiemail" }) 
-            .set('Content-Type', 'application/json');
+            .send({ email: "testEmail" }) 
+            .set('Content-Type', 'application/json')
 
-        expect(response.statusCode).toBe(400);
-    });
+        expect(response.statusCode).toBe(400)
+    })
 
-    test("should return 500 on server error", async () => {
-        const response = await request(server)
-            .post("/barberReg")
-            .send(null) 
-            .set('Content-Type', 'application/json');
+    test("should return 500 on forced server error", async () => {
+    const response = await request(server)
+        .post("/barberReg")
+        .send({ force500: true })
+        .set("Content-Type", "application/json")
 
-        expect([500, 400]).toContain(response.statusCode); 
-    });
+    expect(response.statusCode).toBe(500)
+})
 })
 
 
 
 describe("testing /barberLogin post route", () =>{
-    test("should return 201 status code", async()=>{
+    test("should return 201 status code on successful login", async () => {
         const response = await request(server)
-        .post("/barberLogin")
-        .send({email : 'valamiemail', name : 'nev', password : 'asd', })
-        .set('Content-Type', 'application/json')
-        expect(response.statusCode).toBe(201)
-        expect(response.body.token).toBeDefined();
-        console.log("BARBER TOKEN IN TEST:", barberToken);
-        barberToken = response.body.token;
-        
-    })
-    test("/barberLogin should return 400 on missing fields", async () => {
-        const res = await request(server)
             .post("/barberLogin")
-            .send({ email: "valamiemail" });
-        expect(res.statusCode).toBe(400);
-    });
+            .send({email: 'testEmail',name: 'testName',password: 'testPass'})
+            .set('Content-Type', 'application/json')
+
+        expect(response.statusCode).toBe(201)
+        expect(response.body.token).toBeDefined()
+
+        barberToken = response.body.token
+    })
+     test("should return 400 for missing data", async () => {
+        const response = await request(server)
+            .post("/barberLogin")
+            .send({ email: "testEmail" })
+
+        expect(response.statusCode).toBe(400)
+    })
+    test("should return 500 on forced server error", async () => {
+    const response = await request(server)
+        .post("/barberReg")
+        .send({ force500: true })
+        .set("Content-Type", "application/json")
+
+    expect(response.statusCode).toBe(500)
+})
     
 })
 
 //User Reg és Login
 
 describe("testing /userReg post route", () =>{
-    test("should return 200 status code", async()=>{
-       const response = await request(server)
-        .post("/userReg")
-        .send({email : 'asdaaaa', name : 'kksk', password : "asd", phoneNum : 1234567})
-        .set('Content-Type', 'application/json')
-        expect(response.statusCode).toBe(201)
-        userId = response.body.id; 
+    test("should return 201 status code on successful registration", async () => {
+        const response = await request(server)
+            .post("/userReg")
+            .send({email: 'testUserEmail',name: 'testName',password: "testPass",phoneNum: 12345})
+            .set('Content-Type', 'application/json')
 
+        expect(response.statusCode).toBe(201)
+        userId = response.body.id
     })
-    test("/userReg should return 400 on missing fields", async () => {
+   test("should return 400 for missing data", async () => {
         const res = await request(server)
             .post("/userReg")
-            .send({ email: "ssss" });
-        expect(res.statusCode).toBe(400);
-    });
+            .send({ email: "testUserEmail" })
+
+        expect(res.statusCode).toBe(400)
+    })
 
     test("/userReg should return 500 on server error", async () => {
-        const res = await request(server).post("/userReg").send(null);
-        expect([500, 400]).toContain(res.statusCode);
-    });
+        const response = await request(server).post("/userReg").send(null)
+        expect(response.statusCode).toBe(500)
+    })
 })
 
-describe("testing /userLogin post route", () =>{
-    test("should return 200 status code", async()=>{
+describe("POST /userLogin", () => {
+    test("should return 200 status code on successful login", async () => {
         const response = await request(server)
-        .post("/userLogin")
-        .send({email : 'asdaaaa', name : 'kksk', password : "asd"})
-        .set('Content-Type', 'application/json')
+            .post("/userLogin")
+            .send({email: 'testUserEmail',name: 'testName',password: "testPass"})
+            .set('Content-Type', 'application/json')
+
         expect(response.statusCode).toBe(200)
-        expect(response.body.token).toBeDefined();
-        console.log("USER TOKEN IN TEST:", userToken);
+        expect(response.body.token).toBeDefined()
+
         userToken = response.body.token;
     })
-    test("/userLogin should return 401 on missing fields", async () => {
+    test("should return 400 for missing data", async () => {
         const res = await request(server)
             .post("/userLogin")
-            .send({ email: "asdaaaa" });
-        expect(res.statusCode).toBe(401);
-    });
+            .send({ email: "testUserEmail" })
 
-    test("/userLogin should return 500 on server error", async () => {
-        const res = await request(server).post("/userLogin").send(null);
-        expect([500, 400]).toContain(res.statusCode);
-    });
+        expect(res.statusCode).toBe(400)
+    })
+
+    test("should return 500 on forced server error", async () => {
+    const response = await request(server)
+        .post("/barberReg")
+        .send({ force500: true })
+        .set("Content-Type", "application/json")
+
+    expect(response.statusCode).toBe(500)
+})
 })
 
 
@@ -122,32 +138,32 @@ describe('testing /servicesPost post route', () => {
         .send({ name : "asd", description : "asdasd", duration_minutes : 10, price:5000})
         .set("Authorization", `Bearer ${barberToken}`)
         expect(response.statusCode).toBe(200)
-        serviceId = response.body.id;
+        serviceId = response.body.id
     })
     test("servicesPost401 no token", async () => {
         const res = await request(server)
             .post('/servicesPost')
-            .send({ name: "asd" });
+            .send({ name: "asd" })
 
-        expect(res.statusCode).toBe(401);
+        expect(res.statusCode).toBe(401)
     })
 
     test("servicesPost 400 no data", async () => {
         const res = await request(server)
             .post('/servicesPost')
             .send({})
-            .set("Authorization", `Bearer ${barberToken}`);
+            .set("Authorization", `Bearer ${barberToken}`)
 
-        expect(res.statusCode).toBe(400);
+        expect(res.statusCode).toBe(400)
     })
 
     test("servicesPost 400/500 bad body", async () => {
         const res = await request(server)
             .post('/servicesPost')
             .send("rossz")
-            .set("Authorization", `Bearer ${barberToken}`);
+            .set("Authorization", `Bearer ${barberToken}`)
 
-        expect([400, 500]).toContain(res.statusCode);
+        expect([400, 500]).toContain(res.statusCode)
     })
 })
 

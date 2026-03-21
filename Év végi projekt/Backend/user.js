@@ -25,9 +25,9 @@ router.get("/usersAll", Auth(), async (req, res) => {
         const users = await dbHandler.user.findAll({
             attributes: ['id', 'name', 'email']
         });
-        res.json(users);
+        res.json(users)
     } catch (error) {
-        console.log(error);
+        console.log(error)
         res.status(500).json({ message: "Szerverhiba a vendégek lekérésekor" });
     }
 });
@@ -35,9 +35,8 @@ router.get("/usersAll", Auth(), async (req, res) => {
 router.post("/userReg", async (req, res) => {
     console.log(req.body);
 
-    const { email, name, password, phoneNum } = req.body;
+    const { email, name, password, phoneNum } = req.body
 
-    // 🔥 EZ HIÁNYZIK
     if (!email || !name || !password || !phoneNum) {
         return res.status(400).json({ message: "Missing fields" });
     }
@@ -51,7 +50,7 @@ router.post("/userReg", async (req, res) => {
             return res.status(400).json({ message: "Mar van ilyen" });
         }
 
-        const hashedPassword = await bcrypt.hash(password, 9);
+        const hashedPassword = await bcrypt.hash(password, 9)
 
         const newUser = await dbHandler.user.create({
             email,
@@ -78,17 +77,17 @@ router.post('/userLogin', async(req,res)=>{
         })
 
         if(!oneUser){
-            return res.status(401).json({message:"Nem létezik ilyen felhasználó"})
+            return res.status(400).json({message:"Nem létezik ilyen felhasználó"})
         }
 
         if(oneUser.name !== name){
-            return res.status(401).json({message:"Hibás név"})
+            return res.status(400).json({message:"Hibás név"})
         }
 
         const validPassword = await bcrypt.compare(password, oneUser.password)
 
         if(!validPassword){
-            return res.status(401).json({message:"Hibás jelszó"})
+            return res.status(400).json({message:"Hibás jelszó"})
         }
 
         const token = JWT.sign({uid:oneUser.id}, SK, {expiresIn: EI})
@@ -115,7 +114,7 @@ router.delete("/userDelete/:id", Auth(), async (req, res) => {
             return res.status(400).json({ message: "Invalid ID" });
         }
 
-        const oneUser = await dbHandler.user.findOne({ where: { id:Id } });
+        const oneUser = await dbHandler.user.findOne({ where: { id:Id } })
 
         if (!oneUser) {
             return res.status(404).json({ message: "Nincs ilyen felhasználó" });
@@ -134,7 +133,7 @@ router.put('/userUpdate/:id', Auth(), async(req,res) =>{
     try {
         const Id = req.params.id
         const id = req.uid
-        const oneUser = await dbHandler.user.findOne({ where: { id:Id } });
+        const oneUser = await dbHandler.user.findOne({ where: { id:Id } })
 
         if (isNaN(Id)) {
             return res.status(400).json({ message: "Invalid ID" });
@@ -191,7 +190,7 @@ router.put('/userUpdate/:id', Auth(), async(req,res) =>{
     }
     res.json({'message':'sikeres módosítás'})
     } catch (error) {
-        console.log(error);
+        console.log(error)
     return res.status(500).json({ message: 'Szerverhiba' });
     }
     
