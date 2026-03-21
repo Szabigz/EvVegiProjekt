@@ -65,7 +65,7 @@ router.post('/barberLogin', async(req,res)=>{
         
 
         if(!validPassword){
-            return res.status(401).json({message:"Hibás jelszó"});
+            return res.status(400).json({message:"Hibás jelszó"});
         }
         const token=JWT.sign({uid:oneBarber.id},SK,{expiresIn: EI})
             
@@ -76,6 +76,7 @@ router.post('/barberLogin', async(req,res)=>{
     }
     catch(err){
         console.log(err)
+        return res.status(500).json({message:"Szerverhiba"})
     }
 })
 

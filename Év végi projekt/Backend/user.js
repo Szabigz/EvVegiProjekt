@@ -38,7 +38,7 @@ router.post("/userReg", async (req, res) => {
     const { email, name, password, phoneNum } = req.body
 
     if (!email || !name || !password || !phoneNum) {
-        return res.status(400).json({ message: "Missing fields" });
+        return res.status(400).json({ message: "Missing data" });
     }
 
     try {
