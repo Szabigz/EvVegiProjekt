@@ -113,7 +113,9 @@ router.get("/availableSlots/:barberID/:date", async (req, res) => {
 
 router.post("/appointmentPost", Auth(), async(req,res)=>{
     const {serviceID, comment, start_time, end_time, userID} = req.body
+
     const oneAppointment = await dbHandler.appointments.findOne({
+        
         where: {
                 barberID: req.uid,
                 start_time: { [Op.lt]: end_time },
@@ -121,6 +123,9 @@ router.post("/appointmentPost", Auth(), async(req,res)=>{
                 status: { [Op.ne]: 'canceled' }
             }
     })
+    if (!userID  || !serviceID || !start_time || !end_time || !comment) {
+        return res.status(400).json({ message: "Missing fields" });
+    }
     if(oneAppointment){
         return res.status(400).json({ message: "Ez a barber már foglalt az adott időintervallumban" });
     }
@@ -145,9 +150,22 @@ router.post("/appointmentPost", Auth(), async(req,res)=>{
 
 
 router.post("/appointmentUserPost", Auth(), async (req, res) => {
-    const { barberID, serviceID, start_time, end_time, comment } = req.body
-    const userID = req.uid
+    
     try {
+        if (!req.body || typeof req.body !== "object") {
+            return res.status(400).json({ message: "Invalid body" });
+        }
+        const { barberID, serviceID, start_time, end_time, comment } = req.body
+        const userID = req.uid
+        if (!barberID || !serviceID || !start_time || !end_time || !comment) {
+            return res.status(400).json({ message: "Missing data" });
+        }
+        if (typeof barberID !== "number" || typeof serviceID !== "number") {
+            return res.status(400).json({ message: "Invalid IDs" });
+        }
+        if (isNaN(new Date(start_time)) || isNaN(new Date(end_time))) {
+            return res.status(400).json({ message: "Invalid date format" });
+        }
         const existingAppointment = await dbHandler.appointments.findOne({
             where: {
                 barberID: barberID,
@@ -156,6 +174,7 @@ router.post("/appointmentUserPost", Auth(), async (req, res) => {
                 status: { [Op.ne]: 'canceled' }
             }
         })
+        
         if (existingAppointment) {
             return res.status(400).json({
                 message: "Ez az időpont már foglalt ennél a fodrásznál"
