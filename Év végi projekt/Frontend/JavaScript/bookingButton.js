@@ -7,7 +7,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const modalSubmitBtn = document.getElementById("modalSubmitBtn")
     const switchLink = document.getElementById("switchToRegister")
     const switchText=document.getElementById("switch")
-
+    
     bookingBtn.addEventListener("click", (e) => {
         e.preventDefault()
         loginModal.show()

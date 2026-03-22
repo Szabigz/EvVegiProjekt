@@ -206,7 +206,7 @@ async function finalizeBooking() {
     if (!selectedDate) return alert("Kérlek válassz egy napot!")
     if (!selectedTime) return alert("Kérlek válassz időpontot!")
 
-    const comment = document.getElementById("commentInput").value || "";
+    const comment = document.getElementById("commentInput").value || "Nincs megjegyzés";
     
     const timeParts = selectedTime.split(":")
     const hour = parseInt(timeParts[0])

@@ -6,6 +6,7 @@ const {
 const Auth = require('./Auth')
 const Log = require('./log')
 const dbHandler = require('./dbHandler')
+const { sendBookingEmail } = require('./emailsender');
 
 router.get("/appointmentMyBarber", Auth(), async (req, res) => {
     try {
@@ -186,6 +187,8 @@ router.post("/appointmentUserPost", Auth(), async (req, res) => {
             message: "Invalid date format"
         })
 
+
+
         const existingAppointment = await dbHandler.appointments.findOne({
             where: {
                 barberID,
@@ -213,6 +216,23 @@ router.post("/appointmentUserPost", Auth(), async (req, res) => {
             comment,
             status: "booked"
         })
+        const barber = await dbHandler.barber.findByPk(barberID)
+        const service = await dbHandler.services.findByPk(serviceID)
+        const user = await dbHandler.user.findByPk(req.uid)
+        if (user && user.email) {
+            const dateObj = new Date(start_time);
+            const formattedDate = dateObj.toLocaleDateString("hu-HU");
+            const formattedTime = dateObj.toLocaleTimeString("hu-HU", { hour: "2-digit", minute: "2-digit" });
+
+            sendBookingEmail(
+                user.email, 
+                barber.name, 
+                service.name,
+                formattedDate, 
+                formattedTime
+            ).catch(err => console.error("Email hiba:", err));
+        }
+
         res.status(200).json({
             message: "Foglalás sikeres",
             id: newAppointment.id

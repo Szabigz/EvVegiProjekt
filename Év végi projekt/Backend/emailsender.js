@@ -5,7 +5,7 @@ const EMAIL_USER= process.env.EMAIL_USER
 const EMAIL_PASS= process.env.EMAIL_PASS
 
 const transporter= nodemailer.createTransport({
-    service: "smtp-relay.brevo.com",
+    host: "smtp-relay.brevo.com",
     port: 587,
     secure: false,
     auth:{
@@ -14,8 +14,9 @@ const transporter= nodemailer.createTransport({
     }
 })
 async function sendBookingEmail(to, barberName, service, date, time) {
-    await transporter.sendMail({
-        from: '"Slick Barber Shop" <myexammail@gmail.com>',
+    try{
+        await transporter.sendMail({
+        from: '"Slick Barber Shop" <myexamail1@gmail.com>',
         to: to,
         subject: "Foglalás visszaigazolás",
         html: `
@@ -25,9 +26,13 @@ async function sendBookingEmail(to, barberName, service, date, time) {
             <p><b>Dátum:</b> ${date}</p>
             <p><b>Időpont:</b> ${time}</p>
             <br>
-            <p>Várunk szeretettel!</p>
-        `
-    })
+            <p>Várunk szeretettel!</p>`
+        })
+        console.log("Email elküldve: " + to);
+    }
+    catch(error){
+        console.error("Sikertelen email küldés: ", error.message)
+    }
 }
 
-module.exports={transporter,sendBookingEmail}
+module.exports={sendBookingEmail}
