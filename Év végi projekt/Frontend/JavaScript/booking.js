@@ -72,10 +72,15 @@ document.querySelectorAll(".service-btn").forEach(btn => {
 const calendarBody = document.getElementById("calendarBody")
 const monthYear = document.getElementById("monthYear")
 let current = new Date()
-
 function renderCalendar() {
     const year = current.getFullYear()
     const month = current.getMonth()
+    
+    const today = new Date()
+    const todayYear = today.getFullYear()
+    const todayMonth = today.getMonth()
+    const todayDate = today.getDate()
+
     monthYear.innerText = current.toLocaleString("hu-HU", { month: "long", year: "numeric" })
     calendarBody.innerHTML = ""
 
@@ -88,8 +93,8 @@ function renderCalendar() {
 
     for (let day = 1; day <= daysInMonth; day++) {
         if (dayIndex == 7) {
-            calendarBody.appendChild(row)
-            row = document.createElement("tr")
+            calendarBody.appendChild(row);
+            row = document.createElement("tr");
             dayIndex = 0
         }
 
@@ -97,21 +102,39 @@ function renderCalendar() {
         cell.innerText = day
         const dateObj = new Date(year, month, day)
 
-        if (dateObj.getDay() == 0) { // vasarnap tiltva
+        const isSunday = dateObj.getDay() == 0
+        
+        let isPast = false
+        if (year < todayYear) {
+            isPast = true
+        } else if (year == todayYear) {
+            if (month < todayMonth) {
+                isPast = true
+            } else if (month == todayMonth) {
+                if (day < todayDate) isPast = true
+            }
+        }
+
+        if (isSunday || isPast) {
             cell.classList.add("disabled-day")
+
         } else {
+            
+            cell.style.cursor = "pointer"
             cell.addEventListener("click", () => {
                 selectedDate = dateObj
                 highlightSelectedDay(cell)
-            })
+            });
         }
 
         row.appendChild(cell)
         dayIndex++
     }
     calendarBody.appendChild(row)
-}
 
+    const isCurrentMonth = (year == todayYear && month == todayMonth)
+    document.getElementById("prevMonth").disabled = isCurrentMonth
+}
 function highlightSelectedDay(cell) {
     document.querySelectorAll("#calendarBody td").forEach(td => td.classList.remove("selected-day"))
     cell.classList.add("selected-day")
