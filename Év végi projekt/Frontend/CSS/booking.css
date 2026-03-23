@@ -305,8 +305,6 @@ body {
 
 /* Reszponzivitas */
 
-/*Tablet*/
-
 @media (max-width: 992px) {
 
     .booking-wrapper {
@@ -325,29 +323,24 @@ body {
         padding: 25px;
     }
 
-    /* Fodrász rész */
     #barbers {
         max-width: 500px;
     }
 
     .barber-selection {
         width: 100%;
-        max-width: 450px;
+        max-width: 100%;
         grid-template-columns: repeat(2, 1fr);
     }
 
-    /* Szolgáltatások */
     .service-selection {
         grid-template-columns: repeat(2, 1fr);
     }
 
-    /* Időpont */
     .time-slot-wrapper {
         grid-template-columns: repeat(auto-fill, minmax(90px, 1fr));
     }
 }
-
-/* Mobil */
 
 @media (max-width: 768px) {
 
@@ -368,7 +361,6 @@ body {
         font-size: 1.2rem;
     }
 
-    /* Fodrász */
     #barbers {
         max-width: 100%;
     }
@@ -385,7 +377,6 @@ body {
         height: 90px;
     }
 
-    /* Szolgáltatás */
     .service-selection {
         grid-template-columns: 1fr;
     }
@@ -396,7 +387,6 @@ body {
         padding: 12px;
     }
 
-    /* Időpont */
     .time-slot-wrapper {
         grid-template-columns: repeat(auto-fill, minmax(75px, 1fr));
         gap: 8px;
@@ -412,9 +402,6 @@ body {
         font-size: 1rem;
     }
 }
-
-
-/*Kis mobil*/
 
 @media (max-width: 480px) {
 

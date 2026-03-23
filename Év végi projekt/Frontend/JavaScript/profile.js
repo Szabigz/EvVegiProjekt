@@ -1,13 +1,15 @@
 let currentUserId = null
 document.addEventListener("DOMContentLoaded", async () => {
+    /*Megnezzuk be van e jelentkezve*/
     const token = sessionStorage.getItem('token')
 
     if (!token) {
         window.location.href = "/HTML/mainpage.html"
-        return
+        return;
     }
 
     try {
+        /*Felhasznalo adatainak betoltese*/
         const response = await fetch('http://localhost:3000/userGet', {
             method: 'GET',
             headers: {
@@ -29,23 +31,25 @@ document.addEventListener("DOMContentLoaded", async () => {
         } else {
 
             sessionStorage.removeItem('token')
-            window.location.href = "/index.html"
+            window.location.href = "/HTML/mainpage.html"
         }
     } catch (error) {
         console.error("Hiba:", error)
     }
-
+    /*Kijelentkes gomb*/
     document.getElementById('logoutBtn').addEventListener('click', () => {
         sessionStorage.removeItem('token')
         window.location.href = "/HTML/mainpage.html"
     })
 })
+
+/*Idopontok betoltese*/
 loadMyAppointment()
 async function loadMyAppointment() {
     const token = sessionStorage.getItem("token")
     const container = document.getElementById("appointmentDiv")
 
-    if (!token || !container) return
+    if (!token || !container) return;
 
     try {
         const res = await fetch("http://localhost:3000/appointmentMyUser", {
@@ -55,17 +59,17 @@ async function loadMyAppointment() {
         if (!res.ok) throw new Error("Hiba a lekérésnél")
 
         const data = await res.json()
-        
+        /*Ha nincs foglalas*/
         if (!data || data.length == 0) {
             container.innerHTML = `<div class="col-12"><p class="text-white mt-3" style="text-align: center";>Jelenleg nincs aktív foglalásod.</p></div>`
             return;
         }
 
         container.innerHTML = "";
-
+        /*Ha van*/
         data.forEach(appointment => {
             const date = new Date(appointment.start_time);
-            
+            /*Foglalas divek letrehozasa*/
             const appointmentHtml = `
                 <div class="col-lg-6 col-md-6 col-sm-12 mb-4">
                     <div class="appointment-card">
@@ -102,6 +106,8 @@ async function loadMyAppointment() {
         container.innerHTML = `<p class="text-danger">Hiba történt az adatok betöltésekor.</p>`
     }
 }
+
+/*Felhasznalo adatainak modositasa (jelszo, felhasznalonev*/
 function editField(type) {
     const container = document.getElementById(`${type}-container`)
     const originalValue = type == 'phone' ? document.getElementById('display-phone').innerText : ""
@@ -120,6 +126,8 @@ function editField(type) {
         `;
     }
 }
+
+/*Modositasok elmentese*/ 
 async function saveUpdate(type) {
     const token = sessionStorage.getItem('token')
     let bodyData = {}
@@ -153,6 +161,8 @@ async function saveUpdate(type) {
         console.error("Hiba a küldéskor:", error)
     }
 }
+
+/*Idopont lemondasa*/
 async function cancelAppointment(id) {
     const confirmCancel = confirm("Biztosan le szeretnéd mondani ezt az időpontot?")
     

@@ -37,10 +37,11 @@ async function loadServices() {
     container.innerHTML = ""
 
     const res = await fetch(`/services?barberID=${selectedBarber}`)
-    if (!res.ok) return
+    if (!res.ok) return;
 
     const services = await res.json()
 
+    /*Szolhaltatasok kiirasa barberID alapjan*/
     services.forEach(service => {
         const btn = document.createElement("button")
         btn.classList.add("service-btn")
@@ -73,6 +74,7 @@ const calendarBody = document.getElementById("calendarBody")
 const monthYear = document.getElementById("monthYear")
 let current = new Date()
 function renderCalendar() {
+    /*Datum lekeresek*/
     const year = current.getFullYear()
     const month = current.getMonth()
     
@@ -81,6 +83,7 @@ function renderCalendar() {
     const todayMonth = today.getMonth()
     const todayDate = today.getDate()
 
+    /*Magyar idoszamitas*/
     monthYear.innerText = current.toLocaleString("hu-HU", { month: "long", year: "numeric" })
     calendarBody.innerHTML = ""
 
@@ -124,7 +127,7 @@ function renderCalendar() {
             cell.addEventListener("click", () => {
                 selectedDate = dateObj
                 highlightSelectedDay(cell)
-            });
+            })
         }
 
         row.appendChild(cell)
@@ -158,7 +161,7 @@ async function generateTimeSlots() {
     timeSlotsContainer.innerHTML = ""
     message.classList.add('d-none')
 
-    if (!selectedBarber || !selectedDate) return
+    if (!selectedBarber || !selectedDate) return;
     
     const year = selectedDate.getFullYear()
     const month = String(selectedDate.getMonth() + 1).padStart(2, '0')
@@ -169,7 +172,7 @@ async function generateTimeSlots() {
         const res = await fetch(`http://localhost:3000/availableSlots/${selectedBarber}/${formattedDate}`)
         
         if (!res.ok)
-            return
+            return;
         
         const slots = await res.json()
 
@@ -181,6 +184,7 @@ async function generateTimeSlots() {
             const d = new Date(slot)
             const timeStr = d.toLocaleTimeString("hu-HU", { hour:"2-digit", minute:"2-digit" })
 
+            /*Idopontok kiirasa*/
             const btn = document.createElement("button")
             btn.classList.add("time-slot-btn")
             btn.textContent = timeStr
@@ -247,13 +251,13 @@ async function finalizeBooking() {
         formatLocalDateTime(end_time),
         comment
     )
-
+    /*Sikeres foglalas kiirasa es email kuldes*/
     if (success) {
         const dateText = start_time.toLocaleDateString("hu-HU")
         const timeText = start_time.toLocaleTimeString("hu-HU", { hour: "2-digit", minute: "2-digit" })
         
         const barberElem = document.querySelector(`.barber-card[data-barber="${selectedBarber}"] h5`)
-        const barberName = barberElem ? barberElem.innerText : "Fodrász";
+        const barberName = barberElem ? barberElem.innerText : "Fodrász"
 
         const serviceElem = document.querySelector(`.service-btn[data-service="${selectedService}"]`)
         const serviceName = serviceElem ? serviceElem.innerText.split("\n")[0] : "Szolgáltatás"
@@ -271,6 +275,7 @@ async function finalizeBooking() {
     }
 }
 
+/*Idopont foglalas*/
 async function bookAppointment(barberID, serviceID, start_time, end_time, comment) {
 
     const token = sessionStorage.getItem("token")
@@ -292,24 +297,3 @@ async function bookAppointment(barberID, serviceID, start_time, end_time, commen
 
     return res.ok
 }
-
-async function deleteAppointment(barberID, userID, start_time, end_time) {
-
-    const token = sessionStorage.getItem("token")
-
-    const res = await fetch('/appointmentDelete/:'+ userID, {
-        method: 'DELETE',
-        headers: {
-            'Content-Type': 'application/json',
-            'Authorization': 'Bearer ' + token
-        },
-        body: JSON.stringify({ 
-            barberID,
-            start_time,
-            end_time,
-        })
-    })
-
-    return res.ok
-}
-

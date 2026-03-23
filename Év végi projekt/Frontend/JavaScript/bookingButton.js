@@ -8,19 +8,22 @@ document.addEventListener("DOMContentLoaded", () => {
     const switchLink = document.getElementById("switchToRegister")
     const switchText=document.getElementById("switch")
     const profileBtn = document.querySelector(".profile-btn");
-        
+    
+    /*Profil gomb*/
     profileBtn.addEventListener("click",(e)=>{
         e.preventDefault()
-        sessionStorage.setItem('postLoginRedirect', "/HTML/profile.html");
+        sessionStorage.setItem('postLoginRedirect', "/HTML/profile.html")
         loginModal.show()
     })
 
+    /*Foglalas gomb*/
     bookingBtn.addEventListener("click", (e) => {
         e.preventDefault()
-        sessionStorage.setItem('postLoginRedirect', "/HTML/booking.html");
+        sessionStorage.setItem('postLoginRedirect', "/HTML/booking.html")
         loginModal.show()
-    });
+    })
 
+    /*Bejelentkezes - Regisztracio*/
     switchLink.addEventListener("click", (e) => {
         e.preventDefault()
         const phoneField = document.getElementById("phoneField")
@@ -45,6 +48,7 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     })
 
+    /*Veglegesites*/
     loginForm.addEventListener("submit", (e) => {
         e.preventDefault()
 

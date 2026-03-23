@@ -536,6 +536,125 @@ body {
 
 
 /* Reszponzivitas */
+@media (max-width: 992px) {
+
+    .navbar .menu-item {
+        flex: 0 0 auto;         
+        width: auto;             
+        text-align: center;      
+    }
+
+    .navbar .menu-item:first-child {
+        margin-bottom: 10px;     
+    }
+
+    .menu-img {
+        display: block;
+        margin: 0 auto;         
+        height: 80px;
+        width: auto;
+    }
+
+    .menu-link {
+        font-size: 0.95rem;
+        letter-spacing: 1px;
+    }
+
+    .contact-box {
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        margin-left: 0;
+        width: 260px;
+        z-index: 2000;
+    }
+
+    #book-appointment-div {
+        flex-direction: column;
+        align-items: center
+    }
+
+    #book-appointment-div .col-lg-6,
+    #book-appointment-div .col-lg-4,
+    #book-appointment-div .col-lg-2 {
+        width: 100%;
+        max-width: 500px;
+        margin-bottom: 20px;
+    }
+}
+
+@media (max-width: 768px) {
+    .navbar ul {
+        flex-direction: column;   
+        gap: 15px;                
+        margin: 30px auto;         
+        max-width: 300px;
+        padding: 0;      
+    }
+
+    .menu-item:not(:first-child) {
+        width: auto; 
+        padding: 8px 0;
+        margin: 0 auto;  
+        text-align: center;        
+    }
+
+    .menu-img {
+        height: 70px;             
+        margin-bottom: 10px;
+        display: block;
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    .menu-link {
+        font-size: 0.9rem;       
+        letter-spacing: 1px;
+    }
+    .container {
+        padding-left: 10px;
+        padding-right: 10px;
+    }
+
+    #info-box {
+        padding: 20px 25px;
+    }
+
+    .info-title {
+        font-size: 1.7rem;
+    }
+
+    #info-box p {
+        font-size: 1rem;
+    }
+
+    .img-circle-hover {
+        width: 170px;
+        height: 170px;
+        margin: 15px auto;
+        display: block;
+    }
+
+    .card-img-top {
+        height: 120px;
+        width: 120px;
+    }
+
+    #team-div {
+        flex-direction: column;
+        align-items: center;
+        gap: 20px;
+    }
+
+    .team-card {
+        width: 85%;
+        max-width: 350px;
+    }
+
+    #location-div iframe {
+        height: 300px;
+    }
+}
 
 @media (min-width: 751px) and (max-width: 999px) {
     .img-circle-hover {
@@ -615,121 +734,4 @@ body {
         height: 250px;
     }
 }
-@media (max-width: 768px) {
-    .navbar ul {
-        flex-direction: column;   
-        gap: 15px;                
-        margin: 30px auto;         
-        max-width: 300px;
-        padding: 0;      
-    }
 
-    .menu-item:not(:first-child) {
-        width: auto; 
-        padding: 8px 0;
-        margin: 0 auto;  
-        text-align: center;        
-    }
-
-    .menu-img {
-        height: 70px;             
-        margin-bottom: 10px;
-        display: block;
-        margin-left: auto;
-        margin-right: auto;
-    }
-
-    .menu-link {
-        font-size: 0.9rem;       
-        letter-spacing: 1px;
-    }
-    .container {
-        padding-left: 10px;
-        padding-right: 10px;
-    }
-
-    #info-box {
-        padding: 20px 25px;
-    }
-
-    .info-title {
-        font-size: 1.7rem;
-    }
-
-    #info-box p {
-        font-size: 1rem;
-    }
-
-    .img-circle-hover {
-        width: 170px;
-        height: 170px;
-        margin: 15px auto;
-        display: block;
-    }
-
-    .card-img-top {
-        height: 120px;
-        width: 120px;
-    }
-
-    #team-div {
-        flex-direction: column;
-        align-items: center;
-        gap: 20px;
-    }
-
-    .team-card {
-        width: 85%;
-        max-width: 350px;
-    }
-
-    #location-div iframe {
-        height: 300px;
-    }
-}
-@media (max-width: 992px) {
-
-    .navbar .menu-item {
-        flex: 0 0 auto;         
-        width: auto;             
-        text-align: center;      
-    }
-
-    .navbar .menu-item:first-child {
-        margin-bottom: 10px;     
-    }
-
-    .menu-img {
-        display: block;
-        margin: 0 auto;         
-        height: 80px;
-        width: auto;
-    }
-
-    .menu-link {
-        font-size: 0.95rem;
-        letter-spacing: 1px;
-    }
-
-    .contact-box {
-        position: fixed;
-        bottom: 20px;
-        right: 20px;
-        margin-left: 0;
-        width: 260px;
-        z-index: 2000;
-    }
-
-    #book-appointment-div {
-        flex-direction: column;
-        align-items: center
-    }
-
-    #book-appointment-div .col-lg-6,
-    #book-appointment-div .col-lg-4,
-    #book-appointment-div .col-lg-2 {
-        width: 100%;
-        max-width: 500px;
-        margin-bottom: 20px;
-    }
-}

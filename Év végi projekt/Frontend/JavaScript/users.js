@@ -1,3 +1,4 @@
+/*Bejelentkezes*/ 
 async function userLogin(redirectUrl="/HTML/booking.html") {
     const name = document.getElementById("nameInput").value
     const email = document.getElementById("emailInput").value
@@ -27,6 +28,7 @@ async function userLogin(redirectUrl="/HTML/booking.html") {
     }
 }
 
+/*Regisztracio*/
 async function userRegister() {
     const name = document.getElementById("nameInput").value
     const email = document.getElementById("emailInput").value
@@ -43,7 +45,7 @@ async function userRegister() {
         })
 
         const data = await response.json()
-
+        /*Modal megnyitasa ha regisztralt a felhasznalo*/
         if (response.ok) {
             alert(data.message || "Sikeres regisztráció!")
             const modalTitle = document.querySelector("#loginModal .modal-title")
