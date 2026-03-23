@@ -152,20 +152,17 @@ router.put('/userUpdate/:id', Auth(), async (req, res) => {
                 message: "No data to update"
             }) 
         }
+        let updateData = {};
+        if (password) {
+            updateData.password = await bcrypt.hash(password, 9);
+        }
 
-        if (password) await dbHandler.user.update({
-            password
-        }, {
-            where: {
-                id: Id
-            }
-        })
-        else if (phoneNum) await dbHandler.user.update({
-            phoneNum
-        }, {
-            where: {
-                id: Id
-            }
+        if (phoneNum) {
+            updateData.phoneNum = phoneNum;
+        }
+
+        await dbHandler.user.update(updateData, {
+            where: { id: Id }
         })
         res.json({
             'message': 'sikeres módosítás'

@@ -2,11 +2,18 @@ body{
     background-color: #121212;
     font-family: Georgia, 'Times New Roman', Times, serif;
 }
-h1{
+h1 {
     text-align: left;
+    padding: 4px 8px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    background: linear-gradient(90deg, #d4af37, #f5e6a3, #d4af37);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+
     text-decoration: underline;
-    padding: 2px;
-    color: #121212;
+    text-decoration-color: #d4af37;
+    text-decoration-thickness: 2px;
 }
 
 #profilediv{
@@ -93,4 +100,20 @@ h1{
 .cancel-btn:hover {
     background: #d4af37;
     color: white;
+}
+
+.form-control-sm {
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: white;
+}
+.form-control-sm:focus {
+    background: rgba(255, 255, 255, 0.2);
+    color: white;
+    box-shadow: none;
+    border-color: #d4af37;
+}
+.edit-link:hover {
+    text-decoration: underline;
+    color: #d4af37;
 }

@@ -248,6 +248,7 @@ async function finalizeBooking() {
             Időpont: ${timeText}`)
 
         generateTimeSlots()
+        window.location.href= "/HTML/profile.html"
     } else {
         alert("Hiba történt a foglalás során!")
     }

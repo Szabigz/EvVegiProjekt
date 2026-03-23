@@ -19,6 +19,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         if (response.ok) {
             const data = await response.json()
             const user = data[0];
+            currentUserId=user.id
 
             if (user) {
                 document.getElementById('display-name').textContent = user.name
@@ -99,5 +100,83 @@ async function loadMyAppointment() {
         })
     } catch (err) {
         container.innerHTML = `<p class="text-danger">Hiba történt az adatok betöltésekor.</p>`
+    }
+}
+function editField(type) {
+    const container = document.getElementById(`${type}-container`)
+    const originalValue = type == 'phone' ? document.getElementById('display-phone').innerText : ""
+
+    if (type == 'phone') {
+        container.innerHTML = `
+            <input type="text" id="input-phone" class="form-control form-control-sm w-50" value="${originalValue}">
+            <button class="btn btn-sm btn-dark text-light"" onclick="saveUpdate('phone')">Mentés</button>
+            <button class="btn btn-sm btn-outline-light" onclick="location.reload()">Mégse</button>
+        `;
+    } else {
+        container.innerHTML = `
+            <input type="password" id="input-password" class="form-control form-control-sm w-50" placeholder="Új jelszó">
+            <button class="btn btn-sm btn-dark text-light" onclick="saveUpdate('password')">Mentés</button>
+            <button class="btn btn-sm btn-outline-light" onclick="location.reload()">Mégse</button>
+        `;
+    }
+}
+async function saveUpdate(type) {
+    const token = sessionStorage.getItem('token')
+    let bodyData = {}
+
+    if (type == 'phone') {
+        bodyData.phoneNum = document.getElementById('input-phone').value
+    } else {
+        bodyData.password = document.getElementById('input-password').value
+        if (!bodyData.password) return alert("Adj meg egy új jelszót!")
+    }
+
+    try {
+        const response = await fetch(`http://localhost:3000/userUpdate/${currentUserId}`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            },
+            body: JSON.stringify(bodyData)
+        })
+
+        const resData = await response.json()
+
+        if (response.ok) {
+            alert("Sikeres módosítás!")
+            location.reload()
+        } else {
+            alert("Hiba: " + resData.message)
+        }
+    } catch (error) {
+        console.error("Hiba a küldéskor:", error)
+    }
+}
+async function cancelAppointment(id) {
+    const confirmCancel = confirm("Biztosan le szeretnéd mondani ezt az időpontot?")
+    
+    if (!confirmCancel) return;
+
+    const token = sessionStorage.getItem("token")
+
+    try {
+        const res = await fetch(`http://localhost:3000/appointmentDelete/${id}`, {
+            method: 'DELETE',
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        })
+
+        if (res.ok) {
+            alert("Időpont sikeresen lemondva.");
+            loadMyAppointment()
+        } else {
+            const errorText = await res.text()
+            alert("Hiba: " + errorText)
+        }
+    } catch (err) {
+        console.error("Hiba a lemondás során:", err)
+        alert("Hálózati hiba történt a lemondáskor.")
     }
 }

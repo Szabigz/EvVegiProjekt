@@ -3,6 +3,7 @@ const nodemailer=require('nodemailer')
 
 const EMAIL_USER= process.env.EMAIL_USER
 const EMAIL_PASS= process.env.EMAIL_PASS
+const BASE_URL = process.env.BASE_URL
 
 const transporter= nodemailer.createTransport({
     service: 'gmail',
@@ -25,7 +26,7 @@ async function sendBookingEmail(to, barberName, service, date, time) {
             <p><b>Időpont:</b> ${time}</p>
             <br>
             <p>Várunk szeretettel!</p>
-            <small>Le szeretnéd mondani? <a>/HTML/mainpage.html</a></small>`
+            <small>Le szeretnéd mondani? <a href="${BASE_URL}/HTML/mainpage.html" style="color: #d4af37; font-weight: bold; text-decoration: none;"> Irany a profilomhoz → </a></small>`
         })
         console.log("Email elküldve: " + to);
     }
