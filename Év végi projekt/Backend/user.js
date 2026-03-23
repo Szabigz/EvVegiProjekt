@@ -115,13 +115,23 @@ router.delete("/userDelete/:id", Auth(), async (req, res) => {
         if (!oneUser) return res.status(404).json({
             message: "Nincs ilyen felhasználó"
         }) 
+        /*A felhasznalohoz tartozo idopontokat lemondjuk*/ 
+        await dbHandler.appointments.update(
+            { status: 'canceled' },
+            { 
+                where: { 
+                    userID: Id,
+                    status: 'booked' 
+                } 
+            }
+        );
         await dbHandler.user.destroy({
             where: {
                 id: Id
             }
         }) 
         return res.status(200).json({
-            message: "Sikeres törlés"
+            message: "Sikeres törlés, az időpontok lemondva"
         }) 
     } catch (err) {
         return res.status(500).json({
