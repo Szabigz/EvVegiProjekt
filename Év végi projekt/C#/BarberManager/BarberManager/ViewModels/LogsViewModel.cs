@@ -32,7 +32,8 @@ namespace BarberManager.ViewModels
             StatusMessage = "";
             try
             {
-                var data = await _api.GetMyLogsAsync();
+                var data = await _api.GetAllLogsAsync();
+
                 Logs.Clear();
                 foreach (var item in data)
                 {

@@ -8,6 +8,7 @@ let userId;
 let userToken;
 let serviceId
 let appointmentId
+let workhoursId
 
 //Barber Reg és Login
 
@@ -16,11 +17,11 @@ describe("testing /barberReg post route", () => {
         const response = await request(server)
             .post("/barberReg")
             .send({
-                email: 'testEmail',
+                email: 'testEmail' + Date.now() + '@example.com',
                 name: 'testName',
                 password: 'testPass',
                 phoneNum: 12345,
-                isAdmin: 0
+                isAdmin: 1
             })
             .set('Content-Type', 'application/json')
         expect(response.statusCode).toBe(201)
@@ -54,10 +55,19 @@ describe("testing /barberReg post route", () => {
 
 describe("testing /barberLogin post route", () => {
     test("should return 201 status code on successful login", async () => {
+        const email = 'log' + Date.now() + '@b.hu';
+        const reg = await request(server).post("/barberReg").send({
+            email: email,
+            name: 'testName',
+            password: 'testPass',
+            phoneNum: 12345,
+            isAdmin: 1
+        });
+
         const response = await request(server)
             .post("/barberLogin")
             .send({
-                email: 'testEmail',
+                email: email,
                 name: 'testName',
                 password: 'testPass'
             })
@@ -97,7 +107,7 @@ describe("testing /userReg post route", () => {
         const response = await request(server)
             .post("/userReg")
             .send({
-                email: 'testUserEmail',
+                email: 'testUserEmail' + Date.now() + '@example.com',
                 name: 'testName',
                 password: "testPass",
                 phoneNum: 12345
@@ -136,10 +146,18 @@ describe("testing /userReg post route", () => {
 
 describe("POST /userLogin", () => {
     test("should return 200 status code on successful login", async () => {
+        const email = 'ulog' + Date.now() + '@example.com';
+        const reg = await request(server).post("/userReg").send({
+            email: email,
+            name: 'testName',
+            password: "testPass",
+            phoneNum: 12345
+        });
+
         const response = await request(server)
             .post("/userLogin")
             .send({
-                email: 'testUserEmail',
+                email: email,
                 name: 'testName',
                 password: "testPass"
             })
@@ -190,7 +208,7 @@ describe('testing /servicesPost post route', () => {
     test('should return 200 status code', async () => {
         const response = await request(server).post('/servicesPost')
             .send({
-                name: "asd",
+                name: "asd" + Date.now(),
                 description: "asdasd",
                 duration_minutes: 10,
                 price: 5000
@@ -279,8 +297,8 @@ describe('testing /appointmentPost post route', () => {
                 userID: userId,
                 barberID: barberId,
                 serviceID: serviceId,
-                start_time: "2026-03-18 10:00",
-                end_time: "2026-03-18 16:30",
+                start_time: "2028-03-18 10:00",
+                end_time: "2028-03-18 16:30",
                 comment: "asd"
             })
             .set("Authorization", `Bearer ${barberToken}`)
@@ -302,7 +320,7 @@ describe('testing /appointmentPost post route', () => {
                 userID: userId,
                 barberID: barberId,
                 serviceID: serviceId,
-                start_time: "2026-03-18 10:00"
+                start_time: "2028-03-18 10:00"
             })
             .set("Authorization", `Bearer ${barberToken}`)
 
@@ -314,11 +332,8 @@ describe('testing /appointmentPost post route', () => {
             .post('/appointmentPost')
             .send({
                 userID: userId,
-                barberID: barberId,
                 serviceID: serviceId,
-                start_time: "2026-03-18 10:00",
-                end_time: "2026-03-18 16:30",
-                comment: "asd"
+                start_time: null // Hiányzó kötelező mező
             })
             .set("Authorization", `Bearer ${barberToken}`)
 
@@ -328,8 +343,8 @@ describe('testing /appointmentPost post route', () => {
 
 describe('testing /appointmentUserPost post route', () => {
     test('should return 200 status code', async () => {
-        const start_time = "2026-03-20 10:00"
-        const end_time = "2026-03-20 11:00"
+        const start_time = "2028-03-20 10:00"
+        const end_time = "2028-03-20 11:00"
         const response = await request(server)
             .post('/appointmentUserPost')
             .send({
@@ -343,7 +358,6 @@ describe('testing /appointmentUserPost post route', () => {
             .set("Authorization", `Bearer ${userToken}`)
 
         expect(response.body.id).toBeDefined()
-        appointmentId = response.body.id
         expect(response.statusCode).toBe(200)
     })
     test("should return 401 fir no token", async () => {
@@ -372,8 +386,8 @@ describe('testing /appointmentUserPost post route', () => {
                 userID: userId,
                 barberID: "asd",
                 serviceID: serviceId,
-                start_time: "2026-03-20 10:00",
-                end_time: "2026-03-20 11:00",
+                start_time: "2028-03-20 10:00",
+                end_time: "2028-03-20 11:00",
                 comment: "asd",
                 staus: "booked"
             })
@@ -411,14 +425,6 @@ describe("testing /servicesGet get route", () => {
     })
 })
 
-
-describe("testing /servicesMy get route", () => {
-    test("should return 200 status code", async () => {
-        const response = await request(server).get('/servicesMy').set("Authorization", `Bearer ${barberToken}`)
-        expect(response.statusCode).toBe(200)
-
-    })
-})
 
 describe("testing /servicesMy get route", () => {
     test("should return 200 status code", async () => {
@@ -471,16 +477,9 @@ describe("testing /appointmentMyUser get route", () => {
 
 
 describe('GET /availableSlots/:barberID/:date', () => {
-    let barberID;
-    let workhoursDate;
-
-    beforeAll(async () => {
-        barberID = barberId;
-        workhoursDate = "2026-03-18";
-    })
 
     test('should return available slots for a barber', async () => {
-        const response = await request(server).get(`/availableSlots/${barberId}/2026-03-18`);
+        const response = await request(server).get(`/availableSlots/${barberId}/2028-03-18`);
         expect(response.statusCode).toBe(200);
         expect(Array.isArray(response.body)).toBe(true);
     });
@@ -536,7 +535,6 @@ describe('testing /userUpdate/:id put route', () => {
         const response = await request(server)
             .put(`/userUpdate/${userId}`)
             .send({
-                name: "GERI",
                 phoneNum: 1111111
             })
             .set("Authorization", `Bearer ${userToken}`)
@@ -586,7 +584,7 @@ describe('testing /servicesUpdate/:id put route', () => {
     })
     test('servicesUpdate 401 no token', async () => {
         const res = await request(server)
-            .put(`/servicesUpdate/${workhoursId}`)
+            .put(`/servicesUpdate/${serviceId}`)
         expect(res.statusCode).toBe(401)
     })
 
@@ -614,8 +612,8 @@ describe('testing /appointmentUpdate/:id put route', () => {
         const response = await request(server)
             .put(`/appointmentUpdate/${appointmentId}`)
             .send({
-                start_time: "2026-03-10 10:00",
-                end_time: "2026-03-10 11:00",
+                start_time: "2028-12-10 10:00",
+                end_time: "2028-12-10 11:00",
                 comment: "sss"
             })
             .set("Authorization", `Bearer ${barberToken}`)
@@ -639,7 +637,7 @@ describe('testing /appointmentUpdate/:id put route', () => {
         const res = await request(server)
             .put(`/appointmentUpdate/999999`)
             .send({
-                start_time: "2026-03-10 10:00"
+                start_time: "2028-03-10 10:00"
             })
             .set("Authorization", `Bearer ${barberToken}`)
         expect(res.statusCode).toBe(404)
@@ -711,7 +709,6 @@ describe('testing /appointmentDelete/:id delete route', () => {
         const res = await request(server)
             .delete(`/appointmentDelete/abc`)
             .set("Authorization", `Bearer ${barberToken}`)
-        console.log("Test response:", res.body);
         expect(res.statusCode).toBe(400);
     })
     test('appointmentDelete 401 no token', async () => {
@@ -821,8 +818,10 @@ describe('testing /userDelete/:id delete route', () => {
     test('should return 200 status code', async () => {
         const response = await request(server)
             .delete(`/userDelete/${userId}`)
-            .set("Authorization", `Bearer ${userToken}`)
+            .set("Authorization", `Bearer ${barberToken}`)
         expect(response.statusCode).toBe(200)
+        expect(response.body.message).toBe("Sikeres törlés, az időpontok lemondva")
+
     })
     test('userDelete 401 no token', async () => {
         const res = await request(server)
@@ -833,14 +832,14 @@ describe('testing /userDelete/:id delete route', () => {
     test('userDelete 400 invalid id', async () => {
         const res = await request(server)
             .delete(`/userDelete/abc`)
-            .set("Authorization", `Bearer ${userToken}`)
+            .set("Authorization", `Bearer ${barberToken}`)
         expect(res.statusCode).toBe(400)
     })
 
     test('userDelete 404 not found', async () => {
         const res = await request(server)
             .delete(`/userDelete/999999`)
-            .set("Authorization", `Bearer ${userToken}`)
+            .set("Authorization", `Bearer ${barberToken}`)
         expect(res.statusCode).toBe(404)
     })
 })
