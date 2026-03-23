@@ -39,10 +39,10 @@ h1 {
 }
 
 #deleteUserBtn{
-    text-align: right;
     color: red; 
-    background-color: rgba(255, 0, 0, 0.418);
+    background-color: rgba(255, 0, 0, 0.295);
     outline: solid 1px red;
+    margin-left: 10px;
 }
 
 #updateBtn{
