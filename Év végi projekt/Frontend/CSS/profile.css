@@ -37,6 +37,14 @@ h1 {
     color: #d4af37; 
     outline: solid 1px #d4af37; 
 }
+
+#deleteUserBtn{
+    text-align: right;
+    color: red; 
+    background-color: rgba(255, 0, 0, 0.418);
+    outline: solid 1px red;
+}
+
 #updateBtn{
     color: #d4af37; 
 }

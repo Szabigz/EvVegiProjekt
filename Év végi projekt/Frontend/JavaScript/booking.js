@@ -153,36 +153,53 @@ renderCalendar()
 const timeSlotsContainer = document.querySelector('.time-slot-wrapper')
 
 async function generateTimeSlots() {
-    timeSlotsContainer.innerHTML = ""
-    if (!selectedBarber || !selectedDate) return
+    const message=document.getElementById("noSlotsMessage")
 
+    timeSlotsContainer.innerHTML = ""
+    message.classList.add('d-none')
+
+    if (!selectedBarber || !selectedDate) return
+    
     const year = selectedDate.getFullYear()
     const month = String(selectedDate.getMonth() + 1).padStart(2, '0')
     const day = String(selectedDate.getDate()).padStart(2, '0')
     const formattedDate = `${year}-${month}-${day}`
 
-    const res = await fetch(`/availableSlots/${selectedBarber}/${formattedDate}`)
-    if (!res.ok) return
-    const slots = await res.json()
+    try{
+        const res = await fetch(`http://localhost:3000/availableSlots/${selectedBarber}/${formattedDate}`)
+        
+        if (!res.ok)
+            return
+        
+        const slots = await res.json()
 
-    slots.forEach((slot, index) => {
-        const d = new Date(slot)
-        const timeStr = d.toLocaleTimeString("hu-HU", { hour:"2-digit", minute:"2-digit" })
+        if (slots.length == 0) {
+            message.classList.remove('d-none')
+            return;
+        }
+        slots.forEach((slot, index) => {
+            const d = new Date(slot)
+            const timeStr = d.toLocaleTimeString("hu-HU", { hour:"2-digit", minute:"2-digit" })
 
-        const btn = document.createElement("button")
-        btn.classList.add("time-slot-btn")
-        btn.textContent = timeStr
+            const btn = document.createElement("button")
+            btn.classList.add("time-slot-btn")
+            btn.textContent = timeStr
 
-        btn.addEventListener("click", () => {
-            timeSlotsContainer.querySelectorAll("button").forEach(b => b.classList.remove("active"))
-            btn.classList.add("active")
-            selectedTime = timeStr
-            scrollToStep(3)
+            btn.addEventListener("click", () => {
+                timeSlotsContainer.querySelectorAll("button").forEach(b => b.classList.remove("active"))
+                btn.classList.add("active")
+                selectedTime = timeStr
+                scrollToStep(3)
+            })
+
+            timeSlotsContainer.appendChild(btn)
+            setTimeout(() => btn.classList.add("show"), index * 50)
         })
 
-        timeSlotsContainer.appendChild(btn)
-        setTimeout(() => btn.classList.add("show"), index * 50)
-    })
+    }
+    catch(err){
+        console.error("Hiba az időpontok betöltésekor: "+err)
+    }
 }
 
 //Helyes datum formatum miatt segedfuggveny
