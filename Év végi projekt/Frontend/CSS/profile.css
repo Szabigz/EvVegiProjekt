@@ -37,14 +37,24 @@ h1 {
     color: #d4af37; 
     outline: solid 1px #d4af37; 
 }
-
+#logoutBtn:hover{
+    color: white; 
+    background-color: #d4af3759;
+    outline: solid 1px #d4af37; 
+    transition: all 0.3s ease;
+}
 #deleteUserBtn{
     color: red; 
     background-color: rgba(255, 0, 0, 0.295);
     outline: solid 1px red;
     margin-left: 10px;
 }
+#deleteUserBtn:hover{
+    color: white; 
+    background-color: #d43737;
+    transition: all 0.3s ease;
 
+}
 #updateBtn{
     color: #d4af37; 
 }
