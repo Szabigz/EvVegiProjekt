@@ -5,9 +5,7 @@ const EMAIL_USER= process.env.EMAIL_USER
 const EMAIL_PASS= process.env.EMAIL_PASS
 
 const transporter= nodemailer.createTransport({
-    host: "smtp-relay.brevo.com",
-    port: 587,
-    secure: false,
+    service: 'gmail',
     auth:{
         user: EMAIL_USER,
         pass: EMAIL_PASS
@@ -16,7 +14,7 @@ const transporter= nodemailer.createTransport({
 async function sendBookingEmail(to, barberName, service, date, time) {
     try{
         await transporter.sendMail({
-        from: '"Slick Barber Shop" <myexamail1@gmail.com>',
+        from: `"Slick Barber Shop" <${EMAIL_USER}>`,
         to: to,
         subject: "Foglalás visszaigazolás",
         html: `
