@@ -1,4 +1,4 @@
-async function userLogin() {
+async function userLogin(redirectUrl="/HTML/booking.html") {
     const name = document.getElementById("nameInput").value
     const email = document.getElementById("emailInput").value
     const password = document.getElementById("passwordInput").value
@@ -17,7 +17,7 @@ async function userLogin() {
         if (response.ok) { 
             alert(data.message || "Sikeres bejelentkezés!")
             sessionStorage.setItem('token', data.token)
-            window.location.href = "/HTML/booking.html"
+            window.location.href = redirectUrl
         } else {
             alert("Hiba: " + data.message)
         }

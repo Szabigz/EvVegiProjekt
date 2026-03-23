@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+    <link rel="stylesheet" href="/CSS/profile.css">
+    <link rel="icon" href="/images/icon.jpg" type="image/png">
+    <title>Profilom - Slick Barber Shop</title>
+</head>
+<body>
+    <div class="container">
+        <div id="profilediv">
+            <h1>Profilod adatai</h1>
+            <hr style="border-color: rgba(255,255,255,0.1);">
+            
+            <div class="row mt-4">
+                <div class="col-md-6 mb-3">
+                    <label class="d-block small">Felhasználónév:</label>
+                    <span id="display-name" class="fs-5">Betöltés...</span>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label class="d-block small">E-mail cím:</label>
+                    <span id="display-email" class="fs-5">Betöltés...</span>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label class="d-block small text-white-50">Telefonszám:</label>
+                    <div id="phone-container" class="d-flex align-items-center gap-2">
+                        <span id="display-phone" class="fs-5">Betöltés...</span>
+                        <small class="text-info edit-link" onclick="editField('phone')" style="cursor:pointer;">(Módosítás)</small>
+                    </div>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label class="d-block small text-white-50">Jelszó:</label>
+                    <div id="password-container" class="d-flex align-items-center gap-2">
+                        <span class="fs-5">********</span>
+                        <small class="text-info edit-link" onclick="editField('password')" style="cursor:pointer;">(Módosítás)</small>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mt-4 pt-3 border-top border-secondary">
+                <button id="logoutBtn" class="btn btn-sm">Kijelentkezés</button>
+            </div>
+        </div>
+
+        <div id="appointmentDiv" class="row mt-4"></div>
+
+    </div>
+
+    <script src="/JavaScript/profile.js"></script>
+</body>
+</html>

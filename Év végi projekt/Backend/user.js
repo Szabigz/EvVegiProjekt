@@ -131,6 +131,7 @@ router.delete("/userDelete/:id", Auth(), async (req, res) => {
 }) 
 
 router.put('/userUpdate/:id', Auth(), async (req, res) => {
+    const {password, phoneNum}=req.body
     try {
         const Id = req.params.id
         if (isNaN(Id)) return res.status(400).json({
@@ -152,11 +153,20 @@ router.put('/userUpdate/:id', Auth(), async (req, res) => {
             }) 
         }
 
-        await dbHandler.user.update(req.body, {
+        if (password) await dbHandler.user.update({
+            password
+        }, {
             where: {
                 id: Id
             }
-        }) 
+        })
+        else if (phoneNum) await dbHandler.user.update({
+            phoneNum
+        }, {
+            where: {
+                id: Id
+            }
+        })
         res.json({
             'message': 'sikeres módosítás'
         })

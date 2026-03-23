@@ -248,7 +248,6 @@ async function finalizeBooking() {
             Időpont: ${timeText}`)
 
         generateTimeSlots()
-        loadMyAppointment()
     } else {
         alert("Hiba történt a foglalás során!")
     }
@@ -276,27 +275,6 @@ async function bookAppointment(barberID, serviceID, start_time, end_time, commen
     return res.ok
 }
 
-async function loadMyAppointment() {
-    const token = sessionStorage.getItem("token")
-    if(!token) return
-
-    const res = await fetch("/appointmentMyUser", {
-        headers: { "Authorization": "Bearer " + token }
-    })
-    if(!res.ok) return
-
-    const data = await res.json()
-    if(data.length == 0) return
-
-    const appointment = data[0]
-    const date = new Date(appointment.start_time)
-
-    document.getElementById("selectedBarber").innerText = appointment.barber.name
-    document.getElementById("selectedService").innerText = appointment.service.name
-    document.getElementById("selectedDate").innerText = date.toLocaleDateString("hu-HU")
-    document.getElementById("selectedTime").innerText = date.toLocaleTimeString("hu-HU", {hour:"2-digit", minute:"2-digit"})
-}
-
 async function deleteAppointment(barberID, userID, start_time, end_time) {
 
     const token = sessionStorage.getItem("token")
@@ -317,4 +295,3 @@ async function deleteAppointment(barberID, userID, start_time, end_time) {
     return res.ok
 }
 
-loadMyAppointment()

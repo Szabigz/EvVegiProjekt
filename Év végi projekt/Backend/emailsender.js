@@ -24,7 +24,8 @@ async function sendBookingEmail(to, barberName, service, date, time) {
             <p><b>Dátum:</b> ${date}</p>
             <p><b>Időpont:</b> ${time}</p>
             <br>
-            <p>Várunk szeretettel!</p>`
+            <p>Várunk szeretettel!</p>
+            <small>Le szeretnéd mondani? <a>/HTML/mainpage.html</a></small>`
         })
         console.log("Email elküldve: " + to);
     }

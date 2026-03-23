@@ -1,0 +1,96 @@
+body{
+    background-color: #121212;
+    font-family: Georgia, 'Times New Roman', Times, serif;
+}
+h1{
+    text-align: left;
+    text-decoration: underline;
+    padding: 2px;
+    color: #121212;
+}
+
+#profilediv{
+    background: rgba(255, 255, 255, 0.15);
+    border-left: 5px solid rgba(255, 255, 255, 0.25);
+    border-top: 1px solid rgba(255, 255, 255, 0.25);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.25);
+    border-right: 1px solid rgba(255, 255, 255, 0.25);
+    border-radius: 12px;
+    padding: 25px 35px;
+    box-shadow: 0 8px 22px rgba(0,0,0,0.25);
+    backdrop-filter: blur(4px);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    margin: 0 auto;
+    margin-top: 60px;
+    color: white;
+    max-width: 1000px;
+}
+
+#logoutBtn{
+    color: #d4af37; 
+    outline: solid 1px #d4af37; 
+}
+#updateBtn{
+    color: #d4af37; 
+}
+
+#appointmentDiv{
+    max-width: 1000px;
+    margin: 0 auto;
+}
+
+.appointment-card {
+    background: rgba(255, 255, 255, 0.15);
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    border-left: 5px solid rgba(255, 255, 255, 0.25);
+    border-radius: 12px;
+    padding: 20px;
+    box-shadow: 0 8px 22px rgba(0,0,0,0.25);
+    backdrop-filter: blur(4px);
+    color: white;
+    transition: transform 0.3s ease;
+}
+
+.appointment-card:hover {
+    transform: translateY(-5px);
+}
+
+.appointment-title {
+    font-size: 1.2rem;
+    color: #d4af37;
+    margin: 0;
+}
+
+.appointment-divider {
+    border-color: rgba(255,255,255,0.1);
+    margin: 10px 0;
+}
+
+.label-text {
+    display: block;
+    color: rgba(255,255,255,0.5);
+}
+
+.gold-text {
+    color: #d4af37;
+}
+
+.cancel-container {
+    margin-top: 15px;
+    text-align: right;
+}
+
+.cancel-btn {
+    background: transparent;
+    color: #d4af37;
+    border: 1px solid #d4af37;
+    padding: 5px 15px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    transition: all 0.3s ease;
+}
+
+.cancel-btn:hover {
+    background: #d4af37;
+    color: white;
+}
