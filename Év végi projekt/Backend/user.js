@@ -172,7 +172,7 @@ router.put('/userUpdate/:id', Auth(), async (req, res) => {
             message: "Nincs ilyen felhasználó"
         })
         if (!req.body.name && !req.body.email && !req.body.password && !req.body.phoneNum) return res.status(400).json({
-            message: "No data to update"
+            message: "Nincs módosítanó adat"
         })
 
         let updateData = {};

@@ -131,7 +131,7 @@ describe("testing /userReg post route", () => {
     })
     test("should return 400 for no data", async () => {
         const res = await request(server)
-            .post('/servicesPost')
+            .post('/userReg')
             .send({})
             .set("Authorization", `Bearer ${barberToken}`)
 
@@ -181,7 +181,7 @@ describe("POST /userLogin", () => {
     })
     test("should return 400 for no data", async () => {
         const res = await request(server)
-            .post('/servicesPost')
+            .post('/userLogin')
             .send({})
             .set("Authorization", `Bearer ${barberToken}`)
 
@@ -190,7 +190,7 @@ describe("POST /userLogin", () => {
 
     test("should return 500 on forced server error", async () => {
         const response = await request(server)
-            .post("/barberReg")
+            .post("/userLogin")
             .send({
                 force500: true
             })
@@ -333,7 +333,7 @@ describe('testing /appointmentPost post route', () => {
             .send({
                 userID: userId,
                 serviceID: serviceId,
-                start_time: null // Hiányzó kötelező mező
+                start_time: null 
             })
             .set("Authorization", `Bearer ${barberToken}`)
 
