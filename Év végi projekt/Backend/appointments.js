@@ -286,10 +286,12 @@ router.delete("/appointmentDelete/:id", Auth(), ValidateId(), Log(), async (req,
 })
 
 router.put('/appointmentUpdate/:id', Auth(), ValidateId(), Log(), async (req, res) => {
-    const {serviceID, start_time, end_time, comment} = req.body
-    if (!serviceID && !start_time && !end_time && !comment) return res.status(400).json({
-            message: "Nincs módosítanó adat"
+    const {serviceID, start_time, end_time, comment, status} = req.body
+    if (!serviceID && !start_time && !end_time && !comment && !status) {
+        return res.status(400).json({
+            message: "Nincs módosítandó adat"
         })
+    }
     try {
         const oneAppointment = await dbHandler.appointments.findOne({
             where: {

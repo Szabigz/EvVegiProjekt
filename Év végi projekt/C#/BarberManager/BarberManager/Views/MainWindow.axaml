@@ -6,7 +6,7 @@
         xmlns:views="using:BarberManager.Views"
         mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
         x:Class="BarberManager.Views.MainWindow"
-        Icon="/Assets/avalonia-logo.ico"
+        Icon="/Assets/icon.jpg"
         Title="BarberManager"
         WindowState="Maximized"
         WindowStartupLocation="CenterScreen">
