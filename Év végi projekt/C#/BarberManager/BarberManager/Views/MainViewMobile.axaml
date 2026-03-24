@@ -1,56 +1,76 @@
-<UserControl xmlns="https://github.com/avaloniaui"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:vm="using:BarberManager.ViewModels"
+﻿<UserControl
+	xmlns="https://github.com/avaloniaui"
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	xmlns:vm="using:BarberManager.ViewModels"
              x:Class="BarberManager.Views.MainViewMobile"
              x:DataType="vm:MainViewModel"
              Background="White">
-
-    <Grid RowDefinitions="*, Auto">
-        <!-- felso tartalom -->
-        <ContentControl Grid.Row="0" Content="{Binding CurrentPage}" />
-
-        <!-- also navigacio -->
-        <Border Grid.Row="1" 
-                IsVisible="{Binding IsLoggedIn}" 
-                Background="White" 
-                BorderThickness="0,1,0,0" 
-                BorderBrush="#EEEEEE" 
-                Padding="0,5,0,15">
-            
-            <Grid ColumnDefinitions="*, *, *, *">
-                
-                <!-- Id�pontok -->
-                <Button Grid.Column="0" Command="{Binding NavigateToAppointmentsCommand}" 
-                        Background="White" BorderThickness="0" 
-                        HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" Padding="10">
-                    <Path Fill="Black" Stretch="Uniform" Width="26" Height="26"
-                          Data="M17 2C17 1.44772 16.5523 1 16 1C15.4477 1 15 1.44772 15 2V3H9V2C9 1.44772 8.55228 1 8 1C7.44772 1 7 1.44772 7 2V3H5C3.34315 3 2 4.34315 2 6V20C2 21.6569 3.34315 23 5 23H19C20.6569 23 22 21.6569 22 20V6C22 4.34315 20.6569 3 19 3H17V2ZM20 9V6C20 5.44772 19.5523 5 19 5H17V6C17 6.55228 16.5523 7 16 7C15.4477 7 15 6.55228 15 6V5H9V6C9 6.55228 8.55228 7 8 7C7.44772 7 7 6.55228 7 6V5H5C4.44772 5 4 5.44772 4 6V9H20ZM4 11H20V20C20 20.5523 19.5523 21 19 21H5C4.44772 21 4 20.5523 4 20V11Z"/>
-                </Button>
-
-                <!-- Szolg�ltat�sok -->
-                <Button Grid.Column="1" Command="{Binding NavigateToServicesCommand}" 
-                        Background="White" BorderThickness="0" 
-                        HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" Padding="10">
-                    <Path Fill="Black" Stretch="Uniform" Width="26" Height="26"
-                          Data="M9.44623 8.03189C9.79809 7.43639 10 6.74178 10 6C10 3.79086 8.20914 2 6 2C3.79086 2 2 3.79086 2 6C2 8.20914 3.79086 10 6 10C6.74184 10 7.43651 9.79805 8.03204 9.44614L10.5859 12L8.03204 14.5539C7.43651 14.2019 6.74184 14 6 14C3.79086 14 2 15.7909 2 18C2 20.2091 3.79086 22 6 22C8.20914 22 10 20.2091 10 18C10 17.2582 9.79809 16.5636 9.44622 15.9681L20.7072 4.70711C21.0977 4.31658 21.0977 3.68342 20.7072 3.29289C20.3167 2.90237 19.6835 2.90237 19.293 3.29289L12.0001 10.5858L9.44623 8.03189ZM6 4C4.89543 4 4 4.89543 4 6C4 7.10457 4.89543 8 6 8C6.53462 8 7.02025 7.79023 7.37907 7.44851C7.39004 7.43643 7.40135 7.42455 7.41301 7.41289C7.42466 7.40124 7.43652 7.38994 7.44859 7.37899C7.79026 7.02018 8 6.53458 8 6C8 4.89543 7.10457 4 6 4ZM6 16C4.89543 16 4 16.8954 4 18C4 19.1046 4.89543 20 6 20C7.10457 20 8 19.1046 8 18C8 17.4654 7.79025 16.9798 7.44855 16.621C7.4365 16.61 7.42465 16.5987 7.41301 16.5871C7.40136 16.5755 7.39006 16.5636 7.3791 16.5515C7.02028 16.2098 6.53464 16 6 16ZM14.2929 14.2929C14.6834 13.9024 15.3166 13.9024 15.7071 14.2929L20.7071 19.2929C21.0976 19.6834 21.0976 20.3166 20.7071 20.7071C20.3166 21.0976 19.6834 21.0976 19.2929 20.7071L14.2929 15.7071C13.9024 15.3166 13.9024 14.6834 14.2929 14.2929Z"/>
-                </Button>
-
-                <!-- Munkaid� -->
-                <Button Grid.Column="2" Command="{Binding NavigateToWorkHoursCommand}" 
-                        Background="White" BorderThickness="0" 
-                        HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" Padding="10">
-                    <Path Fill="Black" Stretch="Uniform" Width="26" Height="26"
-                          Data="M16.5 13C17.0523 13 17.5 12.5523 17.5 12C17.5 11.4477 17.0523 11 16.5 11H13V5.5C13 4.94772 12.5523 4.5 12 4.5C11.4477 4.5 11 4.94772 11 5.5V12C11 12.5523 11.4477 13 12 13H16.5ZM12 1C5.92487 1 1 5.92487 1 12C1 18.0751 5.92487 23 12 23C18.0751 23 23 18.0751 23 12C23 5.92487 18.0751 1 12 1ZM3 12C3 7.02944 7.02944 3 12 3C16.9706 3 21 7.02944 21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12Z"/>
-                </Button>
-
-                <!-- Profil -->
-                <Button Grid.Column="3" Command="{Binding NavigateToProfileCommand}" 
-                        Background="White" BorderThickness="0" 
-                        HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" Padding="10">
-                    <Path Fill="Black" Stretch="Uniform" Width="26" Height="26"
-                          Data="M12 1C8.96243 1 6.5 3.46243 6.5 6.5C6.5 9.53757 8.96243 12 12 12C15.0376 12 17.5 9.53757 17.5 6.5C17.5 3.46243 15.0376 1 12 1ZM8.5 6.5C8.5 4.567 10.067 3 12 3C13.933 3 15.5 4.567 15.5 6.5C15.5 8.433 13.933 10 12 10C10.067 10 8.5 8.433 8.5 6.5ZM8 14C4.68629 14 2 16.6863 2 20V22C2 22.5523 2.44772 23 3 23C3.55228 23 4 22.5523 4 22V20C4 17.7909 5.79086 16 8 16H16C18.2091 16 20 17.7909 20 20V22C20 22.5523 20.4477 23 21 23C21.5523 23 22 22.5523 22 22V20C22 16.6863 19.3137 14 16 14H8Z"/>
-                </Button>
-            </Grid>
-        </Border>
-    </Grid>
+	<Grid RowDefinitions="*, Auto">
+		<ContentControl Grid.Row="0" Content="{Binding CurrentPage}" />
+		<!-- also resz -->
+		<Border Grid.Row="1" IsVisible="{Binding IsLoggedIn}" Background="#F7F7F7" BorderThickness="0,1,0,0" BorderBrush="#EEEEEE" Padding="5">
+			<Grid>
+				<!-- barber nezet -->
+				<Grid ColumnDefinitions="*, *, *, *, *" IsVisible="{Binding !IsAdmin}">
+					<Button Grid.Column="0" Command="{Binding NavigateToAppointmentsCommand}" Background="Transparent" HorizontalAlignment="Stretch">
+						<StackPanel Spacing="2">
+							<Path Fill="Black" Stretch="Uniform" Width="20" Height="20" Data="M17 2V3H9V2H7V3H5C3.3 3 2 4.3 2 6V20C2 21.7 3.3 23 5 23H19C20.7 23 22 21.7 22 20V6C22 4.3 20.7 3 19 3H17V2H15V3H9V2H7ZM20 11V20C20 20.6 19.4 21 19 21H5C4.6 21 4 20.6 4 20V11H20Z"/>
+							<TextBlock Text="Naptár" FontSize="10" HorizontalAlignment="Center"/>
+						</StackPanel>
+					</Button>
+					<Button Grid.Column="1" Command="{Binding NavigateToServicesCommand}" Background="Transparent" HorizontalAlignment="Stretch">
+						<StackPanel Spacing="2">
+							<Path Fill="Black" Stretch="Uniform" Width="20" Height="20" Data="M9.4 8C9.8 7.4 10 6.7 10 6C10 3.8 8.2 2 6 2C3.8 2 2 3.8 2 6C2 8.2 3.8 10 6 10C6.7 10 7.4 9.8 8 9.4L10.6 12L8 14.6C7.4 14.2 6.7 14 6 14C3.8 14 2 15.8 2 18C2 20.2 3.8 22 6 22C8.2 22 10 20.2 10 18C10 17.3 9.8 16.6 9.4 16L20.7 4.7C21.1 4.3 21.1 3.7 20.7 3.3C20.3 2.9 19.7 2.9 19.3 3.3L12 10.6L9.4 8Z"/>
+							<TextBlock Text="Szolg." FontSize="10" HorizontalAlignment="Center"/>
+						</StackPanel>
+					</Button>
+					<Button Grid.Column="2" Command="{Binding NavigateToWorkHoursCommand}" Background="Transparent" HorizontalAlignment="Stretch">
+						<StackPanel Spacing="2">
+							<Path Fill="Black" Stretch="Uniform" Width="20" Height="20" Data="M12 8C9.8 8 8 9.8 8 12C8 14.2 9.8 16 12 16C14.2 16 16 14.2 16 12C16 9.8 14.2 8 12 8ZM12 2C6.5 2 2 6.5 2 12C2 17.5 6.5 22 12 22C17.5 22 22 17.5 22 12C22 6.5 17.5 2 12 2Z"/>
+							<TextBlock Text="Idő" FontSize="10" HorizontalAlignment="Center"/>
+						</StackPanel>
+					</Button>
+					<Button Grid.Column="3" Command="{Binding NavigateToProfileCommand}" Background="Transparent" HorizontalAlignment="Stretch">
+						<StackPanel Spacing="2">
+							<Path Fill="Black" Stretch="Uniform" Width="20" Height="20" Data="M12 1C9 1 6.5 3.5 6.5 6.5C6.5 9.5 9 12 12 12C15 12 17.5 9.5 17.5 6.5C17.5 3.5 15 1 12 1ZM8 14C4.7 14 2 16.7 2 20V22H22V20C22 16.7 19.3 14 16 14H8Z"/>
+							<TextBlock Text="Profil" FontSize="10" HorizontalAlignment="Center"/>
+						</StackPanel>
+					</Button>
+					<Button Grid.Column="4" Command="{Binding LogoutCommand}" Background="Transparent" HorizontalAlignment="Stretch">
+						<StackPanel Spacing="2">
+							<Path Fill="Red" Stretch="Uniform" Width="20" Height="20" Data="M7 4V2H4C2.9 2 2 2.9 2 4V20C2 21.1 2.9 22 4 22H7V20H4V4H7ZM21.7 12.7L16.7 17.7L15.3 16.3L18.6 13H8V11H18.6L15.3 7.7L16.7 6.3L21.7 11.3C22.1 11.7 22.1 12.3 21.7 12.7Z"/>
+							<TextBlock Text="Kilépés" FontSize="10" Foreground="Red" HorizontalAlignment="Center"/>
+						</StackPanel>
+					</Button>
+				</Grid>
+				<!-- admin nezet -->
+				<Grid ColumnDefinitions="*, *, *, *" IsVisible="{Binding IsAdmin}">
+					<Button Grid.Column="0" Command="{Binding NavigateToAdminPanelCommand}" Background="Transparent" HorizontalAlignment="Stretch">
+						<StackPanel Spacing="2">
+							<Path Fill="Black" Stretch="Uniform" Width="20" Height="20" Data="M12 12C14.2 12 16 10.2 16 8C16 5.8 14.2 4 12 4C9.8 4 8 5.8 8 8C8 10.2 9.8 12 12 12ZM12 14C9.3 14 4 15.3 4 18V20H20V18C20 15.3 14.7 14 12 14Z"/>
+							<TextBlock Text="Kezelés" FontSize="10" HorizontalAlignment="Center"/>
+						</StackPanel>
+					</Button>
+					<Button Grid.Column="1" Command="{Binding NavigateToLogsCommand}" Background="Transparent" HorizontalAlignment="Stretch">
+						<StackPanel Spacing="2">
+							<Path Fill="Black" Stretch="Uniform" Width="20" Height="20" Data="M19 3H5C3.9 3 3 3.9 3 5V19C3 20.1 3.9 21 5 21H19C20.1 21 21 20.1 21 19V5C21 3.9 20.1 3 19 3ZM7 7H17V9H7V7ZM7 11H17V13H7V11ZM7 15H14V17H7V15Z"/>
+							<TextBlock Text="Napló" FontSize="10" HorizontalAlignment="Center"/>
+						</StackPanel>
+					</Button>
+					<Button Grid.Column="2" Command="{Binding NavigateToProfileCommand}" Background="Transparent" HorizontalAlignment="Stretch">
+						<StackPanel Spacing="2">
+							<Path Fill="Black" Stretch="Uniform" Width="20" Height="20" Data="M12 1C9 1 6.5 3.5 6.5 6.5C6.5 9.5 9 12 12 12C15 12 17.5 9.5 17.5 6.5C17.5 3.5 15 1 12 1ZM8 14C4.7 14 2 16.7 2 20V22H22V20C22 16.7 19.3 14 16 14H8Z"/>
+							<TextBlock Text="Profil" FontSize="10" HorizontalAlignment="Center"/>
+						</StackPanel>
+					</Button>
+					<Button Grid.Column="3" Command="{Binding LogoutCommand}" Background="Transparent" HorizontalAlignment="Stretch">
+						<StackPanel Spacing="2">
+							<Path Fill="Red" Stretch="Uniform" Width="20" Height="20" Data="M7 4V2H4C2.9 2 2 2.9 2 4V20C2 21.1 2.9 22 4 22H7V20H4V4H7ZM21.7 12.7L16.7 17.7L15.3 16.3L18.6 13H8V11H18.6L15.3 7.7L16.7 6.3L21.7 11.3C22.1 11.7 22.1 12.3 21.7 12.7Z"/>
+							<TextBlock Text="Kilépés" FontSize="10" Foreground="Red" HorizontalAlignment="Center"/>
+						</StackPanel>
+					</Button>
+				</Grid>
+			</Grid>
+		</Border>
+	</Grid>
 </UserControl>

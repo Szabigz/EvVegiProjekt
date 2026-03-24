@@ -4,7 +4,10 @@ const bcrypt = require("bcrypt")
 const {
     Op
 } = require("sequelize")
-const Auth = require('./Auth')
+const {
+    Auth,
+    AuthAdmin
+} = require('./Auth')
 const dbHandler = require('./dbHandler')
 const JWT = require('jsonwebtoken')
 
@@ -18,6 +21,69 @@ router.get("/barberGet", Auth(), async (req, res) => {
         }
     }))
 })
+
+// admin osszes barber lekerese
+router.get("/barbersAll", AuthAdmin(), async (req, res) => {
+    try {
+        res.json(await dbHandler.barber.findAll({
+            attributes: {
+                exclude: ['password']
+            }
+        }));
+    } catch (error) {
+        res.status(500).json({
+            message: "Szerverhiba"
+        });
+    }
+});
+
+// admin barmelyik barber torlese
+router.delete("/barberDelete/:id", AuthAdmin(), async (req, res) => {
+    try {
+        const Id = req.params.id
+        if (isNaN(Id)) return res.status(400).json({
+            message: 'Invalid ID'
+        })
+
+        const oneBarber = await dbHandler.barber.findOne({
+            where: {
+                id: Id
+            }
+        })
+        if (!oneBarber) return res.status(404).json({
+            message: "Nincs ilyen felhasználó"
+        })
+
+        await dbHandler.barber.destroy({
+            where: {
+                id: Id
+            }
+        })
+        return res.status(200).json({
+            message: "Sikeres törlés"
+        })
+    } catch (error) {
+        return res.status(500).json({
+            message: "Szerverhiba"
+        })
+    }
+})
+
+// admin osszes log
+router.get("/logsAll", AuthAdmin(), async (req, res) => {
+    try {
+        const logs = await dbHandler.log.findAll({
+            include: [
+                { model: dbHandler.user, attributes: ['name'] },
+                { model: dbHandler.barber, attributes: ['name'] }
+            ],
+            order: [['createdAt', 'DESC']]
+        });
+        res.json(logs);
+    } catch (error) {
+        res.status(500).json({ message: "Hiba" });
+    }
+});
 
 router.post("/barberReg", async (req, res) => {
     const {
@@ -136,34 +202,6 @@ router.delete("/logsCleanup", Auth(), async (req, res) => {
     }
 })
 
-router.delete("/barberDelete/:id", Auth(), async (req, res) => {
-    try {
-        const Id = req.params.id
-        if (isNaN(Id)) return res.status(400).json({
-            message: 'Invalid ID'
-        })
-        const oneBarber = await dbHandler.barber.findOne({
-            where: {
-                id: Id
-            }
-        })
-        if (!oneBarber) return res.status(404).json({
-            message: "Nincs ilyen felhasználó"
-        })
-        await dbHandler.barber.destroy({
-            where: {
-                id: Id
-            }
-        })
-        return res.status(200).json({
-            message: "Sikeres törlés"
-        })
-    } catch (error) {
-        return res.status(500).json({
-            message: "Szerverhiba"
-        })
-    }
-})
 
 router.put('/barberUpdate/:id', Auth(), async (req, res) => {
     try {
@@ -187,12 +225,9 @@ router.put('/barberUpdate/:id', Auth(), async (req, res) => {
             password,
             phoneNum
         } = req.body
-        if (!name && !email && !password && !phoneNum) {
-            return res.status(400).json({
-                message: "Nincs módosítandó adat"
-            })
-        }
-
+        if (!name && !email && !password && !phoneNum) return res.status(400).json({
+            message: "Nincs módosítandó adat"
+        })
         if (name) await dbHandler.barber.update({
             name
         }, {

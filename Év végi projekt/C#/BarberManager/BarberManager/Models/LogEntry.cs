@@ -8,11 +8,13 @@ namespace BarberManager.Models
         [JsonPropertyName("id")] public int Id { get; set; }
         [JsonPropertyName("activity")] public string Activity { get; set; } = string.Empty;
         [JsonPropertyName("createdAt")] public DateTime CreatedAt { get; set; }
+
         [JsonPropertyName("user")] public LogUserInfo? User { get; set; }
+        [JsonPropertyName("barber")] public LogUserInfo? Barber { get; set; }
     }
 
     public class LogUserInfo
     {
-        [JsonPropertyName("name")] public string Name { get; set; } = "Rendszer";
+        [JsonPropertyName("name")] public string Name { get; set; } = "Ismeretlen";
     }
 }

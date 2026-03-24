@@ -10,8 +10,8 @@
 		<Border Grid.Row="0" Background="#F7F7F7" Padding="20" BorderThickness="0,0,0,1" BorderBrush="#EEEEEE">
 			<Grid ColumnDefinitions="*, Auto, Auto">
 				<StackPanel Grid.Column="0">
-					<TextBlock Text="Rendszernapló" FontSize="26" FontWeight="Bold"/>
-					<TextBlock Text="Minden esemény nyomon követése" FontSize="14" Foreground="Gray"/>
+					<TextBlock Text="Rendszernapló (Összesitett)" FontSize="26" FontWeight="Bold"/>
+					<TextBlock Text="Minden esemény és foglalás nyomon követése" FontSize="14" Foreground="Gray"/>
 				</StackPanel>
 				<Button Grid.Column="1" Command="{Binding CleanupLogsCommand}" Background="#FFF0F0" Foreground="Red" BorderBrush="Red" BorderThickness="1" Margin="0,0,10,0" Padding="15,8" Content="30 napnál régebbi törlése"/>
 				<Button Grid.Column="2" Command="{Binding LoadLogsCommand}" Background="Black" Foreground="White" Padding="15,8" Content="Frissítés"/>
@@ -30,7 +30,14 @@
 								</StackPanel>
 								<StackPanel Grid.Column="1" Margin="20,0,0,0">
 									<TextBlock Text="{Binding Activity}" FontSize="16" FontWeight="Bold"/>
-									<TextBlock Text="{Binding User.Name, StringFormat='Vendég: {0}'}" FontSize="13" Foreground="Gray" IsVisible="{Binding User, Converter={x:Static ObjectConverters.IsNotNull}}"/>
+									<StackPanel Orientation="Horizontal" Spacing="20" Margin="0,5,0,0">
+										<TextBlock Text="{Binding Barber.Name, StringFormat='Fodrász: {0}'}" 
+                                                   FontSize="13" Foreground="Blue" 
+                                                   IsVisible="{Binding Barber, Converter={x:Static ObjectConverters.IsNotNull}}"/>
+										<TextBlock Text="{Binding User.Name, StringFormat='Vendég: {0}'}" 
+                                                   FontSize="13" Foreground="Gray" 
+                                                   IsVisible="{Binding User, Converter={x:Static ObjectConverters.IsNotNull}}"/>
+									</StackPanel>
 								</StackPanel>
 							</Grid>
 						</Border>

@@ -3,10 +3,15 @@ const router = express.Router()
 const {
     Op
 } = require("sequelize")
-const Auth = require('./Auth')
+const {
+    Auth,
+    AuthAdmin
+} = require('./Auth')
 const Log = require('./log')
 const dbHandler = require('./dbHandler')
-const { sendBookingEmail } = require('./emailsender');
+const {
+    sendBookingEmail
+} = require('./emailsender');
 
 router.get("/appointmentMyBarber", Auth(), async (req, res) => {
     try {
@@ -89,8 +94,8 @@ router.get("/availableSlots/:barberID/:date", async (req, res) => {
 
         const slots = []
         const toMin = (t) => {
-            const [h, m] = t.split(':').map(Number) 
-            return h * 60 + m 
+            const [h, m] = t.split(':').map(Number)
+            return h * 60 + m
         }
         let current = toMin(workhour.start_time.substring(0, 5))
         const end = toMin(workhour.end_time.substring(0, 5))
@@ -102,7 +107,7 @@ router.get("/availableSlots/:barberID/:date", async (req, res) => {
             const slotEnd = new Date(slotStart.getTime() + 60 * 60 * 1000)
 
             const isBusy = appointments.some(a => {
-                const aStart = new Date(a.start_time) 
+                const aStart = new Date(a.start_time)
                 const aEnd = new Date(a.end_time)
                 return slotStart < aEnd && slotEnd > aStart
             })
@@ -222,13 +227,16 @@ router.post("/appointmentUserPost", Auth(), async (req, res) => {
         if (user && user.email) {
             const dateObj = new Date(start_time);
             const formattedDate = dateObj.toLocaleDateString("hu-HU");
-            const formattedTime = dateObj.toLocaleTimeString("hu-HU", { hour: "2-digit", minute: "2-digit" });
+            const formattedTime = dateObj.toLocaleTimeString("hu-HU", {
+                hour: "2-digit",
+                minute: "2-digit"
+            });
 
             sendBookingEmail(
-                user.email, 
-                barber.name, 
+                user.email,
+                barber.name,
                 service.name,
-                formattedDate, 
+                formattedDate,
                 formattedTime
             ).catch(err => console.error("Email hiba:", err));
         }
@@ -248,8 +256,8 @@ function ValidateId() {
     return (req, res, next) => {
         if (isNaN(req.params.id)) return res.status(400).json({
             message: "Invalid ID"
-        }) 
-        next() 
+        })
+        next()
     }
 }
 
@@ -289,15 +297,15 @@ router.put('/appointmentUpdate/:id', Auth(), ValidateId(), Log(), async (req, re
                 id: req.params.id,
                 barberID: req.uid
             }
-        }) 
+        })
         if (!oneAppointment) return res.status(404).json({
             message: "Időpont nem található"
-        }) 
+        })
 
         const {
             start_time,
             end_time
-        } = req.body 
+        } = req.body
         if (start_time && end_time) {
             const conflict = await dbHandler.appointments.findOne({
                 where: {
