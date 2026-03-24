@@ -125,13 +125,13 @@ body {
     display: inline-block;
     padding-bottom: 6px;
 }
-.scissor-list {
+.info-list {
     list-style: circle;
     padding-left: 0;
     margin-left: 20px;
 }
 
-.scissor-list li {
+.info-list li {
     font-size: 1.1rem;
     margin-bottom: 8px;
     position: relative;
@@ -195,7 +195,9 @@ body {
 }
 .img-circle-hover {
     filter: grayscale(100%);
-    transition: filter 0.4s ease, transform 0.4s ease, box-shadow 0.3s ease;
+    transition: filter 0.4s ease,
+    transform 0.4s ease, 
+    box-shadow 0.3s ease;
     width: 250px;
     height: 250px;
     margin: 40px auto 0;
