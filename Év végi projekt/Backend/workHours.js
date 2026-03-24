@@ -1,17 +1,11 @@
 const express = require('express')
 const router = express.Router()
 
-const {
-    Auth,
-    AuthAdmin
-} = require('./Auth')
+const {Auth,AuthAdmin} = require('./Auth')
 
 const dbHandler = require('./dbHandler')
 const JWT = require('jsonwebtoken')
-const {
-    Op,
-    where
-} = require("sequelize");
+const {Op,where} = require("sequelize");
 
 
 router.get("/workhoursGet", Auth(), async (req, res) => {
@@ -63,7 +57,7 @@ router.post("/workhoursPost", Auth(), async (req, res) => {
 
         if (onewhour) {
             return res.status(400).json({
-                message: "Mar van ilyen"
+                message: "Már létező munkaidő"
             })
         }
 
@@ -107,12 +101,12 @@ router.delete("/workhoursDelete/:id", Auth(), async (req, res) => {
 
         if (!oneWorkhour) {
             return res.status(404).json({
-                message: "Nincs ilyen felhasználó"
+                message: "Nincs ilyen munkaidő"
             });
         }
         if (!barberID) {
             return res.status(401).json({
-                message: "Hiányzó Tool ID / jogosultság"
+                message: "Hiányzó jogosultság"
             });
         }
 
@@ -154,12 +148,12 @@ router.put('/workhoursUpdate/:id', Auth(), async (req, res) => {
 
         if (!oneWorkhours) {
             return res.status(404).json({
-                message: "Nincs ilyen bejegyzés"
+                message: "Nincs ilyen munkaóra"
             });
         }
         if (!id) {
             return res.status(401).json({
-                message: "Hiányzó Tool ID / jogosultság"
+                message: "Hiányzó jogosultság"
             });
         }
         const {

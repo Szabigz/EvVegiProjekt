@@ -1,12 +1,7 @@
 const express = require('express')
 const router = express.Router()
-const {
-    Op
-} = require("sequelize")
-const {
-    Auth,
-    AuthAdmin
-} = require('./Auth')
+const { Op} = require("sequelize")
+const {Auth, AuthAdmin} = require('./Auth')
 const Log = require('./log')
 const dbHandler = require('./dbHandler')
 const {
@@ -284,13 +279,17 @@ router.delete("/appointmentDelete/:id", Auth(), ValidateId(), Log(), async (req,
             })
             return res.status(200).send("Időpont lemondva")
         }
-        return res.status(401).send("Nincs jogosultságod")
+        return res.status(401).send("No token")
     } catch (err) {
         res.status(500).send("Hiba")
     }
 })
 
 router.put('/appointmentUpdate/:id', Auth(), ValidateId(), Log(), async (req, res) => {
+    const {serviceID, start_time, end_time, comment} = req.body
+    if (!serviceID && !start_time && !end_time && !comment) return res.status(400).json({
+            message: "Nincs módosítanó adat"
+        })
     try {
         const oneAppointment = await dbHandler.appointments.findOne({
             where: {
@@ -301,6 +300,7 @@ router.put('/appointmentUpdate/:id', Auth(), ValidateId(), Log(), async (req, re
         if (!oneAppointment) return res.status(404).json({
             message: "Időpont nem található"
         })
+        
 
         const {
             start_time,

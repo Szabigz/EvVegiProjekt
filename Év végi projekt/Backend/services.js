@@ -92,7 +92,7 @@ router.post("/servicesPost", Auth(), async (req, res) => {
             barberID: req.uid
         })
         res.status(200).json({
-            message: 'sikeres regisztracio',
+            message: 'sikeres létrehozás',
             id: newService.id
         }).end()
     } catch (error) {
@@ -131,7 +131,7 @@ router.delete("/servicesDelete/:id", Auth(), async (req, res) => {
 
         if (!barberID) {
             return res.status(401).json({
-                message: "Hiányzó Tool ID / jogosultság"
+                message: "Hiányzó jogosultság"
             });
         }
 
@@ -179,7 +179,7 @@ router.put('/servicesUpdate/:id', Auth(), async (req, res) => {
         }
         if (!barberID) {
             return res.status(401).json({
-                message: "Hiányzó Tool ID / jogosultság"
+                message: "Hiányzó jogosultság"
             });
         }
 

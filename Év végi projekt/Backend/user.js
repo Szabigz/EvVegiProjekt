@@ -156,7 +156,9 @@ router.post('/userLogin', async (req, res) => {
 router.put('/userUpdate/:id', Auth(), async (req, res) => {
     const {
         password,
-        phoneNum
+        phoneNum,
+        email,
+        name
     } = req.body
     try {
         const Id = req.params.id
@@ -171,7 +173,7 @@ router.put('/userUpdate/:id', Auth(), async (req, res) => {
         if (!oneUser) return res.status(404).json({
             message: "Nincs ilyen felhasználó"
         })
-        if (!req.body.name && !req.body.email && !req.body.password && !req.body.phoneNum) return res.status(400).json({
+        if (!name && !email && !password && !phoneNum) return res.status(400).json({
             message: "Nincs módosítanó adat"
         })
 

@@ -632,6 +632,13 @@ describe('testing /appointmentUpdate/:id put route', () => {
 
         expect(res.statusCode).toBe(400)
     })
+    test('should return 400 for missing data', async () => {
+        const res = await request(server)
+            .put(`/appointmentUpdate/${barberId}`)
+            .send({})
+            .set("Authorization", `Bearer ${barberToken}`)
+        expect(res.statusCode).toBe(400)
+    })
 
     test('appointmentUpdate 404 not found', async () => {
         const res = await request(server)
