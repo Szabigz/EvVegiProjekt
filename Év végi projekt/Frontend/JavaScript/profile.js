@@ -193,31 +193,7 @@ async function cancelAppointment(id) {
 
 /*Fiok torlese*/
 document.getElementById('deleteUserBtn').addEventListener('click', async () => {
-    const confirmDelete = confirm("Biztosan törölni szeretnéd a fiókodat? Ez a művelet nem vonható vissza!");
-    if (!confirmDelete) return;
-
-    const token = sessionStorage.getItem('token');
-
-    try {
-        const response = await fetch(`http://localhost:3000/userDelete/${currentUserId}`, {
-            method: 'DELETE',
-            headers: {
-                'Authorization': `Bearer ${token}`
-            }
-        });
-
-        if (response.ok) {
-            alert("Fiókod sikeresen törölve.");
-            
-            sessionStorage.removeItem('token');
-            sessionStorage.removeItem('user');
-            window.location.href = "/HTML/mainpage.html";
-        } else {
-            const resData = await response.json();
-            alert("Hiba a törlés során: " + resData.message);
-        }
-    } catch (error) {
-        console.error("Hiba a törléskor:", error);
-        alert("Szerverhiba történt a törlés során.");
-    }
-});
+    const confirmDelete = confirm("Biztosan törölni szeretnéd a fiókodat? Ez a művelet nem vonható vissza!")
+    if (!confirmDelete) return
+    deleteUser();
+})
