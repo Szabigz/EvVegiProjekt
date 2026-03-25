@@ -69,3 +69,31 @@ async function userRegister() {
         alert("Nem sikerült csatlakozni a szerverhez.")
     }
 }
+
+/*Fiok torlese*/
+async function deleteUser(){
+    const token = sessionStorage.getItem('token')
+
+    try {
+        const response = await fetch(`http://localhost:3000/userDelete/${currentUserId}`, {
+            method: 'DELETE',
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        })
+
+        if (response.ok) {
+            alert("Fiókod sikeresen törölve.")
+            
+            sessionStorage.removeItem('token')
+            sessionStorage.removeItem('user')
+            window.location.href = "/HTML/mainpage.html"
+        } else {
+            const resData = await response.json()
+            alert("Hiba a törlés során: " + resData.message)
+        }
+    } catch (error) {
+        console.error("Hiba a törléskor:", error)
+        alert("Szerverhiba történt a törlés során.")
+    }
+}
