@@ -7,7 +7,8 @@
              x:Class="BarberManager.Views.ProfileView"
 	xmlns:vm="using:BarberManager.ViewModels"
 			 Background="White"
-			 x:DataType="vm:ProfileViewModel">
+			 x:DataType="vm:ProfileViewModel"
+			 >
 	<Grid Margin="40">
 		<Border Background="White" CornerRadius="15" BoxShadow="0 4 20 0 #11000000" Padding="30" VerticalAlignment="Top" MaxWidth="500">
 			<StackPanel Spacing="20">
@@ -22,6 +23,20 @@
 			        FontWeight="SemiBold"
 			        HorizontalAlignment="Center"
 			        IsVisible="{Binding StatusMessage, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"/>
+				<!-- profilkep -->
+				<StackPanel Spacing="10" HorizontalAlignment="Center">
+					<Border Width="120" Height="120" CornerRadius="60" ClipToBounds="True" BorderBrush="#d4af37" BorderThickness="2">
+						<Panel>
+							<Path Fill="Gray" Stretch="Uniform" Margin="25"
+								  Data="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 3c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm0 14.2c-2.5 0-4.71-1.28-6-3.22.03-1.99 4-3.08 6-3.08 1.99 0 5.97 1.09 6 3.08-1.29 1.94-3.5 3.22-6 3.22z"
+								  IsVisible="{Binding ProfileImageSource, Converter={x:Static ObjectConverters.IsNull}}"/>
+        
+							<Image Source="{Binding ProfileImageSource}" Stretch="UniformToFill"/>
+						</Panel>
+					</Border>
+					<Button Content="Kép kiválasztása" Click="SelectImageClick" 
+							HorizontalAlignment="Center" FontSize="12" Background="#f0f0f0"/>
+				</StackPanel>
 				<StackPanel Spacing="5">
 					<TextBlock Text="Teljes név" FontWeight="SemiBold" Foreground="Gray"/>
 					<TextBox Text="{Binding BarberName}"/>
@@ -33,6 +48,14 @@
 				<StackPanel Spacing="5">
 					<TextBlock Text="Telefonszám" FontWeight="SemiBold" Foreground="Gray"/>
 					<TextBox Text="{Binding BarberPhone}"/>
+				</StackPanel>
+				<StackPanel Spacing="5" Margin="0,10,0,0">
+					<TextBlock Text="Bemutatkozás a weboldalra:" FontWeight="SemiBold" Foreground="#d4af37"/>
+					<TextBox Text="{Binding BarberDescription}" 
+							 Height="120" 
+							 AcceptsReturn="True" 
+							 TextWrapping="Wrap" 
+							 Watermark="Írj magadról, amit a vendégek látni fognak a főoldalon..."/>
 				</StackPanel>
 				<!-- reset jelszo section-->
 				<!-- Current Password -->

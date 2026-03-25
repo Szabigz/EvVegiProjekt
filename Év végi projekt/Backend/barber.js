@@ -21,7 +21,21 @@ router.get("/barberGet", Auth(), async (req, res) => {
         }
     }))
 })
-
+router.get("/barbersPublic", async (req, res) => {
+    try {
+        const barbers = await dbHandler.barber.findAll({
+            where: {
+                isAdmin: false
+            },
+            attributes: ['id', 'name', 'profile_image', 'description']
+        })
+        res.json(barbers)
+    } catch (error) {
+        res.status(500).json({
+            message: "Szerverhiba"
+        })
+    }
+})
 // admin osszes barber lekerese
 router.get("/barbersAll", AuthAdmin(), async (req, res) => {
     try {
@@ -29,13 +43,13 @@ router.get("/barbersAll", AuthAdmin(), async (req, res) => {
             attributes: {
                 exclude: ['password']
             }
-        }));
+        }))
     } catch (error) {
         res.status(500).json({
             message: "Szerverhiba"
-        });
+        })
     }
-});
+})
 
 function ValidateId() {
     return (req, res, next) => {
@@ -48,7 +62,7 @@ function ValidateId() {
 
 
 // admin barmelyik barber torlese
-router.delete("/barberDelete/:id",ValidateId(), AuthAdmin(), async (req, res) => {
+router.delete("/barberDelete/:id", ValidateId(), AuthAdmin(), async (req, res) => {
     try {
         const Id = req.params.id
 
@@ -81,17 +95,26 @@ router.delete("/barberDelete/:id",ValidateId(), AuthAdmin(), async (req, res) =>
 router.get("/logsAll", AuthAdmin(), async (req, res) => {
     try {
         const logs = await dbHandler.log.findAll({
-            include: [
-                { model: dbHandler.user, attributes: ['name'] },
-                { model: dbHandler.barber, attributes: ['name'] }
+            include: [{
+                    model: dbHandler.user,
+                    attributes: ['name']
+                },
+                {
+                    model: dbHandler.barber,
+                    attributes: ['name']
+                }
             ],
-            order: [['createdAt', 'DESC']]
-        });
-        res.json(logs);
+            order: [
+                ['createdAt', 'DESC']
+            ]
+        })
+        res.json(logs)
     } catch (error) {
-        res.status(500).json({ message: "Hiba" });
+        res.status(500).json({
+            message: "Hiba"
+        })
     }
-});
+})
 
 router.post("/barberReg", async (req, res) => {
     const {
@@ -214,64 +237,40 @@ router.delete("/logsCleanup", Auth(), async (req, res) => {
 router.put('/barberUpdate/:id', Auth(), async (req, res) => {
     try {
         const Id = req.params.id
-        if (isNaN(Id)) return res.status(400).json({
-            message: 'Invalid ID'
-        })
-
-        const oneBarber = await dbHandler.barber.findOne({
-            where: {
-                id: Id
-            }
-        })
-        if (!oneBarber) return res.status(404).json({
-            message: "Nincs ilyen felhasználó"
-        })
 
         const {
             name,
             email,
             password,
-            phoneNum
+            phoneNum,
+            profile_image,
+            description
         } = req.body
-        if (!name && !email && !password && !phoneNum) return res.status(400).json({
-            message: "Nincs módosítandó adat"
-        })
-        if (name) await dbHandler.barber.update({
-            name
-        }, {
-            where: {
-                id: Id
-            }
-        })
-        if (email) await dbHandler.barber.update({
-            email
-        }, {
-            where: {
-                id: Id
-            }
-        })
-        if (password) {
-            const hashedPassword = await bcrypt.hash(password, 9)
-            await dbHandler.barber.update({
-                password: hashedPassword
-            }, {
-                where: {
-                    id: Id
-                }
-            })
-        }
-        if (phoneNum) await dbHandler.barber.update({
-            phoneNum
-        }, {
-            where: {
-                id: Id
-            }
-        })
 
+        let updateData = {}
+        if (name) updateData.name = name
+        if (email) updateData.email = email
+        if (phoneNum) updateData.phoneNum = phoneNum
+        if (profile_image) updateData.profile_image = profile_image
+
+        if (description !== undefined) {
+            updateData.description = description
+        }
+
+        if (password) {
+            updateData.password = await bcrypt.hash(password, 9)
+        }
+
+        await dbHandler.barber.update(updateData, {
+            where: {
+                id: Id
+            }
+        })
         res.json({
-            'message': 'sikeres módosítás'
+            message: 'sikeres módosítás'
         })
     } catch (error) {
+        console.log(error)
         res.status(500).json({
             message: 'Szerverhiba'
         })

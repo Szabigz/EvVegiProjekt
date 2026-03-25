@@ -11,5 +11,8 @@ namespace BarberManager.Models
         [JsonPropertyName("phoneNum")] public string PhoneNum { get; set; } = string.Empty;
 
         [JsonPropertyName("isAdmin")] public bool IsAdmin { get; set; }
+        [JsonPropertyName("profile_image")] public string? ProfileImage { get; set; }
+        [JsonPropertyName("description")] public string? Description { get; set; }
+
     }
 }

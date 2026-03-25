@@ -11,7 +11,8 @@ const workhours = require("./workHours.js")
 const path = require("path")
 
 const server = express();
-server.use(express.json());
+server.use(express.json({ limit: '10mb' }));
+server.use(express.urlencoded({ limit: '10mb', extended: true }));
 server.use(express.static(path.join(__dirname, "../Frontend")));
 dbHandler.db.sync()
 require('dotenv').config()

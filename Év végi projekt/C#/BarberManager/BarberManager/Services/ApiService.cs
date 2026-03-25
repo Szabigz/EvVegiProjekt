@@ -103,22 +103,26 @@ namespace BarberManager.Services
             }
         }
 
-        public async Task<(bool IsSuccess, string Message)> UpdateBarberProfileAsync(int id, string name, string phoneNum, string? password = null)
+        public async Task<(bool IsSuccess, string Message)> UpdateBarberProfileAsync(int id, string name, string phoneNum, string? password = null, string? profileImage = null, string? description = null)
         {
             SetAuthorizationHeader();
-            var data = new Dictionary<string, object> { { "name", name }, { "phoneNum", phoneNum } };
+            var data = new Dictionary<string, object> {
+                { "name", name },
+                { "phoneNum", phoneNum } 
+            };
             if (!string.IsNullOrEmpty(password))
                 data.Add("password", password);
+            if (!string.IsNullOrEmpty(profileImage))
+                data.Add("profile_image", profileImage);
+            if (description != null)
+                data.Add("description", description);
 
             try
             {
                 var res = await _httpClient.PutAsJsonAsync($"/barberUpdate/{id}", data);
-                return res.IsSuccessStatusCode ? (true, "Sikeres!") : (false, "Hiba!");
+                return res.IsSuccessStatusCode ? (true, "Mentve!") : (false, "Hiba!");
             }
-            catch
-            {
-                return (false, "Hiba");
-            }
+            catch { return (false, "Hiba"); }
         }
 
         // --- ADMIN FUNKCIÓK ---

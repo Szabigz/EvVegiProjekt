@@ -1,11 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Avalonia.Media.Imaging;
 using BarberManager.Services;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace BarberManager.ViewModels
 {
@@ -18,6 +20,11 @@ namespace BarberManager.ViewModels
         [ObservableProperty] private string _barberName = string.Empty;
         [ObservableProperty] private string _barberEmail = string.Empty;
         [ObservableProperty] private string _barberPhone = string.Empty;
+        [ObservableProperty] private string? _barberImage;
+        [ObservableProperty] private Bitmap? _profileImageSource;
+        private string? _imageBase64;
+        [ObservableProperty] private string _barberDescription = string.Empty;
+
 
         [ObservableProperty] private string _statusMessage = string.Empty;
         [ObservableProperty] private string _statusMessageColor = "Green";
@@ -56,6 +63,70 @@ namespace BarberManager.ViewModels
                 BarberName = barber.Name;
                 BarberEmail = barber.Email;
                 BarberPhone = barber.PhoneNum.ToString();
+                BarberDescription = barber.Description ?? "";
+                // KÉP BETÖLTÉSE AZ ADATBÁZISBÓL:
+                if (!string.IsNullOrEmpty(barber.ProfileImage))
+                {
+                    try
+                    {
+                        // Eltároljuk a szöveges formátumot a mentéshez
+                        _imageBase64 = barber.ProfileImage;
+
+                        // Visszaalakítjuk Bitmap-re a megjelenítéshez
+                        string cleanBase64 = _imageBase64.Contains(",") ? _imageBase64.Split(',')[1] : _imageBase64;
+                        byte[] imageBytes = System.Convert.FromBase64String(cleanBase64);
+                        using (var ms = new MemoryStream(imageBytes))
+                        {
+                            ProfileImageSource = new Bitmap(ms);
+                        }
+                    }
+                    catch
+                    {
+                        // Ha hibás a mentett kép, marad az alapértelmezett ikon
+                        ProfileImageSource = null;
+                    }
+                }
+            }
+        }
+        [RelayCommand]
+        public async Task UploadImageAsync()
+        {
+            var topLevel = Avalonia.Controls.TopLevel.GetTopLevel(null); 
+                                                                        
+                                                                         
+        }
+        // Ez a metódus most már valóban await-el, így megszűnik a figyelmeztetés
+        public async Task ProcessImage(string filePath)
+        {
+            try
+            {
+                var fileInfo = new FileInfo(filePath);
+                if (fileInfo.Length > 5 * 1024 * 1024)
+                {
+                    StatusMessage = "A kép túl nagy! (Max 5MB)";
+                    StatusMessageColor = "Red";
+                    return;
+                }
+
+                // 1. Beolvassuk a bájtokat
+                byte[] imageBytes = await File.ReadAllBytesAsync(filePath);
+
+                // 2. Csinálunk belőle Bitmap-et a UI-nak
+                using (var ms = new MemoryStream(imageBytes))
+                {
+                    ProfileImageSource = new Bitmap(ms);
+                }
+
+                // 3. Eltároljuk Base64-ben az adatbázisnak
+                _imageBase64 = "data:image/png;base64," + System.Convert.ToBase64String(imageBytes);
+
+                StatusMessage = "Kép kiválasztva!";
+                StatusMessageColor = "Blue";
+            }
+            catch (Exception)
+            {
+                StatusMessage = "Hiba a kép beolvasásakor.";
+                StatusMessageColor = "Red";
             }
         }
 
@@ -81,11 +152,13 @@ namespace BarberManager.ViewModels
             StatusMessageColor = "Black";
 
             var result = await _api.UpdateBarberProfileAsync(
-                _barberId,
-                BarberName,
-                BarberPhone,
-                string.IsNullOrEmpty(NewPassword) ? null : NewPassword
-            );
+        _barberId, 
+        BarberName, 
+        BarberPhone, 
+        string.IsNullOrEmpty(NewPassword) ? null : NewPassword,
+        _imageBase64, // pfp
+        BarberDescription // leírás
+    );
 
             StatusMessage = result.Message;
             StatusMessageColor = result.IsSuccess ? "Green" : "Red";

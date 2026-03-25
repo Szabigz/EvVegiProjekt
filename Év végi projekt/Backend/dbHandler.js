@@ -59,6 +59,14 @@ const barberTable = dbHandler.define("barbers", {
     type:DataTypes.STRING,
     allowNull:false
   },
+  description: {
+    type: DataTypes.TEXT,
+    allowNull: true
+  },
+  profile_image: {
+    type: DataTypes.TEXT('long'),
+    allowNull: true
+  },
   isAdmin:{
     type:DataTypes.BOOLEAN,
     allowNull:false,

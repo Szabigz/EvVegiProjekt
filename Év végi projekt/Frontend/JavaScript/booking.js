@@ -1,3 +1,42 @@
+document.addEventListener("DOMContentLoaded", () => {
+    loadBarbers()
+})
+
+async function loadBarbers() {
+    const container = document.querySelector(".barber-selection")
+    container.innerHTML = "<p class='text-white'>Barbererek betöltése...</p>"
+
+    try {
+        const res = await fetch('/barbersPublic')
+        const barbers = await res.json()
+        
+        container.innerHTML = ""
+        barbers.forEach(barber => {
+            const card = document.createElement("div")
+            card.classList.add("barber-card")
+            card.setAttribute("data-barber", barber.id)
+            
+            const imgSrc = barber.profile_image ? barber.profile_image : "/images/barber.png"
+            
+            card.innerHTML = `
+                <img src="${imgSrc}" alt="${barber.name}">
+                <h5>${barber.name}</h5>
+            `
+
+            card.addEventListener("click", () => {
+                document.querySelectorAll(".barber-card").forEach(c => c.classList.remove("selected"))
+                card.classList.add("selected")
+                selectedBarber = barber.id
+                scrollToStep(1)
+                loadServices()
+            })
+            container.appendChild(card)
+        })
+    } catch (err) {
+        container.innerHTML = "<p class='text-danger'>Hiba a barbereket betöltésekor!</p>"
+    }
+}
+
 //Vedelem
 const token = sessionStorage.getItem("token")
 
