@@ -17,7 +17,7 @@ describe("testing /barberReg post route", () => {
         const response = await request(server)
             .post("/barberReg")
             .send({
-                email: 'testEmail' + Date.now() + '@example.com',
+                email: 'testEmail',
                 name: 'testName',
                 password: 'testPass',
                 phoneNum: 12345,
@@ -55,21 +55,14 @@ describe("testing /barberReg post route", () => {
 
 describe("testing /barberLogin post route", () => {
     test("should return 201 status code on successful login", async () => {
-        const email = 'log' + Date.now() + '@b.hu';
-        const reg = await request(server).post("/barberReg").send({
-            email: email,
-            name: 'testName',
-            password: 'testPass',
-            phoneNum: 12345,
-            isAdmin: 1
-        });
 
         const response = await request(server)
             .post("/barberLogin")
             .send({
-                email: email,
+                email: 'testEmail',
                 name: 'testName',
-                password: 'testPass'
+                password: 'testPass',
+                isAdmin:1   
             })
             .set('Content-Type', 'application/json')
 
@@ -107,7 +100,7 @@ describe("testing /userReg post route", () => {
         const response = await request(server)
             .post("/userReg")
             .send({
-                email: 'testUserEmail' + Date.now() + '@example.com',
+                email: 'aaaa@ssss',
                 name: 'testName',
                 password: "testPass",
                 phoneNum: 12345
@@ -121,10 +114,10 @@ describe("testing /userReg post route", () => {
         const res = await request(server)
             .post("/userReg")
             .send({
-                email: "testUserEmail",
+                email: "aaaa@ssss",
                 name: "ggggg",
                 password: "testPass",
-                phoneNum: "12345"
+                phoneNum: 12345
             })
 
         expect(res.statusCode).toBe(400)
@@ -146,18 +139,11 @@ describe("testing /userReg post route", () => {
 
 describe("POST /userLogin", () => {
     test("should return 200 status code on successful login", async () => {
-        const email = 'ulog' + Date.now() + '@example.com';
-        const reg = await request(server).post("/userReg").send({
-            email: email,
-            name: 'testName',
-            password: "testPass",
-            phoneNum: 12345
-        });
 
         const response = await request(server)
             .post("/userLogin")
             .send({
-                email: email,
+                email: 'aaaa@ssss',
                 name: 'testName',
                 password: "testPass"
             })
@@ -400,78 +386,101 @@ describe('testing /appointmentUserPost post route', () => {
 //Get testek
 
 describe("testing /barberGet get route", () => {
-    test("should return 200 status code", async () => {
+    test("200 - Success", async () => {
         const response = await request(server).get('/barberGet').set("Authorization", `Bearer ${barberToken}`)
         expect(response.statusCode).toBe(200)
-
+    })
+    test("401 - Unauthorized (No token)", async () => {
+        const res = await request(server).get('/barberGet')
+        expect(res.statusCode).toBe(401)
     })
 })
 
 
 describe("testing /userGet get route", () => {
-    test("should return 200 status code", async () => {
+    test("200 - Success", async () => {
         const response = await request(server).get('/userGet').set("Authorization", `Bearer ${userToken}`)
         expect(response.statusCode).toBe(200)
-
+    })
+    test("401 - Unauthorized (Invalid token)", async () => {
+        const res = await request(server).get('/userGet').set("Authorization", "Bearer hibas_token")
+        expect(res.statusCode).toBe(401)
     })
 })
-
+describe("testing /usersAll get route", () => {
+    test("200 - Success (Admin check)", async () => {
+        const response = await request(server)
+            .get("/usersAll")
+            .set("Authorization", `Bearer ${barberToken}`)
+        expect(response.statusCode).toBe(200)
+        expect(Array.isArray(response.body)).toBe(true)
+        if (response.body.length > 0) {
+            expect(response.body[0].password).toBeUndefined()
+        }
+    })
+    test("401 - Unauthorized", async () => {
+        const response = await request(server).get("/usersAll")
+        expect(response.statusCode).toBe(401)
+    })
+})
 
 describe("testing /servicesGet get route", () => {
-    test("should return 200 status code", async () => {
+    test("200 - Success", async () => {
         const response = await request(server).get('/servicesGet').set("Authorization", `Bearer ${barberToken}`)
         expect(response.statusCode).toBe(200)
-
+        expect(Array.isArray(response.body)).toBe(true)
     })
 })
 
-
 describe("testing /servicesMy get route", () => {
-    test("should return 200 status code", async () => {
+    test("200 - Success", async () => {
         const response = await request(server).get('/servicesMy').set("Authorization", `Bearer ${barberToken}`)
         expect(response.statusCode).toBe(200)
-
+    })
+    test("401 - Unauthorized", async () => {
+        const res = await request(server).get('/servicesMy')
+        expect(res.statusCode).toBe(401)
     })
 })
 
 describe("testing /workhoursGet get route", () => {
-    test("should return 200 status code", async () => {
+    test("200 - Success", async () => {
         const response = await request(server).get('/workhoursGet').set("Authorization", `Bearer ${barberToken}`)
         expect(response.statusCode).toBe(200)
-
     })
 })
 
 describe("testing /workhoursMy get route", () => {
-    test("should return 200 status code", async () => {
+    test("200 - Success", async () => {
         const response = await request(server).get('/workhoursMy').set("Authorization", `Bearer ${barberToken}`)
         expect(response.statusCode).toBe(200)
-
+    })
+    test("401 - Unauthorized", async () => {
+        const res = await request(server).get('/workhoursMy')
+        expect(res.statusCode).toBe(401)
     })
 })
 
 describe("testing /appointmentMyBarber get route", () => {
-    test("should return 200 status code", async () => {
+    test("200 - Success", async () => {
         const response = await request(server).get('/appointmentMyBarber').set("Authorization", `Bearer ${barberToken}`)
         expect(response.statusCode).toBe(200)
-
     })
-    test("appointmentMyBarber 401 no token", async () => {
-        const res = await request(server).get('/appointmentMyBarber');
-        expect(res.statusCode).toBe(401);
+    test("401 - Unauthorized", async () => {
+        const res = await request(server).get('/appointmentMyBarber')
+        expect(res.statusCode).toBe(401)
     })
 })
 
 
 describe("testing /appointmentMyUser get route", () => {
-    test("should return 200 status code", async () => {
+    test("200 - Success", async () => {
         const response = await request(server).get('/appointmentMyUser').set("Authorization", `Bearer ${userToken}`)
         expect(response.statusCode).toBe(200)
-
     })
-    test("appointmentMyUser 401 no token", async () => {
-        const res = await request(server).get('/appointmentMyUser');
-        expect(res.statusCode).toBe(401);
+    test("401 - Unauthorized", async () => {
+        const res = await request(server).get('/appointmentMyUser')
+        expect(res.statusCode).toBe(401)
     })
 })
 
@@ -479,18 +488,68 @@ describe("testing /appointmentMyUser get route", () => {
 describe('GET /availableSlots/:barberID/:date', () => {
 
     test('should return available slots for a barber', async () => {
-        const response = await request(server).get(`/availableSlots/${barberId}/2028-03-18`);
-        expect(response.statusCode).toBe(200);
-        expect(Array.isArray(response.body)).toBe(true);
-    });
+        const response = await request(server).get(`/availableSlots/${barberId}/2028-03-18`)
+        expect(response.statusCode).toBe(200)
+        expect(Array.isArray(response.body)).toBe(true)
+    })
     test("400/500 - bad date", async () => {
         const res = await request(server)
             .get(`/availableSlots/${barberId}/ROSSZ_DATUM`)
 
         expect([400, 500]).toContain(res.statusCode)
     })
-});
+})
+describe("testing /barbersAll get route", () => {
+    test("200 - Success (Admin access)", async () => {
+        const response = await request(server)
+            .get("/barbersAll")
+            .set("Authorization", `Bearer ${barberToken}`)
+        expect(response.statusCode).toBe(200);
+    })
+    test("403 - Forbidden (Regular user access)", async () => {
+        const response = await request(server)
+            .get("/barbersAll")
+            .set("Authorization", `Bearer ${userToken}`)
+        expect(response.statusCode).toBe(403)
+    })
+})
+describe("testing /logsAll get route", () => {
 
+    test("200 - Success", async () => {
+        const response = await request(server)
+            .get("/logsAll")
+            .set("Authorization", `Bearer ${barberToken}`)
+        expect(response.statusCode).toBe(200)
+    })
+
+    test("should return 401 for /logsAll without token", async () => {
+        const response = await request(server).get("/logsAll")
+        expect(response.statusCode).toBe(401);
+    })
+
+    test("403 - Forbidden (Not an admin)", async () => {
+        const response = await request(server)
+            .get("/logsAll")
+            .set("Authorization", `Bearer ${userToken}`)
+        expect(response.statusCode).toBe(403)
+    })
+})
+
+describe("testing /logsMy get route", () => {
+    test("200 - Success", async () => {
+        const response = await request(server)
+            .get("/logsMy")
+            .set("Authorization", `Bearer ${barberToken}`)
+        expect(response.statusCode).toBe(200)
+        if (response.body.length > 0) {
+            expect(response.body[0].barberID).toBe(barberId)
+        }
+    })
+    test("401 - Unauthorized", async () => {
+        const response = await request(server).get("/logsMy")
+        expect(response.statusCode).toBe(401)
+    })
+})
 
 //Update Testek
 
@@ -790,66 +849,97 @@ describe('testing /workhoursDelete/:id delete route', () => {
         expect(res.statusCode).toBe(404)
     })
 })
+describe("testing /logsCleanup delete route", () => {
 
-
-describe('testing /barberDelete/:id delete route', () => {
-    test('should return 200 status code', async () => {
+    test("should return 200 and success message on cleanup", async () => {
         const response = await request(server)
-            .delete(`/barberDelete/${barberId}`)
-            .set("Authorization", `Bearer ${barberToken}`)
-        expect(response.statusCode).toBe(200)
-    })
-    test('barberDelete 401 no token', async () => {
-        const res = await request(server)
-            .delete(`/barberDelete/${barberId}`)
-        expect(res.statusCode).toBe(401)
-    })
+            .delete("/logsCleanup")
+            .set("Authorization", `Bearer ${barberToken}`);
 
-    test('barberDelete 400 invalid id', async () => {
-        const res = await request(server)
-            .delete(`/barberDelete/abc`)
-            .set("Authorization", `Bearer ${barberToken}`)
-        expect(res.statusCode).toBe(400)
-    })
+        expect(response.statusCode).toBe(200);
+        expect(response.body.message).toBe("Sikeres takarítás");
+    });
 
-    test('barberDelete not found', async () => {
-        const res = await request(server)
-            .delete(`/barberDelete/999999`)
-            .set("Authorization", `Bearer ${barberToken}`)
-        expect(res.statusCode).toBe(404)
-    })
-})
+    test("should return 401 if no token is provided for cleanup", async () => {
+        const response = await request(server)
+            .delete("/logsCleanup");
+        
+        expect(response.statusCode).toBe(401);
+    });
 
+    test("should return 200 even if there are no old logs to delete", async () => {
+        // A Sequelize .destroy() akkor is sikeres, ha 0 sort töröl
+        const response = await request(server)
+            .delete("/logsCleanup")
+            .set("Authorization", `Bearer ${barberToken}`);
+        
+        expect(response.statusCode).toBe(200);
+        expect(response.body.message).toBe("Sikeres takarítás");
+    });
+});
 
 describe('testing /userDelete/:id delete route', () => {
     test('should return 200 status code', async () => {
         const response = await request(server)
-            .delete(`/userDelete/${userId}`)
-            .set("Authorization", `Bearer ${barberToken}`)
+        .delete(`/userDelete/${userId}`)
+        .set("Authorization", `Bearer ${userToken}`) 
+        
         expect(response.statusCode).toBe(200)
         expect(response.body.message).toBe("Sikeres törlés, az időpontok lemondva")
-
     })
+
     test('userDelete 401 no token', async () => {
         const res = await request(server)
-            .delete(`/userDelete/${userId}`)
+        .delete(`/userDelete/${userId}`)
         expect(res.statusCode).toBe(401)
     })
 
     test('userDelete 400 invalid id', async () => {
         const res = await request(server)
-            .delete(`/userDelete/abc`)
-            .set("Authorization", `Bearer ${barberToken}`)
+        .delete(`/userDelete/abc`)
+        .set("Authorization", `Bearer ${userToken}`)
         expect(res.statusCode).toBe(400)
     })
-
+    
     test('userDelete 404 not found', async () => {
         const res = await request(server)
-            .delete(`/userDelete/999999`)
-            .set("Authorization", `Bearer ${barberToken}`)
+        .delete(`/userDelete/999999`)
+        .set("Authorization", `Bearer ${barberToken}`)
         expect(res.statusCode).toBe(404)
     })
+    
 })
+
+describe('testing /barberDelete/:id delete route', () => {
+    test('barberDelete 401 no token', async () => {
+        const res = await request(server)
+        .delete(`/barberDelete/${barberId}`)
+        expect(res.statusCode).toBe(401)
+    })
+    
+    test('barberDelete 400 invalid id', async () => {
+        const res = await request(server)
+        .delete(`/barberDelete/abc`)
+        .set("Authorization", `Bearer ${barberToken}`)
+        expect(res.statusCode).toBe(400)
+    })
+    
+    test('barberDelete not found', async () => {
+        const res = await request(server)
+        .delete(`/barberDelete/999999`)
+        .set("Authorization", `Bearer ${barberToken}`)
+        expect(res.statusCode).toBe(404)
+    })
+    test('should return 200 status code', async () => {
+        const response = await request(server)
+            .delete(`/barberDelete/${barberId}`)
+            .set("Authorization", `Bearer ${barberToken}`)
+        expect(response.statusCode).toBe(200)
+    })
+})
+
+
+
 
 afterAll(async () => {
     const dbHandler = require("./dbHandler");

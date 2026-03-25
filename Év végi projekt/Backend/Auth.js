@@ -15,7 +15,8 @@ function Auth() {
             const decodedToken = JWT.verify(token, SK);
             req.uid = decodedToken.uid;
             next();
-        } catch (error) {
+        } 
+        catch (error) {
             res.status(401).json({ message: "Invalid token" });
         }
     };

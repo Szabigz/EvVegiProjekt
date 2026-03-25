@@ -37,13 +37,21 @@ router.get("/barbersAll", AuthAdmin(), async (req, res) => {
     }
 });
 
+function ValidateId() {
+    return (req, res, next) => {
+        if (isNaN(req.params.id)) return res.status(400).json({
+            message: "Invalid ID"
+        })
+        next()
+    }
+}
+
+
 // admin barmelyik barber torlese
-router.delete("/barberDelete/:id", AuthAdmin(), async (req, res) => {
+router.delete("/barberDelete/:id",ValidateId(), AuthAdmin(), async (req, res) => {
     try {
         const Id = req.params.id
-        if (isNaN(Id)) return res.status(400).json({
-            message: 'Invalid ID'
-        })
+
 
         const oneBarber = await dbHandler.barber.findOne({
             where: {

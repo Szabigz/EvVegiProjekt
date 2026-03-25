@@ -33,20 +33,10 @@ router.get("/usersAll", Auth(), async (req, res) => {
 
 router.delete("/userDelete/:id", Auth(), async (req, res) => {
     try {
-        const Id = req.params.id;
+        const Id = parseInt(req.params.id)
         if (isNaN(Id)) return res.status(400).json({
             message: "Invalid ID"
         });
-
-        const requester = await dbHandler.barber.findByPk(req.uid);
-        const isAdmin = requester && requester.isAdmin;
-
-        if (!isAdmin && req.uid != Id) {
-            return res.status(403).json({
-                message: "Nincs jogosultságod más fiókját törölni"
-            });
-        }
-
         const oneUser = await dbHandler.user.findOne({
             where: {
                 id: Id
@@ -54,7 +44,17 @@ router.delete("/userDelete/:id", Auth(), async (req, res) => {
         });
         if (!oneUser) return res.status(404).json({
             message: "Nincs ilyen felhasználó"
-        });
+        })
+
+        const requester = await dbHandler.barber.findByPk(req.uid);
+        const isAdmin = requester && requester.isAdmin;
+
+        if (!isAdmin && Number(req.uid) !== Number(Id)) {
+            return res.status(403).json({
+                message: "Nincs jogosultságod más fiókját törölni"
+            });
+        }
+
 
         await dbHandler.appointments.update({
             status: 'canceled'
@@ -91,6 +91,23 @@ router.post("/userReg", async (req, res) => {
     if (!email || !name || !password || !phoneNum) return res.status(400).json({
         message: "Missing data"
     })
+
+    if (!email.includes("@")) {
+    return res.status(400).json({ message: "Invalid email" })
+    }
+
+    if (name.length < 2) {
+    return res.status(400).json({ message: "Name too short" })
+    }
+
+    if (password.length < 6) {
+    return res.status(400).json({ message: "Weak password" })
+    }
+
+    if (phoneNum.length < 6) {
+    return res.status(400).json({ message: "Invalid phone number" })
+    }
+    
     try {
         const oneUser = await dbHandler.user.findOne({
             where: {
