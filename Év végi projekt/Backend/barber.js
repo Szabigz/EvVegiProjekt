@@ -4,17 +4,15 @@ const bcrypt = require("bcrypt")
 const {
     Op
 } = require("sequelize")
-const {
-    Auth,
-    AuthAdmin
-} = require('./Auth')
+const { AuthBarber, AuthAdmin } = require('./Auth')
+
 const dbHandler = require('./dbHandler')
 const JWT = require('jsonwebtoken')
 
 const SK = process.env.SECRET_KEY
 const EI = process.env.EXPIRES_IN
 
-router.get("/barberGet", Auth(), async (req, res) => {
+router.get("/barberGet", AuthBarber(), async (req, res) => {
     return res.json(await dbHandler.barber.findAll({
         where: {
             id: req.uid
@@ -175,7 +173,8 @@ router.post('/barberLogin', async (req, res) => {
             message: "Hibás jelszó"
         })
         const token = JWT.sign({
-            uid: oneBarber.id
+            uid: oneBarber.id,
+            role: 'barber'
         }, SK, {
             expiresIn: EI
         })
@@ -190,7 +189,7 @@ router.post('/barberLogin', async (req, res) => {
     }
 })
 
-router.get("/logsMy", Auth(), async (req, res) => {
+router.get("/logsMy", AuthBarber(), async (req, res) => {
     try {
         const logs = await dbHandler.log.findAll({
             where: {
@@ -212,7 +211,7 @@ router.get("/logsMy", Auth(), async (req, res) => {
     }
 })
 
-router.delete("/logsCleanup", Auth(), async (req, res) => {
+router.delete("/logsCleanup", AuthBarber(), async (req, res) => {
     try {
         const thirtyDaysAgo = new Date(new Date().setDate(new Date().getDate() - 30))
         await dbHandler.log.destroy({
@@ -234,7 +233,7 @@ router.delete("/logsCleanup", Auth(), async (req, res) => {
 })
 
 
-router.put('/barberUpdate/:id', Auth(), async (req, res) => {
+router.put('/barberUpdate/:id', AuthBarber(), async (req, res) => {
     try {
         const Id = req.params.id
 
