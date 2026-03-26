@@ -571,6 +571,22 @@ describe('testing /barberUpdate/:id put route', () => {
             .set("Authorization", `Bearer ${barberToken}`)
         expect(res.statusCode).toBe(400)
     })
+    test('barberUpdate 400 invalid id', async () => {
+        const res = await request(server)
+            .put(`/barberUpdate/abc`)
+            .send({
+                name: "test"
+            })
+            .set("Authorization", `Bearer ${barberToken}`)
+
+        expect(res.statusCode).toBe(400)
+    })
+    test("403 - Forbidden (Regular user access)", async () => {
+        const response = await request(server)
+            .get("/barbersAll")
+            .set("Authorization", `Bearer ${userToken}`)
+        expect(response.statusCode).toBe(403)
+    })
 
     test('barberUpdate 401 no token', async () => {
         const res = await request(server)
@@ -616,6 +632,12 @@ describe('testing /userUpdate/:id put route', () => {
 
         expect([404, 500]).toContain(res.statusCode)
 
+    })
+    test("403 - Forbidden (Regular user access)", async () => {
+        const response = await request(server)
+            .get("/barbersAll")
+            .set("Authorization", `Bearer ${userToken}`)
+        expect(response.statusCode).toBe(403)
     })
 
     test('userUpdate 400 invalid id', async () => {

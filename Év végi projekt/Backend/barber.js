@@ -236,7 +236,18 @@ router.delete("/logsCleanup", AuthBarber(), async (req, res) => {
 router.put('/barberUpdate/:id', AuthBarber(), async (req, res) => {
     try {
         const Id = req.params.id
-
+        
+        if (isNaN(Id)) return res.status(400).json({
+            message: "Invalid ID"
+        })
+        
+        const barber = await dbHandler.barber.findByPk(Id);
+        if (!barber) {
+            return res.status(404).json({ message: "A borbély nem található!" });
+        }
+        if (Number(req.uid) !== Number(Id)) {
+            return res.status(403).json({ message: "Forbidden" }); 
+        }
         const {
             name,
             email,
@@ -245,6 +256,10 @@ router.put('/barberUpdate/:id', AuthBarber(), async (req, res) => {
             profile_image,
             description
         } = req.body
+
+        if (!name && !email && !password && !phoneNum && !profile_image && !description) {
+            return res.status(400).json({ message: "Nincs megadva módosítandó adat!" });
+        }
 
         let updateData = {}
         if (name) updateData.name = name
