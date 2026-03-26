@@ -890,7 +890,6 @@ describe("testing /logsCleanup delete route", () => {
     });
 
     test("should return 200 even if there are no old logs to delete", async () => {
-        // A Sequelize .destroy() akkor is sikeres, ha 0 sort töröl
         const response = await request(server)
             .delete("/logsCleanup")
             .set("Authorization", `Bearer ${barberToken}`);
