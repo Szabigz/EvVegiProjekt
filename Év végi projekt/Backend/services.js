@@ -1,16 +1,13 @@
 const express = require('express')
 const router = express.Router()
 
-const {
-    Auth,
-    AuthAdmin
-} = require('./Auth')
+const { AuthBarber, AuthAdmin } = require('./Auth')
 
 const dbHandler = require('./dbHandler')
 const JWT = require('jsonwebtoken')
 
 
-router.get("/servicesGet", Auth(), async (req, res) => {
+router.get("/servicesGet", AuthBarber(), async (req, res) => {
     return res.json(await dbHandler.services.findAll())
 })
 
@@ -35,7 +32,7 @@ router.get("/services", async (req, res) => {
     }
 })
 
-router.get("/servicesMy", Auth(), async (req, res) => {
+router.get("/servicesMy", AuthBarber(), async (req, res) => {
     try {
 
         const id = req.uid
@@ -56,7 +53,7 @@ router.get("/servicesMy", Auth(), async (req, res) => {
     }
 })
 
-router.post("/servicesPost", Auth(), async (req, res) => {
+router.post("/servicesPost", AuthBarber(), async (req, res) => {
     const {
         description,
         name,
@@ -105,7 +102,7 @@ router.post("/servicesPost", Auth(), async (req, res) => {
 
 })
 
-router.delete("/servicesDelete/:id", Auth(), async (req, res) => {
+router.delete("/servicesDelete/:id", AuthBarber(), async (req, res) => {
     try {
         const Id = req.params.id
         const barberID = req.uid;
@@ -153,7 +150,7 @@ router.delete("/servicesDelete/:id", Auth(), async (req, res) => {
     }
 });
 
-router.put('/servicesUpdate/:id', Auth(), async (req, res) => {
+router.put('/servicesUpdate/:id', AuthBarber(), async (req, res) => {
 
     try {
         const Id = req.params.id

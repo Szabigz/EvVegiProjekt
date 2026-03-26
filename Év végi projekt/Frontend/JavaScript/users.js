@@ -5,7 +5,7 @@ async function userLogin(redirectUrl="/HTML/booking.html") {
     const password = document.getElementById("passwordInput").value
 
     try {
-        const response = await fetch('http://localhost:3000/userLogin', {
+        const response = await fetch(`${CONFIG.BASE_URL}/userLogin`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -36,7 +36,7 @@ async function userRegister() {
     const phoneNum = document.getElementById("phoneNumInput").value
 
     try {
-        const response = await fetch('http://localhost:3000/userReg', {
+        const response = await fetch(`${CONFIG.BASE_URL}/userReg`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -75,7 +75,7 @@ async function deleteUser(){
     const token = sessionStorage.getItem('token')
 
     try {
-        const response = await fetch(`http://localhost:3000/userDelete/${currentUserId}`, {
+        const response = await fetch(`${CONFIG.BASE_URL}/userDelete/${currentUserId}`, {
             method: 'DELETE',
             headers: {
                 'Authorization': `Bearer ${token}`

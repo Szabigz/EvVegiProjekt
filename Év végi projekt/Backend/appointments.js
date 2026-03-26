@@ -1,14 +1,14 @@
 const express = require('express')
 const router = express.Router()
 const { Op} = require("sequelize")
-const {Auth, AuthAdmin} = require('./Auth')
+const { Auth, AuthBarber, AuthUser, AuthAdmin } = require('./Auth')
 const Log = require('./log')
 const dbHandler = require('./dbHandler')
 const {
     sendBookingEmail
 } = require('./emailsender');
 
-router.get("/appointmentMyBarber", Auth(), async (req, res) => {
+router.get("/appointmentMyBarber", AuthBarber(), async (req, res) => {
     try {
         const appointments = await dbHandler.appointments.findAll({
             where: {
@@ -32,7 +32,7 @@ router.get("/appointmentMyBarber", Auth(), async (req, res) => {
     }
 })
 
-router.get("/appointmentMyUser", Auth(), async (req, res) => {
+router.get("/appointmentMyUser", AuthUser(), async (req, res) => {
     try {
         const appointments = await dbHandler.appointments.findAll({
             where: {
@@ -118,7 +118,7 @@ router.get("/availableSlots/:barberID/:date", async (req, res) => {
     }
 })
 
-router.post("/appointmentPost", Auth(), async (req, res) => {
+router.post("/appointmentPost", AuthBarber(), async (req, res) => {
     const {
         serviceID,
         comment,
@@ -168,7 +168,7 @@ router.post("/appointmentPost", Auth(), async (req, res) => {
     }
 })
 
-router.post("/appointmentUserPost", Auth(), async (req, res) => {
+router.post("/appointmentUserPost", AuthUser(), async (req, res) => {
     try {
         const {
             barberID,
@@ -285,7 +285,7 @@ router.delete("/appointmentDelete/:id", Auth(), ValidateId(), Log(), async (req,
     }
 })
 
-router.put('/appointmentUpdate/:id', Auth(), ValidateId(), Log(), async (req, res) => {
+router.put('/appointmentUpdate/:id', AuthBarber(), ValidateId(), Log(), async (req, res) => {
     const {serviceID, start_time, end_time, comment, status} = req.body
     if (!serviceID && !start_time && !end_time && !comment && !status) {
         return res.status(400).json({

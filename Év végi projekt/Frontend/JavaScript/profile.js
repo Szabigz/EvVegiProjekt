@@ -10,7 +10,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     try {
         /*Felhasznalo adatainak betoltese*/
-        const response = await fetch('http://localhost:3000/userGet', {
+        const response = await fetch(`${CONFIG.BASE_URL}/userGet`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
@@ -52,7 +52,7 @@ async function loadMyAppointment() {
     if (!token || !container) return;
 
     try {
-        const res = await fetch("http://localhost:3000/appointmentMyUser", {
+        const res = await fetch(`${CONFIG.BASE_URL}/appointmentMyUser`, {
             headers: { "Authorization": "Bearer " + token }
         })
 
@@ -140,7 +140,7 @@ async function saveUpdate(type) {
     }
 
     try {
-        const response = await fetch(`http://localhost:3000/userUpdate/${currentUserId}`, {
+        const response = await fetch(`${CONFIG.BASE_URL}/userUpdate/${currentUserId}`, {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',
@@ -171,7 +171,7 @@ async function cancelAppointment(id) {
     const token = sessionStorage.getItem("token")
 
     try {
-        const res = await fetch(`http://localhost:3000/appointmentDelete/${id}`, {
+        const res = await fetch(`${CONFIG.BASE_URL}/appointmentDelete/${id}`, {
             method: 'DELETE',
             headers: {
                 'Authorization': `Bearer ${token}`

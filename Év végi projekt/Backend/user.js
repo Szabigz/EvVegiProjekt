@@ -1,8 +1,7 @@
 const express = require('express')
 const router = express.Router()
-const {
-    Auth
-} = require('./Auth')
+const { Auth, AuthUser, AuthBarber, AuthAdmin } = require('./Auth')
+
 const bcrypt = require("bcrypt")
 const dbHandler = require('./dbHandler')
 const JWT = require('jsonwebtoken')
@@ -10,7 +9,7 @@ const JWT = require('jsonwebtoken')
 const SK = process.env.SECRET_KEY
 const EI = process.env.EXPIRES_IN
 
-router.get("/userGet", Auth(), async (req, res) => {
+router.get("/userGet", AuthUser(), async (req, res) => {
     return res.json(await dbHandler.user.findAll({
         where: {
             id: req.uid
@@ -18,7 +17,7 @@ router.get("/userGet", Auth(), async (req, res) => {
     }))
 })
 
-router.get("/usersAll", Auth(), async (req, res) => {
+router.get("/usersAll", AuthAdmin(), async (req, res) => {
     try {
         const users = await dbHandler.user.findAll({
             attributes: ['id', 'name', 'email', 'phoneNum']
@@ -155,7 +154,8 @@ router.post('/userLogin', async (req, res) => {
             message: "Hibás jelszó"
         })
         const token = JWT.sign({
-            uid: oneUser.id
+            uid: oneUser.id,
+            role: 'user'
         }, SK, {
             expiresIn: EI
         })
@@ -170,7 +170,7 @@ router.post('/userLogin', async (req, res) => {
     }
 })
 
-router.put('/userUpdate/:id', Auth(), async (req, res) => {
+router.put('/userUpdate/:id', AuthUser(), async (req, res) => {
     const {
         password,
         phoneNum,

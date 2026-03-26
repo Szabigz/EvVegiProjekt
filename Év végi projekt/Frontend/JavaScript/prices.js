@@ -38,7 +38,7 @@ async function loadTeamMembers() {
     if (!container) return
 
     try {
-        const res = await fetch('http://localhost:3000/barbersPublic')
+        const res = await fetch(`${CONFIG.BASE_URL}/barbersPublic`)
         const barbers = await res.json()
         
         container.innerHTML = "" 

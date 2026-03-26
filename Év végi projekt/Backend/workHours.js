@@ -1,18 +1,18 @@
 const express = require('express')
 const router = express.Router()
 
-const {Auth,AuthAdmin} = require('./Auth')
+const { AuthBarber, AuthAdmin } = require('./Auth')
 
 const dbHandler = require('./dbHandler')
 const JWT = require('jsonwebtoken')
 const {Op,where} = require("sequelize");
 
 
-router.get("/workhoursGet", Auth(), async (req, res) => {
+router.get("/workhoursGet", AuthBarber(), async (req, res) => {
     return res.json(await dbHandler.workhours.findAll())
 })
 
-router.get("/workhoursMy", Auth(), async (req, res) => {
+router.get("/workhoursMy", AuthBarber(), async (req, res) => {
     try {
         const workhours = await dbHandler.workhours.findAll({
             where: {
@@ -28,7 +28,7 @@ router.get("/workhoursMy", Auth(), async (req, res) => {
     }
 });
 
-router.post("/workhoursPost", Auth(), async (req, res) => {
+router.post("/workhoursPost", AuthBarber(), async (req, res) => {
     const {
         dayOfWeek,
         start_time,
@@ -81,7 +81,7 @@ router.post("/workhoursPost", Auth(), async (req, res) => {
     }
 })
 
-router.delete("/workhoursDelete/:id", Auth(), async (req, res) => {
+router.delete("/workhoursDelete/:id", AuthBarber(), async (req, res) => {
     try {
         const Id = req.params.id
         const barberID = req.uid;
@@ -128,7 +128,7 @@ router.delete("/workhoursDelete/:id", Auth(), async (req, res) => {
     }
 });
 
-router.put('/workhoursUpdate/:id', Auth(), async (req, res) => {
+router.put('/workhoursUpdate/:id', AuthBarber(), async (req, res) => {
 
     try {
         const Id = req.params.id
