@@ -1,15 +1,20 @@
+require('dotenv').config();
 const { Sequelize, DataTypes } = require("sequelize");
 
-const dbHandler = new Sequelize("barberShop", "root", "", {
-  dialect: "mysql",
-  host: "localhost",
-  timezone: '+01:00', // +1 idozona
-  dialectOptions: {
-    dateStrings: true, // ezzel stringkent kezeli a datumokat :)
-    typeCast: true
-  },
-  timezone: '+01:00' 
-});
+const dbHandler = new Sequelize(
+  process.env.DB_NAME, 
+  process.env.DB_USER, 
+  process.env.DB_PASS, 
+  {
+    dialect: "mysql",
+    host: process.env.DB_HOST,
+    timezone: '+01:00',
+    dialectOptions: {
+      dateStrings: true,
+      typeCast: true
+    }
+  }
+);
 
 /* USERS */
 const userTable = dbHandler.define("users", {
@@ -48,7 +53,7 @@ const barberTable = dbHandler.define("barbers", {
     allowNull: false
   },
   phoneNum:{
-    type: DataTypes.INTEGER,
+    type: DataTypes.STRING,
     allowNull:false,
   },
   email:{
