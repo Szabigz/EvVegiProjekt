@@ -7,7 +7,7 @@ async function loadBarbers() {
     container.innerHTML = "<p class='text-white'>Barbererek betöltése...</p>"
 
     try {
-        const res = await fetch('/barbersPublic')
+const res = await fetch(`${CONFIG.BASE_URL}/barbersPublic`)
         const barbers = await res.json()
         
         container.innerHTML = ""
@@ -75,7 +75,7 @@ async function loadServices() {
     const container = document.getElementById("serviceContainer")
     container.innerHTML = ""
 
-    const res = await fetch(`/services?barberID=${selectedBarber}`)
+    const res = await fetch(`${CONFIG.BASE_URL}/services?barberID=${selectedBarber}`)
     if (!res.ok) return;
 
     const services = await res.json()
@@ -208,7 +208,7 @@ async function generateTimeSlots() {
     const formattedDate = `${year}-${month}-${day}`
 
     try{
-        const res = await fetch(`http://localhost:3000/availableSlots/${selectedBarber}/${formattedDate}`)
+        const res = await fetch(`${CONFIG.BASE_URL}/availableSlots/${selectedBarber}/${formattedDate}`)
         
         if (!res.ok)
             return;
@@ -319,7 +319,7 @@ async function bookAppointment(barberID, serviceID, start_time, end_time, commen
 
     const token = sessionStorage.getItem("token")
 
-    const res = await fetch('/appointmentUserPost', {
+    const res = await fetch(`${CONFIG.BASE_URL}/appointmentUserPost`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
