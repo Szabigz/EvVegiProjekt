@@ -19,10 +19,7 @@ namespace BarberManager.Services
 
         public ApiService()
         {
-            if (OperatingSystem.IsAndroid())
-                BaseUrl = "http://10.0.2.2:3000";
-            else
-                BaseUrl = "http://127.0.0.1:3000";
+            BaseUrl = "https://api.slickbarber.hu";
             _httpClient = new HttpClient { BaseAddress = new Uri(BaseUrl) };
         }
 
