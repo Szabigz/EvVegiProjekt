@@ -182,6 +182,9 @@ router.put('/userUpdate/:id', AuthUser(), async (req, res) => {
         if (isNaN(Id)) return res.status(400).json({
             message: "Invalid ID"
         })
+        if (Number(req.uid) !== Number(Id)) {
+            return res.status(403).json({ message: "Forbidden" }); 
+        }
         const oneUser = await dbHandler.user.findOne({
             where: {
                 id: Id
