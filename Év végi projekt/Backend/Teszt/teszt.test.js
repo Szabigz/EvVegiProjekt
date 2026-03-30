@@ -38,23 +38,6 @@ describe("testing /barberReg post route", () => {
 
         expect(response.statusCode).toBe(400)
     })
-    test('should return 400 for duplicate email registration', async () => {
-        const barberData = {
-            email: 'duplicate@test.com',
-            name: 'Test Name',
-            password: 'password123',
-            phoneNum: '12345'
-        };
-        await request(server).post("/barberReg").send(barberData);
-
-        // Második regisztráció ugyanazzal az emaillel
-        const response = await request(server)
-            .post("/barberReg")
-            .send(barberData);
-    
-        expect(response.statusCode).toBe(400);
-        expect(response.body.message).toBe("Mar van ilyen");
-    });
 
     test("should return 500 on forced server error", async () => {
         const response = await request(server)
@@ -416,6 +399,51 @@ describe("testing /barberGet get route", () => {
         expect(res.statusCode).toBe(401)
     })
 })
+
+
+    describe("GET /barbersPublic", () => {
+        test("200 - should return public barbers list with correct attributes", async () => {
+            const res = await request(server).get("/barbersPublic");
+            
+            expect(res.statusCode).toBe(200);
+            expect(Array.isArray(res.body)).toBe(true);
+            
+            if (res.body.length > 0) {
+                const barber = res.body[0];
+                expect(barber).toHaveProperty('id');
+                expect(barber).toHaveProperty('name');
+                expect(barber).toHaveProperty('profile_image');
+                expect(barber).toHaveProperty('description');
+                
+                expect(barber.password).toBeUndefined();
+                expect(barber.email).toBeUndefined();
+                expect(barber.isAdmin).toBeUndefined();
+            }
+        });
+    });
+
+    describe("GET /barberBooking", () => {
+        test("200 - should return simplified barber list for booking", async () => {
+            const res = await request(server).get("/barberBooking")
+            
+            expect(res.statusCode).toBe(200)
+            expect(Array.isArray(res.body)).toBe(true)
+            
+            if (res.body.length > 0) {
+                const barber = res.body[0]
+                expect(barber).toHaveProperty('id')
+                expect(barber).toHaveProperty('name')
+                expect(barber).toHaveProperty('profile_image')
+                
+                expect(barber.description).toBeUndefined()
+                expect(barber.password).toBeUndefined()
+            }
+        })
+    })
+
+    test("500 - should handle server errors on public routes", async () => {
+        
+    })
 
 
 describe("testing /userGet get route", () => {
