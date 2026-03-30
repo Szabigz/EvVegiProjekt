@@ -16,7 +16,7 @@ const dbHandler = new Sequelize(
   }
 );
 
-/* USERS */
+//USERS
 const userTable = dbHandler.define("users", {
   id: {
     type: DataTypes.INTEGER,
@@ -41,7 +41,7 @@ const userTable = dbHandler.define("users", {
   }
 });
 
-/* BARBERS */
+BARBERS
 const barberTable = dbHandler.define("barbers", {
   id: {
     type: DataTypes.INTEGER,
@@ -80,7 +80,7 @@ const barberTable = dbHandler.define("barbers", {
 
 });
 
-/* SERVICES */
+//SERVICES
 const servicesTable = dbHandler.define("services", {
   id: {
     type: DataTypes.INTEGER,
@@ -109,7 +109,7 @@ const servicesTable = dbHandler.define("services", {
   }
 });
 
-/* WORKHOURS */
+//WORKHOURS
 const workHoursTable = dbHandler.define("workhours", {
   id: {
     type: DataTypes.INTEGER,
@@ -134,7 +134,7 @@ const workHoursTable = dbHandler.define("workhours", {
   }
 });
 
-/* APPOINTMENTS */
+//APPOINTMENTS
 const appointmentsTable = dbHandler.define("appointments", {
   id: {
     type: DataTypes.INTEGER,
@@ -164,7 +164,7 @@ const appointmentsTable = dbHandler.define("appointments", {
   status: {
     type: DataTypes.STRING,
     allowNull: false,
-    defaultValue:"booked" // ezt atirtam booked-ra hiszen nem kell olyan hogy available - de ezt mar mondtam amugy  - Csongor 03.17
+    defaultValue:"booked"
   },
   comment: {
     type: DataTypes.STRING,
@@ -172,7 +172,7 @@ const appointmentsTable = dbHandler.define("appointments", {
   }
 });
 
-/* LOGS */
+//LOGS
 const logTable = dbHandler.define("logs", {
   id: {
     type: DataTypes.INTEGER,
@@ -216,15 +216,15 @@ workHoursTable.belongsTo(barberTable, { foreignKey: "barberID" });
 servicesTable.hasMany(appointmentsTable, { foreignKey: "serviceID" });
 appointmentsTable.belongsTo(servicesTable, { foreignKey: "serviceID" });
 
-/* USERS ↔ LOGS */
+//USERS LOGS
 userTable.hasMany(logTable, { foreignKey: "userID" });
 logTable.belongsTo(userTable, { foreignKey: "userID" });
 
-/* BARBERS ↔ LOGS */
+//BARBERS LOGS
 barberTable.hasMany(logTable, { foreignKey: "barberID" });
 logTable.belongsTo(barberTable, { foreignKey: "barberID" });
 
-/* APPOINTMENTS ↔ LOGS */
+//APPOINTMENTS LOGS
 appointmentsTable.hasMany(logTable, { foreignKey: "appointmentID" });
 logTable.belongsTo(appointmentsTable, { foreignKey: "appointmentID" });
 

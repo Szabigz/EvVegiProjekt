@@ -64,15 +64,12 @@ namespace BarberManager.ViewModels
                 BarberEmail = barber.Email;
                 BarberPhone = barber.PhoneNum.ToString();
                 BarberDescription = barber.Description ?? "";
-                // KÉP BETÖLTÉSE AZ ADATBÁZISBÓL:
                 if (!string.IsNullOrEmpty(barber.ProfileImage))
                 {
                     try
                     {
-                        // Eltároljuk a szöveges formátumot a mentéshez
                         _imageBase64 = barber.ProfileImage;
 
-                        // Visszaalakítjuk Bitmap-re a megjelenítéshez
                         string cleanBase64 = _imageBase64.Contains(",") ? _imageBase64.Split(',')[1] : _imageBase64;
                         byte[] imageBytes = System.Convert.FromBase64String(cleanBase64);
                         using (var ms = new MemoryStream(imageBytes))
@@ -82,7 +79,6 @@ namespace BarberManager.ViewModels
                     }
                     catch
                     {
-                        // Ha hibás a mentett kép, marad az alapértelmezett ikon
                         ProfileImageSource = null;
                     }
                 }
@@ -95,7 +91,6 @@ namespace BarberManager.ViewModels
                                                                         
                                                                          
         }
-        // Ez a metódus most már valóban await-el, így megszűnik a figyelmeztetés
         public async Task ProcessImage(string filePath)
         {
             try
@@ -108,16 +103,13 @@ namespace BarberManager.ViewModels
                     return;
                 }
 
-                // 1. Beolvassuk a bájtokat
                 byte[] imageBytes = await File.ReadAllBytesAsync(filePath);
 
-                // 2. Csinálunk belőle Bitmap-et a UI-nak
                 using (var ms = new MemoryStream(imageBytes))
                 {
                     ProfileImageSource = new Bitmap(ms);
                 }
 
-                // 3. Eltároljuk Base64-ben az adatbázisnak
                 _imageBase64 = "data:image/png;base64," + System.Convert.ToBase64String(imageBytes);
 
                 StatusMessage = "Kép kiválasztva!";
@@ -156,8 +148,8 @@ namespace BarberManager.ViewModels
         BarberName, 
         BarberPhone, 
         string.IsNullOrEmpty(NewPassword) ? null : NewPassword,
-        _imageBase64, // pfp
-        BarberDescription // leírás
+        _imageBase64, 
+        BarberDescription 
     );
 
             StatusMessage = result.Message;

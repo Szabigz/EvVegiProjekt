@@ -58,7 +58,7 @@ namespace BarberManager.ViewModels
             IsLoading = false;
         }
 
-        //ez nagy szopas volt hogy rajjojjek hogy backend hiba volt vegig xd
+       
         [RelayCommand]
         public async Task SaveAll()
         {

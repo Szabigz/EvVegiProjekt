@@ -24,7 +24,6 @@ public class ViewLocator : IDataTemplate
             }
         }
 
-        // Ha nem mobil akkor a rendeset loadolom be
         var type = Type.GetType(name);
         if (type != null)
         {

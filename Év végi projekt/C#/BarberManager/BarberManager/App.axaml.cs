@@ -30,8 +30,8 @@ public partial class App : Application
             }
             else if (ApplicationLifetime is ISingleViewApplicationLifetime singleViewPlatform)
             {
-                // Próbáljuk meg elõször a sima MainView-val (ami asztalin megy)
-                // Ha ezzel elindul, akkor a hiba a MainViewMobile.axaml-ben van!
+                
+                
                 singleViewPlatform.MainView = new MainViewMobile
                 {
                     DataContext = new MainViewModel()
@@ -40,7 +40,7 @@ public partial class App : Application
         }
         catch (Exception ex)
         {
-            // Ha van hiba, írjuk ki a konzolra (ADB-vel látszik majd)
+            
             System.Diagnostics.Debug.WriteLine("CRASH: " + ex.Message);
         }
 
@@ -49,11 +49,11 @@ public partial class App : Application
 
     private void DisableAvaloniaDataAnnotationValidation()
     {
-        // Get an array of plugins to remove
+        
         var dataValidationPluginsToRemove =
             BindingPlugins.DataValidators.OfType<DataAnnotationsValidationPlugin>().ToArray();
 
-        // remove each entry found
+        
         foreach (var plugin in dataValidationPluginsToRemove)
         {
             BindingPlugins.DataValidators.Remove(plugin);

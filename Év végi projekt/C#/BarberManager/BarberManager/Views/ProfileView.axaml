@@ -10,7 +10,7 @@
 			 x:DataType="vm:ProfileViewModel"
 			 >
 	 <ScrollViewer VerticalScrollBarVisibility="Auto">
-        <Grid Margin="15,20,15,20"> <!-- Kisebb margó mobilra barátságosabb -->
+        <Grid Margin="15,20,15,20">
 		<Border Background="White" CornerRadius="15" BoxShadow="0 4 20 0 #11000000" Padding="30" VerticalAlignment="Top" MaxWidth="500">
 			<StackPanel Spacing="20">
 				<StackPanel Orientation="Horizontal" Spacing="15" HorizontalAlignment="Center" Margin="0,0,0,10">

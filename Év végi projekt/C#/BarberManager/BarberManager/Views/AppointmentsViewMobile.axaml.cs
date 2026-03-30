@@ -41,7 +41,7 @@ public partial class AppointmentsViewMobile : UserControl
 
         foreach (var app in vm.Appointments)
         {
-            // CSAK A MAI NAP MOBILON
+            
             if (app.StartTime.Date != DateTime.Today)
                 continue;
 
