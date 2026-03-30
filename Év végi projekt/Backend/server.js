@@ -3,11 +3,11 @@ const dbHandler = require("./dbHandler");
 const {
     Op
 } = require('sequelize');
-const user = require("./user.js")
-const barber = require('./barber.js')
-const appointments = require("./appointments.js")
-const services = require("./services.js")
-const workhours = require("./workHours.js")
+const user = require("./Routes/user.js")
+const barber = require('./Routes/barber.js')
+const appointments = require("./Routes/appointments.js")
+const services = require("./Routes/services.js")
+const workhours = require("./Routes/workHours.js")
 const path = require("path")
 
 const server = express();
@@ -37,7 +37,7 @@ server.use("/", services)
 
 server.use("/", workhours)
 
-const log = require("./log")
+const log = require("./Middleware/log")
 server.use("/", log)
 
 server.listen(PORT, () => console.log("a szerver fut a " + PORT + "-es porton"))

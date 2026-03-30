@@ -1,6 +1,6 @@
 const request = require("supertest")
 
-const server = require("./server")
+const server = require("../server")
 
 let barberId;
 let barberToken;
@@ -1089,6 +1089,6 @@ describe('testing /barberDelete/:id delete route', () => {
 
 
 afterAll(async () => {
-    const dbHandler = require("./dbHandler")
+    const dbHandler = require("../dbHandler")
     await dbHandler.db.close()
 })
