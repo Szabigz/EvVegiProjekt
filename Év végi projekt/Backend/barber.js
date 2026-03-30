@@ -25,13 +25,25 @@ router.get("/barbersPublic", async (req, res) => {
             where: {
                 isAdmin: false
             },
-            attributes: ['id', 'name', 'profile_image', 'description']
+            attributes:['id', 'name', 'profile_image', 'description']
         })
         res.json(barbers)
     } catch (error) {
-        res.status(500).json({
-            message: "Szerverhiba"
+        res.status(500).json({ message: "Szerverhiba" })
+    }
+})
+
+router.get("/barbersBooking", async (req, res) => {
+    try {
+        const barbers = await dbHandler.barber.findAll({
+            where: {
+                isAdmin: false
+            },
+            attributes: ['id', 'name', 'profile_image']
         })
+        res.json(barbers)
+    } catch (error) {
+        res.status(500).json({ message: "Szerverhiba" })
     }
 })
 // admin osszes barber lekerese

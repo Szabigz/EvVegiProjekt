@@ -4,7 +4,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     const token = sessionStorage.getItem('token')
 
     if (!token) {
-        window.location.href = "/HTML/mainpage.html"
+        window.location.href = "/"
         return;
     }
 
@@ -31,7 +31,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         } else {
 
             sessionStorage.removeItem('token')
-            window.location.href = "/HTML/mainpage.html"
+            window.location.href = "/"
         }
     } catch (error) {
         console.error("Hiba:", error)
@@ -39,7 +39,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     /*Kijelentkes gomb*/
     document.getElementById('logoutBtn').addEventListener('click', () => {
         sessionStorage.removeItem('token')
-        window.location.href = "/HTML/mainpage.html"
+        window.location.href = "/"
     })
 })
 

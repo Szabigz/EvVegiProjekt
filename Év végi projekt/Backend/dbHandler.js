@@ -41,7 +41,7 @@ const userTable = dbHandler.define("users", {
   }
 });
 
-BARBERS
+//BARBERS
 const barberTable = dbHandler.define("barbers", {
   id: {
     type: DataTypes.INTEGER,

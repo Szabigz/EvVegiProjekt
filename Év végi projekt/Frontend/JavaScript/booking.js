@@ -7,7 +7,7 @@ async function loadBarbers() {
     container.innerHTML = "<p class='text-white'>Barbererek betöltése...</p>"
 
     try {
-const res = await fetch(`${CONFIG.BASE_URL}/barbersPublic`)
+        const res = await fetch(`${CONFIG.BASE_URL}/barbersBooking`)
         const barbers = await res.json()
         
         container.innerHTML = ""
@@ -41,7 +41,7 @@ const res = await fetch(`${CONFIG.BASE_URL}/barbersPublic`)
 const token = sessionStorage.getItem("token")
 
 if(!token){
-    window.location.href = "/HTML/mainpage.html"
+    window.location.href = "/"
 }
 
 //Alaphelyzet

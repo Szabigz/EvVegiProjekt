@@ -13,264 +13,241 @@
     <div class="container">
         <!-- Navigacio -->
         <header>
-            <nav class="navbar">
-                <ul>
-                    <li class="menu-item">
-                        <img src="/images/iconwithoutbg.jpg" 
-                             alt="Slick Barber Shop" 
-                             class="menu-img">
-                    </li>
-        
-                    <li class="menu-item">
-                        <a href="#info-div" class="menu-link">
-                            Információ Rólunk
-                        </a>
-                    </li>
-        
-                    <li class="menu-item">
-                        <a href="#works-div" class="menu-link">
-                            Munkáink
-                        </a>
-                    </li>
-        
-                    <li class="menu-item">
-                        <a href="#prices-div" class="menu-link">
-                            Árak
-                        </a>
-                    </li>
-        
-                    <li class="menu-item">
-                        <a href="#team-div" class="menu-link">
-                            Csapat
-                        </a>
-                    </li>
-        
-                    <li class="menu-item">
-                        <a href="#location-div" class="menu-link">
-                            Hol találsz meg minket?
-                        </a>
-                    </li>
-                    <li class="menu-item">
-                        <a href="/HTML/profile.html" class="menu-link profile-btn">
-                            <small>Profilod</small>
-                        </a>
-                    </li>
-                </ul>
+            <nav class="navbar navbar-expand-lg navbar-dark mt-3 mb-4">
+                <div class="container-fluid position-relative px-0">
+                    
+                    <!-- Logo kozepre rendezve mobilon, balra asztalin -->
+                    <a class="navbar-brand mx-auto mx-lg-0" href="#">
+                        <img src="/images/iconwithoutbg.jpg" alt="Slick Barber Shop" class="menu-img">
+                    </a>
+                    
+                    <!-- Hamburger gomb (jobb szelen mobilon) -->
+                    <button class="navbar-toggler position-absolute end-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+                    
+                    <!-- Lenyilo menu pontok -->
+                    <div class="collapse navbar-collapse justify-content-center mt-3 mt-lg-0" id="navbarNav">
+                        <ul class="navbar-nav align-items-center text-center gap-2 gap-lg-4">
+                            <li class="nav-item">
+                                <a href="#info-div" class="nav-link menu-link">Információ Rólunk</a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="#works-div" class="nav-link menu-link">Munkáink</a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="#prices-div" class="nav-link menu-link">Árak</a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="#team-div" class="nav-link menu-link">Csapat</a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="#location-div" class="nav-link menu-link">Hol találsz meg minket?</a>
+                            </li>
+                            <li class="nav-item mt-2 mt-lg-0">
+                                <a href="/HTML/profile.html" class="nav-link menu-link profile-btn">
+                                    <small>Profilod</small>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
             </nav>
         </header>
         
         <!-- Informacio -->
         <main>
-            <div class="row" >
-                <div id="info-div">
-                    <div class="col-lg-10 col-md-8 col-sm-12" id="info-box">
-
+            <div class="row justify-content-center mb-5" id="info-div">
+                <div class="col-lg-10 col-md-10 col-sm-12" id="info-box">
                     <h2 class="info-title">Rólunk:</h2>
-                
-                    <p>
-                        A Slick Barber shop Budapest nem csupán egy fodrászüzlet, hanem egy hely, ahol a stílus és a kényelem találkozik. A szakértő fodrászok precíz hajvágásokat és frissítő hajszárítást kínálnak, miközben a családbarát és állatbarát környezet mindenki számára vonzó. Az utcában és a környéken levő parkolóhelyek és a közlekedési lehetőségek közelsége pedig biztosítja, hogy a látogatás mindenki számára zökkenőmentes legyen.
-                    </p>
-                
+                    <p>A Slick Barber shop Budapest nem csupán egy fodrászüzlet, hanem egy hely, ahol a stílus és a kényelem találkozik. A szakértő fodrászok precíz hajvágásokat és frissítő hajszárítást kínálnak, miközben a családbarát és állatbarát környezet mindenki számára vonzó. Az utcában és a környéken levő parkolóhelyek és a közlekedési lehetőségek közelsége pedig biztosítja, hogy a látogatás mindenki számára zökkenőmentes legyen.</p>
                     <p>Szalonunkban nagy hangsúlyt fektetünk a részletekre:</p>
-                
                     <ul class="info-list">
                         <li> Prémium minőségű haj- és szakállápoló termékek</li>
                         <li> Tapasztalt és képzett barber csapat</li>
                         <li> Igényes, letisztult környezet</li>
                         <li> Egyéni stílustanácsadás minden vendégnek</li>
                     </ul>
-                
-                    <p>
-                        A Slick Barber Shop számára a barberkedés nem csak munka, hanem szenvedély. A célunk, hogy minden vendégünk úgy álljon fel a székből, hogy magabiztosabbnak érzi magát, mint amikor megérkezett.
-                    </p>
-                
+                    <p>A Slick Barber Shop számára a barberkedés nem csak munka, hanem szenvedély. A célunk, hogy minden vendégünk úgy álljon fel a székből, hogy magabiztosabbnak érzi magát, mint amikor megérkezett.</p>
                 </div>
             </div>
-
-            <!-- Kapcsolatok -->
-                <div class="col-lg-2 col-md-4 col-sm-6 contact-box">
-                    <h2 class="contact-title">
-                         Kapcsolat
-                    </h2>
-                    <div class="contact-content">
-                      <p> Cím: <br>
-                        1092 Budapest, Erkel utca 14/A <br>
-                      </p>
-                      <p>
-                         Telefonszám: <br>
-                        +36 20 123 4567
-                      </p>
-                      <p>
-                         E-mail: <br>
-                        <a href="">slickbarbershop@gmail.com</a>
-                      </p>
-                      <p>
-                         Instagram: <br>
-                        <a href="https://www.instagram.com/p/DLzOWJvN-io/" target="_blank">https://www.instagram.com/p/DLzOWJvN-io/</a>
-                      </p>
-                      <p>
-                         Nyitvatartás: <br>
-                        H-K: 9:00 - 19:00 <br>
-                        Sze: 9:30 - 19:30 <br>
-                        Cs-P: 10:00 - 20:00 <br>
-                        Szo: 10:00 - 19:00 <br>
-                        V: Zárva
-                      </p>
-                    </div>
-                </div>
             
             <!--Munkaink-->
-            <div class="works" id="works-div">
-                <h2 class="text-center mb-2">Munkáink</h2>
-                <div class="row">
-                  <div class="col-lg-4 col-md-6 col-sm-6 text-center">
-                    <img src="/images/work1.png" class="img-fluid img-circle-hover">
+            <div class="works mb-5" id="works-div">
+                <h2 class="text-center mb-4">Munkáink</h2>
+                <div class="row justify-content-center">
+
+                  <div class="col-lg-4 col-md-6 col-sm-12 text-center mb-4">
+                    <img src="/images/work1.png" class="img-fluid img-circle-hover mx-auto">
                   </div>
-                  <div class="col-lg-4 col-md-6 col-sm-6 text-center">
-                    <img src="/images/work2.png" class="img-fluid img-circle-hover">
+                  <div class="col-lg-4 col-md-6 col-sm-12 text-center mb-4">
+                    <img src="/images/work2.png" class="img-fluid img-circle-hover mx-auto">
                   </div>
-                  <div class="col-lg-4 col-md-6 col-sm-6 text-center">
-                    <img src="/images/work3.png" class="img-fluid img-circle-hover">
+                  <div class="col-lg-4 col-md-6 col-sm-12 text-center mb-4">
+                    <img src="/images/work3.png" class="img-fluid img-circle-hover mx-auto">
                   </div>
                 </div>
             </div>
             <!--Áraink-->
-            <div class="row prices" id="prices-div">
-                <h2 class="text-center mb-3 mt-2">Áraink</h2>
-
-                <div class="prices-container">
-                    <div class="price-tabs">
-                        <button class="price-tab-btn active" data-tab="hair">
-                             Hajak
-                        </button>
-                        <button class="price-tab-btn" data-tab="beard">
-                             Szakáll
-                        </button>
-                        <button class="price-tab-btn" data-tab="extra">
-                             Extra
-                        </button>
+            <div class="row justify-content-center prices mb-5" id="prices-div">
+                <div class="col-12">
+                    <h2 class="text-center mb-4 mt-2">Áraink</h2>
+                    <div class="prices-container">
+                        <div class="price-tabs">
+                            <button class="price-tab-btn active" data-tab="hair">Hajak</button>
+                            <button class="price-tab-btn" data-tab="beard">Szakáll</button>
+                            <button class="price-tab-btn" data-tab="extra">Extra</button>
+                        </div>
+                        <div class="price-content">
+                            <div class="price-tab-content active" id="hair">
+                                <div class="price-cards-grid">
+                                    <div class="price-card">
+                                        <h3>Hajvágás</h3>
+                                        <p class="price-value">7 200 Ft</p>
+                                        <p class="price-desc">Klasszikus vagy modern stílus</p>
+                                    </div>
+                                    <div class="price-card">
+                                        <h3>Hajmosás & Formázás</h3>
+                                        <p class="price-value">1 000 Ft</p>
+                                        <p class="price-desc">Alapos ápolás</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="price-tab-content" id="beard">
+                                <div class="price-cards-grid">
+                                    <div class="price-card">
+                                        <h3>Szakállvágás</h3>
+                                        <p class="price-value">4 490 Ft</p>
+                                        <p class="price-desc">Precíz formázás</p>
+                                    </div>
+                                    <div class="price-card">
+                                        <h3>Borotválás</h3>
+                                        <p class="price-value">4 490 Ft</p>
+                                        <p class="price-desc">Hagyományos módszerrel</p>
+                                    </div>
+                                    <div class="price-card">
+                                        <h3>Szakállápolás</h3>
+                                        <p class="price-value">2 000 Ft</p>
+                                        <p class="price-desc">Prémium termékekkel</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="price-tab-content" id="extra">
+                                <div class="price-cards-grid">
+                                    <div class="price-card">
+                                        <h3>Haj - Szakáll vágás</h3>
+                                        <p class="price-value">10 200 Ft</p>
+                                        <p class="price-desc">Hajvágás + Szakállvágás</p>
+                                    </div>
+                                    <div class="price-card">
+                                        <h3>Konzultáció</h3>
+                                        <p class="price-value">INGYENES</p>
+                                        <p class="price-desc">Stílustanácsadás</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
-
-                    <div class="price-content">
-                        <div class="price-tab-content active" id="hair">
-                            <div class="price-cards-grid">
-                                <div class="price-card">
-                                    <h3>Hajvágás</h3>
-                                    <p class="price-value">7 200 Ft</p>
-                                    <p class="price-desc">Klasszikus vagy modern stílus</p>
-                                </div>
-                                <div class="price-card">
-                                    <h3>Hajmosás & Formázás</h3>
-                                    <p class="price-value">1 000 Ft</p>
-                                    <p class="price-desc">Alapos ápolás</p>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="price-tab-content" id="beard">
-                            <div class="price-cards-grid">
-                                <div class="price-card">
-                                    <h3>Szakállvágás</h3>
-                                    <p class="price-value">4 490 Ft</p>
-                                    <p class="price-desc">Precíz formázás</p>
-                                </div>
-                                <div class="price-card">
-                                    <h3>Borotválás</h3>
-                                    <p class="price-value">4 490 Ft</p>
-                                    <p class="price-desc">Hagyományos módszerrel</p>
-                                </div>
-                                <div class="price-card">
-                                    <h3>Szakállápolás</h3>
-                                    <p class="price-value">2 000 Ft</p>
-                                    <p class="price-desc">Prémium termékekkel</p>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="price-tab-content" id="extra">
-                            <div class="price-cards-grid">
-                                <div class="price-card">
-                                    <h3>Haj - Szakáll vágás</h3>
-                                    <p class="price-value">10 200 Ft</p>
-                                    <p class="price-desc">Hajvágás + Szakállvágás</p>
-                                </div>
-                                <div class="price-card">
-                                    <h3>Konzultáció</h3>
-                                    <p class="price-value">INGYENES</p>
-                                    <p class="price-desc">Stílustanácsadás</p>
-                                </div>
-                            </div>
-                        </div>
+                    <div class="text-center mt-2 mb-2">
+                        <a href="#" class="btn btn-dark btn-lg booking-btn">Foglalj Időpontot</a>                    
                     </div>
                 </div>
-                    <div class="text-center mt-2 mb-2">
-                        <a href="#" class="btn btn-dark btn-lg booking-btn">
-                            Foglalj Időpontot
-                        </a>                    
-                    </div>
 
-                    <!-- Bejelentkezes -->
-                    <div class="modal fade" id="loginModal" tabindex="-1" aria-hidden="true">
-                        <div class="modal-dialog modal-dialog-centered">
-                        <div class="modal-content custom-modal p-4">
-                            <div class="modal-header border-0">
-                            <h5 class="modal-title">Bejelentkezés</h5>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Bezár"></button>
-                            </div>
-                            <div class="modal-body">
-                            <form id="loginForm">
-
-                                <div class="mb-3">
+                <!-- Bejelentkezes Modal -->
+                <div class="modal fade" id="loginModal" tabindex="-1" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered">
+                    <div class="modal-content custom-modal p-4">
+                        <div class="modal-header border-0">
+                        <h5 class="modal-title">Bejelentkezés</h5>
+                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Bezár"></button>
+                        </div>
+                        <div class="modal-body">
+                        <form id="loginForm">
+                            <div class="mb-3">
                                 <label for="nameInput" class="form-label">Név</label>
                                 <input type="text" class="form-control" id="nameInput" placeholder="Név">
-                                </div>
-                                
-                                <div class="mb-3">
+                            </div>
+                            <div class="mb-3">
                                 <label for="emailInput" class="form-label">Email</label>
                                 <input type="email" class="form-control" id="emailInput" placeholder="Email címed" required>
-                                </div>
-                                
-                                <div class="mb-3 d-none" id="phoneField">
+                            </div>
+                            <div class="mb-3 d-none" id="phoneField">
                                 <label for="phoneNumInput" class="form-label">Telefonszám</label>
                                 <input type="text" class="form-control" id="phoneNumInput" placeholder="Telefonszám">
-                                </div>
-
-                                <div class="mb-3">
+                            </div>
+                            <div class="mb-3">
                                 <label for="passwordInput" class="form-label">Jelszó</label>
                                 <input type="password" class="form-control" id="passwordInput" placeholder="Jelszó" required>
-                                </div>
-
-                                <button type="submit" class="btn btn-dark w-100" id="modalSubmitBtn">Bejelentkezés</button>
-                            </form>
-                            <div class="text-center mt-3">
-                                <small><span  id="switch">Még nincs fiókod?</span> <a href="#" id="switchToRegister">Regisztrálj!</a></small>
                             </div>
-                            </div>
+                            <button type="submit" class="btn btn-dark w-100" id="modalSubmitBtn">Bejelentkezés</button>
+                        </form>
+                        <div class="text-center mt-3">
+                            <small><span id="switch">Még nincs fiókod?</span> <a href="#" id="switchToRegister">Regisztrálj!</a></small>
                         </div>
                         </div>
                     </div>
+                    </div>
+                </div>
             </div>
 
-            <div class="row g-4 justify-content-center mb-5" id="team-list-container" style="padding-bottom: 50px;">
-                <!-- Ide tölti be a JS a barbereket -->
+            <div id="team-div">
+                <h2 class="text-center w-100 mb-4 mx-auto d-table">Csapat</h2>
+                <div class="row g-4 justify-content-center mb-5 w-100" id="team-list-container" style="padding-bottom: 20px;">
+                    <!-- JS tölti be -->
+                </div>
             </div>
 
             <!--Terkep-->
-            <div id="location-div" >
-                <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2696.1483147336903!2d19.05998284116719!3d47.48702399634662!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x4741dc5a77effd55%3A0x2cc66bdf92ae39e6!2sBudapest%2C%20Erkel%20u.%2014%2Fa%2C%201092!5e0!3m2!1shu!2shu!4v1765437272344!5m2!1shu!2shu" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+            <div class="row justify-content-center mt-4 mb-5" id="location-div">
+                <div class="col-12">
+                    <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2696.1483147336903!2d19.05998284116719!3d47.48702399634662!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x4741dc5a77effd55%3A0x2cc66bdf92ae39e6!2sBudapest%2C%20Erkel%20u.%2014%2Fa%2C%201092!5e0!3m2!1shu!2shu!4v1765437272344!5m2!1shu!2shu" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade" style="border-radius: 15px;"></iframe>
+                </div>
             </div>
 
         </main>
-        <!-- Adatvedelem -->
-        <footer class="text-center footer-style">
-            <a href="/HTML/dataprotection.html" target="_blank">Adatvédelmi feltételek</a>
+        <!-- Footer / Kapcsolatok -->
+        <footer class="footer-style mt-4">
+            <div class="container">
+                <div class="row text-center text-md-start">
+                    
+                    <!-- Kapcsolat Oszlop -->
+                    <div class="col-md-4 mb-4 mb-md-0">
+                        <h5 class="footer-title">Kapcsolat</h5>
+                        <p>1092 Budapest, Erkel utca 14/A</p>
+                        <p>Telefon: +36 20 123 4567</p>
+                        <p>E-mail: <a href="mailto:info.slickbarber.hu@gmail.com">info.slickbarber.hu@gmail.com</a></p>
+                    </div>
+
+                    <!-- Nyitvatartás Oszlop -->
+                    <div class="col-md-4 mb-4 mb-md-0">
+                        <h5 class="footer-title">Nyitvatartás</h5>
+                        <p>H-K: 9:00 - 19:00</p>
+                        <p>Sze: 9:30 - 19:30</p>
+                        <p>Cs-P: 10:00 - 20:00</p>
+                        <p>Szo: 10:00 - 19:00 | V: Zárva</p>
+                    </div>
+
+                    <!-- Közösségi Média Oszlop -->
+                    <div class="col-md-4 text-center text-md-end">
+                        <h5 class="footer-title">Közösségi Média</h5>
+                        <p><a href="https://www.instagram.com/p/DLzOWJvN-io/" target="_blank">Kövess minket Instagramon</a></p>
+                    </div>
+                </div>
+
+                <hr style="border-color: rgba(255,255,255,0.2); margin: 20px 0;">
+
+                <!-- Adatvédelem -->
+                <div class="text-center">
+                    <a href="/HTML/dataprotection.html" target="_blank" class="privacy-link">Adatvédelmi feltételek</a>
+                </div>
+            </div>
         </footer>
 
         <!-- Scriptek -->
         <script src="/JavaScript/config.js"></script>
         <script src="/JavaScript/users.js"></script> 
         <script src="/JavaScript/prices.js"></script>
-        <script src="/JavaScript/contacts.js"></script>
+        <script src="/JavaScript/nav.js"></script>
         <script src="/JavaScript/bookingButton.js"></script>
 </body>
 </html>

@@ -51,9 +51,9 @@ async function loadTeamMembers() {
                 <div class="col-lg-5 col-md-6 col-sm-12 mb-4 d-flex justify-content-center">
                     <div class="team-card">
                         <img src="${imgSrc}" class="team-img" alt="${barber.name}">
-                        <h5 class="team-name" style="color: #d4af37 font-size: 1.5rem">${barber.name}</h5>
-                        <p class="mt-3" style="font-weight: bold color: white">Bemutatkozás:</p>
-                        <p style="white-space: pre-wrap color: #eee font-style: italic line-height: 1.6">${desc}</p>
+                        <h5 class="team-name" style="color: #d4af37; font-size: 1.5rem;">${barber.name}</h5>
+                        <p class="mt-3" style="font-weight: bold; color: white;">Bemutatkozás:</p>
+                        <p style="white-space: pre-wrap; color: #eee; font-style: italic; line-height: 1.6;">${desc}</p>
                     </div>
                 </div>
             `
