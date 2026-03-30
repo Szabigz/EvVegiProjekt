@@ -38,6 +38,23 @@ describe("testing /barberReg post route", () => {
 
         expect(response.statusCode).toBe(400)
     })
+    test('should return 400 for duplicate email registration', async () => {
+        const barberData = {
+            email: 'duplicate@test.com',
+            name: 'Test Name',
+            password: 'password123',
+            phoneNum: '12345'
+        };
+        await request(server).post("/barberReg").send(barberData);
+
+        // Második regisztráció ugyanazzal az emaillel
+        const response = await request(server)
+            .post("/barberReg")
+            .send(barberData);
+    
+        expect(response.statusCode).toBe(400);
+        expect(response.body.message).toBe("Mar van ilyen");
+    });
 
     test("should return 500 on forced server error", async () => {
         const response = await request(server)
@@ -394,6 +411,10 @@ describe("testing /barberGet get route", () => {
         const res = await request(server).get('/barberGet')
         expect(res.statusCode).toBe(401)
     })
+    test("401 - Unauthorized (Invalid token)", async () => {
+        const res = await request(server).get('/barberGet').set("Authorization", "Bearer hibas_token")
+        expect(res.statusCode).toBe(401)
+    })
 })
 
 
@@ -401,6 +422,10 @@ describe("testing /userGet get route", () => {
     test("200 - Success", async () => {
         const response = await request(server).get('/userGet').set("Authorization", `Bearer ${userToken}`)
         expect(response.statusCode).toBe(200)
+    })
+    test("401 - Unauthorized (No token)", async () => {
+        const res = await request(server).get('/userGet')
+        expect(res.statusCode).toBe(401)
     })
     test("401 - Unauthorized (Invalid token)", async () => {
         const res = await request(server).get('/userGet').set("Authorization", "Bearer hibas_token")
@@ -437,8 +462,12 @@ describe("testing /servicesMy get route", () => {
         const response = await request(server).get('/servicesMy').set("Authorization", `Bearer ${barberToken}`)
         expect(response.statusCode).toBe(200)
     })
-    test("401 - Unauthorized", async () => {
+    test("401 - Unauthorized (No token)", async () => {
         const res = await request(server).get('/servicesMy')
+        expect(res.statusCode).toBe(401)
+    })
+    test("401 - Unauthorized (Invalid token)", async () => {
+        const res = await request(server).get('/servicesMy').set("Authorization", "Bearer hibas_token")
         expect(res.statusCode).toBe(401)
     })
 })
@@ -455,10 +484,15 @@ describe("testing /workhoursMy get route", () => {
         const response = await request(server).get('/workhoursMy').set("Authorization", `Bearer ${barberToken}`)
         expect(response.statusCode).toBe(200)
     })
-    test("401 - Unauthorized", async () => {
+    test("401 - Unauthorized (No token)", async () => {
         const res = await request(server).get('/workhoursMy')
         expect(res.statusCode).toBe(401)
     })
+    test("401 - Unauthorized (Invalid token)", async () => {
+        const res = await request(server).get('/workhoursMy').set("Authorization", "Bearer hibas_token")
+        expect(res.statusCode).toBe(401)
+    })
+    
 })
 
 describe("testing /appointmentMyBarber get route", () => {
@@ -478,8 +512,12 @@ describe("testing /appointmentMyUser get route", () => {
         const response = await request(server).get('/appointmentMyUser').set("Authorization", `Bearer ${userToken}`)
         expect(response.statusCode).toBe(200)
     })
-    test("401 - Unauthorized", async () => {
+    test("401 - Unauthorized (No token)", async () => {
         const res = await request(server).get('/appointmentMyUser')
+        expect(res.statusCode).toBe(401)
+    })
+    test("401 - Unauthorized (Invalid token)", async () => {
+        const res = await request(server).get('/appointmentMyUser').set("Authorization", "Bearer hibas_token")
         expect(res.statusCode).toBe(401)
     })
 })
@@ -512,6 +550,7 @@ describe("testing /barbersAll get route", () => {
             .set("Authorization", `Bearer ${userToken}`)
         expect(response.statusCode).toBe(403)
     })
+    
 })
 describe("testing /logsAll get route", () => {
 
@@ -525,6 +564,10 @@ describe("testing /logsAll get route", () => {
     test("should return 401 for /logsAll without token", async () => {
         const response = await request(server).get("/logsAll")
         expect(response.statusCode).toBe(401);
+    })
+    test("401 - Unauthorized (Invalid token)", async () => {
+        const res = await request(server).get('/logsAll').set("Authorization", "Bearer hibas_token")
+        expect(res.statusCode).toBe(401)
     })
 
     test("403 - Forbidden (Not an admin)", async () => {
@@ -545,9 +588,13 @@ describe("testing /logsMy get route", () => {
             expect(response.body[0].barberID).toBe(barberId)
         }
     })
-    test("401 - Unauthorized", async () => {
+    test("401 - Unauthorized (No token)", async () => {
         const response = await request(server).get("/logsMy")
         expect(response.statusCode).toBe(401)
+    })
+    test("401 - Unauthorized (Invalid token)", async () => {
+        const res = await request(server).get('/logsMy').set("Authorization", "Bearer hibas_token")
+        expect(res.statusCode).toBe(401)
     })
 })
 
@@ -596,6 +643,15 @@ describe('testing /barberUpdate/:id put route', () => {
             })
         expect(res.statusCode).toBe(401)
     })
+    test("barberUpdate - 401 (Invalid token)", async () => {
+        const res = await request(server)
+            .put(`/barberUpdate/${barberId}`)
+            .set("Authorization", "Bearer hibas.token.123")
+            .send({ name: "New Name" })
+        
+        expect(res.statusCode).toBe(401)
+        expect(res.body.message).toBe("Invalid token")
+    })
 
     test('barberUpdate 404 not found', async () => {
         const res = await request(server)
@@ -623,6 +679,15 @@ describe('testing /userUpdate/:id put route', () => {
             })
 
         expect(res.statusCode).toBe(401)
+    })
+    test("userUpdate - 401 (Invalid token)", async () => {
+        const res = await request(server)
+            .put(`/userUpdate/${userId}`)
+            .set("Authorization", "Bearer hibas.token.123")
+            .send({ name: "New Name" })
+        
+        expect(res.statusCode).toBe(401)
+        expect(res.body.message).toBe("Invalid token")
     })
 
     test('userUpdate not found', async () => {
@@ -668,7 +733,15 @@ describe('testing /servicesUpdate/:id put route', () => {
             .put(`/servicesUpdate/${serviceId}`)
         expect(res.statusCode).toBe(401)
     })
-
+    test("servicesUpdate - 401 (Invalid token)", async () => {
+        const res = await request(server)
+            .put(`/servicesUpdate/${barberId}`)
+            .set("Authorization", "Bearer hibas.token.123")
+            .send({ name: "New Name" })
+        
+        expect(res.statusCode).toBe(401)
+        expect(res.body.message).toBe("Invalid token");
+    })
     test('servicesUpdate 400 invalid id', async () => {
         const res = await request(server)
             .put(`/servicesUpdate/abc`)
@@ -705,11 +778,19 @@ describe('testing /appointmentUpdate/:id put route', () => {
             .put(`/appointmentUpdate/${appointmentId}`)
         expect(res.statusCode).toBe(401)
     })
+    test("appointmentUpdate - 401 (Invalid token)", async () => {
+        const res = await request(server)
+            .put(`/appointmentUpdate/${barberId}`)
+            .set("Authorization", "Bearer hibas.token.123")
+            .send({ comment: "idk" })
 
+        expect(res.statusCode).toBe(401)
+        expect(res.body.message).toBe("Invalid token")
+    })
     test('appointmentUpdate 400 invalid id', async () => {
         const res = await request(server)
             .put(`/appointmentUpdate/abc`)
-            .set("Authorization", `Bearer ${barberToken}`);
+            .set("Authorization", `Bearer ${barberToken}`)
 
         expect(res.statusCode).toBe(400)
     })
@@ -770,6 +851,15 @@ describe('testing /workhoursUpdate/:id put route', () => {
             })
         expect(res.statusCode).toBe(401)
     })
+    test("workhoursUpdate - 401 (Invalid token)", async () => {
+        const res = await request(server)
+            .put(`/workhoursUpdate/${barberId}`)
+            .set("Authorization", "Bearer hibas.token.123")
+            .send({ dayOfWeek: 4 })
+
+        expect(res.statusCode).toBe(401)
+        expect(res.body.message).toBe("Invalid token")
+    })
 
     test('workhoursUpdate 404 not found', async () => {
         const res = await request(server)
@@ -804,6 +894,13 @@ describe('testing /appointmentDelete/:id delete route', () => {
             .delete(`/appointmentDelete/${appointmentId}`)
         expect(res.statusCode).toBe(401)
     })
+    test('appointmentDelete 401 - invalid token', async () => {
+        const res = await request(server)
+            .delete(`/appointmentDelete/${barberId}`)
+            .set("Authorization", "Bearer hibas.token.123")
+        expect(res.statusCode).toBe(401)
+        expect(res.body.message).toBe("Invalid token")
+    })
 
     test('appointmentDelete 404 not found', async () => {
         const res = await request(server)
@@ -824,6 +921,13 @@ describe('testing /servicesDelete/:id delete route', () => {
         const res = await request(server)
             .delete(`/servicesDelete/${serviceId}`)
         expect(res.statusCode).toBe(401)
+    })
+    test('servicesDelete 401 - invalid token', async () => {
+        const res = await request(server)
+            .delete(`/servicesDelete/${barberId}`)
+            .set("Authorization", "Bearer hibas.token.123")
+        expect(res.statusCode).toBe(401)
+        expect(res.body.message).toBe("Invalid token")
     })
 
     test('servicesDelete 400 invalid id', async () => {
@@ -856,6 +960,13 @@ describe('testing /workhoursDelete/:id delete route', () => {
             .delete(`/workhoursDelete/${workhoursId}`)
         expect(res.statusCode).toBe(401)
     })
+    test('workhoursDelete 401 - invalid token', async () => {
+        const res = await request(server)
+            .delete(`/workhoursDelete/${barberId}`)
+            .set("Authorization", "Bearer hibas.token.123")
+        expect(res.statusCode).toBe(401)
+        expect(res.body.message).toBe("Invalid token")
+    })
 
     test('workhoursDelete 400 invalid id', async () => {
         const res = await request(server)
@@ -876,28 +987,29 @@ describe("testing /logsCleanup delete route", () => {
     test("should return 200 and success message on cleanup", async () => {
         const response = await request(server)
             .delete("/logsCleanup")
-            .set("Authorization", `Bearer ${barberToken}`);
+            .set("Authorization", `Bearer ${barberToken}`)
 
-        expect(response.statusCode).toBe(200);
-        expect(response.body.message).toBe("Sikeres takarítás");
+        expect(response.statusCode).toBe(200)
+        expect(response.body.message).toBe("Sikeres takarítás")
     });
 
     test("should return 401 if no token is provided for cleanup", async () => {
         const response = await request(server)
-            .delete("/logsCleanup");
+            .delete("/logsCleanup")
         
-        expect(response.statusCode).toBe(401);
-    });
+        expect(response.statusCode).toBe(401)
+    })
+    
 
     test("should return 200 even if there are no old logs to delete", async () => {
         const response = await request(server)
             .delete("/logsCleanup")
-            .set("Authorization", `Bearer ${barberToken}`);
+            .set("Authorization", `Bearer ${barberToken}`)
         
-        expect(response.statusCode).toBe(200);
-        expect(response.body.message).toBe("Sikeres takarítás");
-    });
-});
+        expect(response.statusCode).toBe(200)
+        expect(response.body.message).toBe("Sikeres takarítás")
+    })
+})
 
 describe('testing /userDelete/:id delete route', () => {
     test('should return 200 status code', async () => {
@@ -913,6 +1025,13 @@ describe('testing /userDelete/:id delete route', () => {
         const res = await request(server)
         .delete(`/userDelete/${userId}`)
         expect(res.statusCode).toBe(401)
+    })
+    test('userDelete 401 - invalid token', async () => {
+        const res = await request(server)
+            .delete(`/userDelete/${userId}`)
+            .set("Authorization", "Bearer hibas.token.123")
+        expect(res.statusCode).toBe(401)
+        expect(res.body.message).toBe("Invalid token")
     })
 
     test('userDelete 400 invalid id', async () => {
@@ -937,6 +1056,13 @@ describe('testing /barberDelete/:id delete route', () => {
         .delete(`/barberDelete/${barberId}`)
         expect(res.statusCode).toBe(401)
     })
+    test('barberDelete 401 - invalid token', async () => {
+        const res = await request(server)
+            .delete(`/barberDelete/${barberId}`)
+            .set("Authorization", "Bearer hibas.token.123")
+        expect(res.statusCode).toBe(401)
+        expect(res.body.message).toBe("Invalid token")
+    })
     
     test('barberDelete 400 invalid id', async () => {
         const res = await request(server)
@@ -945,7 +1071,7 @@ describe('testing /barberDelete/:id delete route', () => {
         expect(res.statusCode).toBe(400)
     })
     
-    test('barberDelete not found', async () => {
+    test('barberDelete 404 not found', async () => {
         const res = await request(server)
         .delete(`/barberDelete/999999`)
         .set("Authorization", `Bearer ${barberToken}`)
@@ -963,6 +1089,6 @@ describe('testing /barberDelete/:id delete route', () => {
 
 
 afterAll(async () => {
-    const dbHandler = require("./dbHandler");
-    await dbHandler.db.close();
-});
+    const dbHandler = require("./dbHandler")
+    await dbHandler.db.close()
+})
