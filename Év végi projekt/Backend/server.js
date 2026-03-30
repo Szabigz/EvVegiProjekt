@@ -9,9 +9,11 @@ const appointments = require("./Routes/appointments.js")
 const services = require("./Routes/services.js")
 const workhours = require("./Routes/workHours.js")
 const path = require("path")
+const cors = require('cors')
 
 const server = express();
 server.use(express.json({ limit: '10mb' }));
+server.use(cors())
 server.use(express.urlencoded({ limit: '10mb', extended: true }));
 server.use(express.static(path.join(__dirname, "../Frontend")));
 dbHandler.db.sync()
