@@ -11,19 +11,42 @@ body {
     z-index: 1; 
 }
 
+/* Footer / Kapcsolatok */
+
 .footer-style {
-    padding: 20px;
+    padding: 40px 20px 20px 20px;
     background: #111;
+    width: 100%;
+}
+
+.footer-title {
+    color: #d4af37;
+    font-weight: bold;
+    margin-bottom: 15px;
+}
+
+.footer-style p {
+    color: #ccc;
+    margin-bottom: 8px;
+    font-size: 0.95rem;
 }
 
 .footer-style a {
-    color: #bbb;
+    color: #d4af37;
     text-decoration: none;
-    font-weight: 500;
     transition: color 0.3s;
 }
 
 .footer-style a:hover {
+    color: white;
+}
+
+.privacy-link {
+    color: #bbb;
+    font-size: 0.9rem;
+}
+
+.privacy-link:hover {
     color: white;
 }
 
@@ -40,13 +63,13 @@ body {
     margin: 40px 0;
 }
 
-.navbar .menu-item {
+.navbar{
     flex: 0 0 auto;
     width: auto;
     text-align: center;
     margin: 10px 0;
 }
-.menu-item:first-child {
+.navbar:first-child {
     flex: 0 0 auto;
     text-align: center;
     margin-bottom: 20px;
@@ -142,37 +165,6 @@ body {
 #info-box p {
     font-size: 1.1rem;
     line-height: 1.6;
-}
-
-/*Kapcsolatok*/
-
-.contact-box h2{
-    font-size: 20px;
-}
-
-.contact-box{
-    position: fixed;
-    border: 2px solid rgba(255, 255, 255, 0.25);
-    color: white;
-    background: rgba(255, 255, 255, 0.15);
-    border-radius: 10px;
-    cursor: pointer;
-    z-index: 1;
-    right: 20px;
-    bottom: 20px;
-    width: 260px;
-    
-}
-.contact-content {
-    max-height: 0;
-    overflow: hidden;
-    transition: max-height 0.4s ease;
-}
-.contact-box.open .contact-content {
-    max-height: 500px;
-}
-.contact-box a{
-    color: #d4af37;
 }
 
 /*Munkak*/
@@ -543,13 +535,13 @@ body {
 /* Reszponzivitas */
 @media (max-width: 992px) {
 
-    .navbar .menu-item {
+    .navbar{
         flex: 0 0 auto;         
         width: auto;             
         text-align: center;      
     }
 
-    .navbar .menu-item:first-child {
+    .navbar:first-child {
         margin-bottom: 10px;     
     }
 
@@ -563,15 +555,6 @@ body {
     .menu-link {
         font-size: 0.95rem;
         letter-spacing: 1px;
-    }
-
-    .contact-box {
-        position: fixed;
-        bottom: 20px;
-        right: 20px;
-        margin-left: 0;
-        width: 260px;
-        z-index: 2000;
     }
 
     #book-appointment-div {
@@ -595,13 +578,6 @@ body {
         margin: 30px auto;         
         max-width: 300px;
         padding: 0;      
-    }
-
-    .menu-item:not(:first-child) {
-        width: auto; 
-        padding: 8px 0;
-        margin: 0 auto;  
-        text-align: center;        
     }
 
     .menu-img {
@@ -690,13 +666,6 @@ body {
 
     .scissor-list li {
         font-size: 0.95rem;
-    }
-
-    .contact-box {
-        width: 85%;
-        right: 50%;
-        transform: translateX(50%);
-        margin-left: 0 
     }
 
     .img-circle-hover {

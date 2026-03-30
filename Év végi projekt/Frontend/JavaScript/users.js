@@ -87,7 +87,7 @@ async function deleteUser(){
             
             sessionStorage.removeItem('token')
             sessionStorage.removeItem('user')
-            window.location.href = "/HTML/mainpage.html"
+            window.location.href = "/"
         } else {
             const resData = await response.json()
             alert("Hiba a törlés során: " + resData.message)
