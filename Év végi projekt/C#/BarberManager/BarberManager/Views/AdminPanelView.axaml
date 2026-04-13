@@ -16,7 +16,7 @@
 					    <Border Grid.Row="0" Grid.Column="0" Background="#F9F9F9" Padding="20" CornerRadius="10" Margin="10" VerticalAlignment="Top">
 						    <StackPanel Spacing="10">
 							    <TextBlock Text="Új Fodrász (Barber) Hozzáadása" FontSize="20" FontWeight="Bold"/>
-							    <TextBlock Text="{Binding StatusMessage}" Foreground="Red" FontWeight="Bold"/>
+								<TextBlock Text="{Binding StatusMessage}" Foreground="{Binding StatusMessageColor}" FontWeight="Bold"/>
 							    <TextBox Text="{Binding NewName}" Watermark="Név..."/>
 							    <TextBox Text="{Binding NewEmail}" Watermark="Email cím..."/>
 							    <TextBox Text="{Binding NewPhone}" Watermark="Telefonszám..."/>

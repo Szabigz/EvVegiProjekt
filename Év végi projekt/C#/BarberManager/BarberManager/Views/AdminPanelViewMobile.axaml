@@ -16,7 +16,7 @@
 					    <Border Background="#F9F9F9" Padding="20" CornerRadius="15" BoxShadow="0 2 10 0 #11000000">
 						    <StackPanel Spacing="12">
 							    <TextBlock Text="Új Fodrász Hozzáadása" FontSize="18" FontWeight="Bold" Foreground="#333333"/>
-							    <TextBlock Text="{Binding StatusMessage}" Foreground="Red" FontSize="13" IsVisible="{Binding StatusMessage, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"/>
+								<TextBlock Text="{Binding StatusMessage}" Foreground="{Binding StatusMessageColor}" FontSize="13" IsVisible="{Binding StatusMessage, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"/>
 							    <TextBox Text="{Binding NewName}" Watermark="Teljes név" Height="45"/>
 							    <TextBox Text="{Binding NewEmail}" Watermark="Email cím" Height="45"/>
 							    <TextBox Text="{Binding NewPhone}" Watermark="Telefonszám" Height="45"/>

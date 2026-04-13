@@ -15,28 +15,18 @@ namespace BarberManager.ViewModels
     {
         private readonly ApiService _api;
 
-        [ObservableProperty]
-        private ObservableCollection<Service> _services = new();
-        [ObservableProperty]
-        private bool _isLoading;
-        [ObservableProperty]
-        private string _errorMessage = string.Empty;
+        [ObservableProperty] private ObservableCollection<Service> _services = new();
+        [ObservableProperty] private bool _isLoading;
+        [ObservableProperty] private string _errorMessage = string.Empty;
+        [ObservableProperty] private bool _isEditing;
+        [ObservableProperty] private Service? _selectedService;
 
-        [ObservableProperty]
-        private bool _isEditing;
-        [ObservableProperty]
-        private Service? _selectedService;
+        [ObservableProperty] private string _priceInput = "";
+        [ObservableProperty] private string _durationInput = "30";
 
         public ServicesViewModel(ApiService api)
         {
             _api = api;
-            SelectedService = new Service
-            {
-                Name = "",
-                Price = 0,
-                Description = "",
-                DurationMinutes = 30
-            };
             _ = LoadServicesAsync();
         }
 
@@ -50,23 +40,15 @@ namespace BarberManager.ViewModels
                 Services.Clear();
                 foreach (var item in list) Services.Add(item);
             }
-            finally
-            {
-                IsLoading = false;
-            }
+            finally { IsLoading = false; }
         }
 
         [RelayCommand]
         public void ShowAddWindow()
         {
-            SelectedService = new Service
-            {
-                Id = 0,
-                Name = "",
-                Price = 0,
-                Description = "",
-                DurationMinutes = 30
-            };
+            SelectedService = new Service { Id = 0, Name = "", Price = 0, Description = "", DurationMinutes = 30 };
+            PriceInput = "";
+            DurationInput = "30";
             IsEditing = true;
             ErrorMessage = string.Empty;
         }
@@ -74,8 +56,7 @@ namespace BarberManager.ViewModels
         [RelayCommand]
         public void EditService(Service service)
         {
-            if (service == null)
-                return;
+            if (service == null) return;
             SelectedService = new Service
             {
                 Id = service.Id,
@@ -85,94 +66,71 @@ namespace BarberManager.ViewModels
                 DurationMinutes = service.DurationMinutes,
                 BarberId = service.BarberId
             };
+            PriceInput = service.Price.ToString();
+            DurationInput = service.DurationMinutes.ToString();
             IsEditing = true;
             ErrorMessage = string.Empty;
         }
 
         [RelayCommand]
-        public async Task DeleteService(Service service)
-        {
-            if (service == null)
-                return;
-            IsLoading = true;
-            try
-            {
-                var result = await _api.DeleteServiceAsync(service.Id);
-                if (result.IsSuccess)
-                    await LoadServicesAsync();
-                else
-                    ErrorMessage = result.Message;
-            }
-            finally
-            {
-                IsLoading = false;
-            }
-        }
-
-        [RelayCommand]
-        public void CancelEdit()
-        {
-            IsEditing = false;
-        }
-
-        [RelayCommand]
         public async Task SaveService()
         {
-            if (SelectedService == null)
-                return;
+            if (SelectedService == null) return;
 
-            if (string.IsNullOrWhiteSpace(SelectedService.Name) ||
-                SelectedService.Price <= 0)
+            if (string.IsNullOrWhiteSpace(SelectedService.Name)) { ErrorMessage = "Add meg a szolgáltatás nevét!"; return; }
+            if (string.IsNullOrWhiteSpace(SelectedService.Description)) { ErrorMessage = "Írj egy rövid leírást is!"; return; }
+
+            if (!int.TryParse(PriceInput, out int parsedPrice) || parsedPrice <= 0)
             {
-                ErrorMessage = "Kérlek töltsd ki a nevet és az árat!";
+                ErrorMessage = "Az ár csak pozitív egész szám lehet!";
                 return;
             }
 
-            if (SelectedService.DurationMinutes < 30)
+            if (!int.TryParse(DurationInput, out int parsedDuration) || parsedDuration < 30 || parsedDuration > 60)
             {
-                ErrorMessage = "A szolgáltatás minimum 30 perces kell legyen!";
+                ErrorMessage = "Az időtartamnak 30 és 60 perc közé kell esnie!";
                 return;
             }
+
+            SelectedService.Price = parsedPrice;
+            SelectedService.DurationMinutes = parsedDuration;
 
             IsLoading = true;
             ErrorMessage = string.Empty;
-
             try
             {
-                bool isSuccess;
-                string message;
+                var res = SelectedService.Id == 0 ? await _api.CreateServiceAsync(SelectedService) : await _api.UpdateServiceAsync(SelectedService);
 
-                if (SelectedService.Id == 0)
-                {
-                    var result = await _api.CreateServiceAsync(SelectedService);
-                    isSuccess = result.IsSuccess;
-                    message = result.Message;
-                }
-                else
-                {
-                    var result = await _api.UpdateServiceAsync(SelectedService);
-                    isSuccess = result.IsSuccess;
-                    message = result.Message;
-                }
-
-                if (isSuccess)
+                if (res.IsSuccess)
                 {
                     IsEditing = false;
                     await LoadServicesAsync();
                 }
                 else
                 {
-                    ErrorMessage = message;
+                    if (res.Message.Contains("Mar van ilyen") || res.Message.Contains("already exists"))
+                        ErrorMessage = "Ilyen nevű szolgáltatásod már van, válassz másikat!";
+                    else
+                        ErrorMessage = "Nem sikerült a mentés. Ellenőrizd az adatokat!";
                 }
             }
-            catch (Exception)
-            {
-                ErrorMessage = "Hiba történt a mentés során.";
-            }
-            finally
-            {
-                IsLoading = false;
-            }
+            catch { ErrorMessage = "Hálózati hiba történt a szerverrel."; }
+            finally { IsLoading = false; }
+        }
+
+        [RelayCommand] public void CancelEdit() => IsEditing = false;
+
+        [RelayCommand]
+        public async Task DeleteService(Service service)
+        {
+            if (service == null) return;
+            IsLoading = true;
+            var result = await _api.DeleteServiceAsync(service.Id);
+            if (result.IsSuccess)
+                await LoadServicesAsync();
+            else
+                ErrorMessage = "Ezt a szolgáltatást most nem tudjuk törölni.";
+            IsLoading = false;
         }
     }
 }

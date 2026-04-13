@@ -3,6 +3,7 @@ using BarberManager.Services;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using System.Collections.ObjectModel;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace BarberManager.ViewModels
@@ -11,60 +12,30 @@ namespace BarberManager.ViewModels
     {
         private readonly ApiService _api;
 
-        [ObservableProperty]
-        private ObservableCollection<Barber> _barbers = new();
+        [ObservableProperty] private ObservableCollection<Barber> _barbers = new();
+        [ObservableProperty] private ObservableCollection<User> _users = new();
 
-        [ObservableProperty]
-        private ObservableCollection<User> _users = new();
+        [ObservableProperty] private string _newName = "";
+        [ObservableProperty] private string _newEmail = "";
+        [ObservableProperty] private string _newPhone = "";
+        [ObservableProperty] private string _newPassword = "";
+        [ObservableProperty] private bool _newIsAdmin;
 
-        [ObservableProperty]
-        private string _newName = "";
+        [ObservableProperty] private string _statusMessage = "";
+        [ObservableProperty] private string _statusMessageColor = "Red";
 
-        [ObservableProperty]
-        private string _newEmail = "";
+        [ObservableProperty] private bool _isNewPasswordVisible;
 
-        [ObservableProperty]
-        private string _newPhone = "";
+        [ObservableProperty] private User? _editingUser;
+        [ObservableProperty] private string _editUserEmail = "";
+        [ObservableProperty] private string _editUserPhone = "";
+        [ObservableProperty] private string _userStatusMessage = "";
+        [ObservableProperty] private string _userStatusColor = "Green";
+        [ObservableProperty] private string _modalErrorMessage = "";
 
-        [ObservableProperty]
-        private string _newPassword = "";
-
-        [ObservableProperty]
-        private bool _newIsAdmin;
-
-        [ObservableProperty]
-        private string _statusMessage = "";
-
-        [ObservableProperty]
-        private bool _isNewPasswordVisible;
-
-        [ObservableProperty]
-        private User? _editingUser;
-
-        [ObservableProperty]
-        private string _editUserEmail = "";
-
-        [ObservableProperty]
-        private string _editUserPhone = "";
-
-        [ObservableProperty]
-        private string _userStatusMessage = "";
-
-        [ObservableProperty]
-        private string _userStatusColor = "Green";
-
-        [ObservableProperty]
-        private string _modalErrorMessage = "";
-
-        [ObservableProperty]
-        private bool _isConfirmingDelete;
-
-        [ObservableProperty]
-        private string _deleteConfirmText = "";
-
+        [ObservableProperty] private bool _isConfirmingDelete;
+        [ObservableProperty] private string _deleteConfirmText = "";
         private object? _itemToDelete;
-
-        public string NewPasswordIcon => IsNewPasswordVisible ? "M11.9999 7.5C9.5146 7.5 7.49988 9.51472 7.49988 12C7.49988 14.4853 9.5146 16.5 11.9999 16.5C14.4852 16.5 16.4999 14.4853 16.4999 12C16.4999 9.51472 14.4852 7.5 11.9999 7.5ZM9.49988 12C9.49988 10.6193 10.6192 9.5 11.9999 9.5C13.3806 9.5 14.4999 10.6193 14.4999 12C14.4999 13.3807 13.3806 14.5 11.9999 14.5C10.6192 14.5 9.49988 13.3807 9.49988 12ZM11.9998 2.5C7.80917 2.5 4.80627 4.84327 2.90279 7.0685C1.94654 8.18638 1.24425 9.29981 0.780854 10.1325C0.548544 10.55 0.374643 10.8998 0.257542 11.1484C0.198955 11.2727 0.154474 11.372 0.123909 11.4419C0.108623 11.4769 0.0968071 11.5046 0.0884377 11.5245L0.0784618 11.5483L0.0754044 11.5557L0.0743572 11.5583L0.0739539 11.5593L-0.0742188 11.9233L0.0645713 12.291L0.0649583 12.292L0.0659593 12.2947L0.0688703 12.3023L0.0783443 12.3266C0.0862884 12.3469 0.0975008 12.3751 0.112024 12.4107C0.141064 12.482 0.183381 12.583 0.23932 12.7095C0.351123 12.9623 0.517779 13.318 0.742125 13.7424C1.1896 14.5889 1.87305 15.7209 2.8177 16.8577C4.70134 19.1243 7.7068 21.5 11.9998 21.5C16.2929 21.5 19.2983 19.1243 21.182 16.8577C22.1266 15.7209 22.8101 14.5889 23.2576 13.7424C23.4819 13.318 23.6486 12.9623 23.7604 12.7095C23.8163 12.583 23.8586 12.482 23.8877 12.4107C23.9022 12.3751 23.9134 12.3469 23.9213 12.3266L23.9308 12.3023L23.9337 12.2947L23.9347 12.292L23.9351 12.291L24.0739 11.9233L23.9257 11.5593L23.9243 11.5557L23.9212 11.5483L23.9112 11.5245C23.9029 11.5046 23.8911 11.4769 23.8758 11.4419C23.8452 11.372 23.8007 11.2727 23.7421 11.1484C23.625 10.8998 23.4511 10.55 23.2188 10.1325C22.7554 9.29981 22.0531 8.18638 21.0969 7.0685C19.1934 4.84327 16.1905 2.5 11.9998 2.5ZM22.9998 11.9371C23.9354 12.2902 23.9351 12.291 23.9351 12.291L22.9998 11.9371ZM23.9257 11.5593C23.9257 11.5593 23.926 11.5601 22.9998 11.9371L23.9257 11.5593ZM0.99984 11.9371C0.0736306 11.5601 0.0739539 11.5593 0.0739539 11.5593L0.99984 11.9371ZM0.0645713 12.291C0.0645713 12.291 0.0642597 12.2902 0.99984 11.9371L0.0645713 12.291ZM2.51028 12.8077C2.32519 12.4576 2.18591 12.1632 2.09065 11.9504C2.19077 11.7404 2.33642 11.4501 2.52847 11.105C2.94543 10.3558 3.57456 9.35995 4.4226 8.36857C6.12769 6.37527 8.62479 4.5 11.9998 4.5C15.3749 4.5 17.872 6.37527 19.5771 8.36857C20.4251 9.35995 21.0542 10.3558 21.4712 11.105C21.6633 11.4501 21.8089 11.7404 21.909 11.9504C21.8138 12.1632 21.6745 12.4576 21.4894 12.8077C21.0881 13.5667 20.4781 14.5754 19.6438 15.5794C17.9694 17.5942 15.4749 19.5 11.9998 19.5C8.52477 19.5 6.03023 17.5942 4.3559 15.5794C3.52156 14.5754 2.91153 13.5667 2.51028 12.8077Z" : "M23.7069 0.292893C24.0974 0.683417 24.0974 1.31658 23.7069 1.70711L18.9888 6.4252C18.9803 6.43399 18.9717 6.4426 18.9629 6.45102L6.42828 18.9857C6.41981 18.9945 6.41121 19.0031 6.40249 19.0115L1.70686 23.7071C1.31634 24.0976 0.683173 24.0976 0.292649 23.7071C-0.0978752 23.3166 -0.0978752 22.6834 0.292649 22.2929L4.2341 18.3514C2.91616 17.1406 1.94152 15.7855 1.27296 14.6799C0.867402 14.0092 0.568856 13.421 0.370367 12.9971C0.27101 12.785 0.196402 12.6133 0.145717 12.4922C0.120366 12.4317 0.100973 12.3838 0.0874364 12.3497L0.0715024 12.3091L0.0667999 12.2969L0.0652601 12.2928L0.0646926 12.2913C0.0646926 12.2913 0.0642597 12.2902 0.99984 11.9371L0.0739539 11.5593L0.0743572 11.5583L0.0754044 11.5557L0.0784618 11.5483L0.0884377 11.5245C0.0968071 11.5046 0.108623 11.4769 0.123909 11.4419C0.154474 11.372 0.198955 11.2727 0.257542 11.1484C0.374643 10.8998 0.548544 10.55 0.780854 10.1325C1.24425 9.29981 1.94654 8.18638 2.90279 7.0685C4.80627 4.84327 7.80917 2.5 11.9998 2.5C14.4524 2.5 16.5051 3.30553 18.1647 4.42081L22.2926 0.292893C22.6832 -0.0976311 23.3163 -0.0976311 23.7069 0.292893ZM9.67175 12.9138L12.9135 9.67199C12.6306 9.56087 12.3225 9.5 11.9998 9.5C10.619 9.5 9.49976 10.6193 9.49976 12C9.49976 12.3227 9.56062 12.6308 9.67175 12.9138ZM14.3954 8.19018C13.7018 7.75332 12.8799 7.5 11.9998 7.5C9.51447 7.5 7.49976 9.51472 7.49976 12C7.49976 12.8801 7.75308 13.702 8.18993 14.3956L5.64978 16.9358C4.48361 15.8793 3.60149 14.6655 2.98438 13.645C2.62121 13.0444 2.35534 12.5199 2.1816 12.1489C2.14775 12.0766 2.11745 12.0103 2.09065 11.9504C2.19078 11.7404 2.33642 11.4501 2.52847 11.105C2.94543 10.3558 3.57456 9.35995 4.4226 8.36856C6.12769 6.37527 8.62479 4.5 11.9998 4.5C13.8293 4.5 15.3947 5.04849 16.7183 5.8672L14.3954 8.19018ZM0.0739539 11.5593L-0.0742188 11.9233L0.0642597 12.2902L0.99984 11.9371C0.0736306 11.5601 0.0739539 11.5593 0.0739539 11.5593ZM20.6068 7.99677C21.0545 7.6733 21.6796 7.77395 22.0031 8.22159C22.6473 9.11312 23.1236 9.93792 23.44 10.542C23.5985 10.8445 23.7175 11.0931 23.7981 11.2688C23.8384 11.3567 23.8692 11.4264 23.8905 11.4757C23.9011 11.5004 23.9094 11.5199 23.9153 11.5341L23.9224 11.5512L23.9247 11.5567L23.9255 11.5586L23.9259 11.5598L22.9998 11.9371L23.9351 12.291L23.9347 12.292L23.9337 12.2947L23.9308 12.3023L23.9213 12.3266C23.9134 12.3469 23.9022 12.3751 23.8877 12.4107C23.8586 12.482 23.8163 12.583 23.7604 12.7095C23.6486 12.9623 23.4819 13.318 23.2576 13.7424C22.8101 14.5889 22.1266 15.7209 21.182 16.8577C19.2983 19.1243 16.2929 21.5 11.9998 21.5C11.1271 21.5 10.3029 21.4013 9.52735 21.2228C8.98913 21.099 8.65319 20.5623 8.77702 20.0241C8.90084 19.4859 9.43754 19.1499 9.97576 19.2737C10.6055 19.4186 11.2793 19.5 11.9998 19.5C15.4749 19.5 17.9694 17.5942 19.6438 15.5794C20.4781 14.5754 21.0881 13.5667 21.4894 12.8077C21.6745 12.4576 21.8138 12.1632 21.909 11.9504C21.8466 11.8195 21.7665 11.6573 21.6683 11.4699C21.3863 10.9316 20.959 10.1915 20.382 9.393C20.0585 8.94536 20.1592 8.32025 20.6068 7.99677ZM23.9351 12.291C23.9351 12.291 23.9354 12.2902 22.9998 11.9371C23.926 11.5601 23.9259 11.5598 23.9259 11.5598L24.0739 11.9233L23.9351 12.291Z";
 
         public AdminPanelViewModel(ApiService api)
         {
@@ -73,102 +44,34 @@ namespace BarberManager.ViewModels
         }
 
         [RelayCommand]
-        public void ToggleNewPasswordVisibility()
-        {
-            IsNewPasswordVisible = !IsNewPasswordVisible;
-            OnPropertyChanged(nameof(NewPasswordIcon));
-        }
-
-        [RelayCommand]
-        public async Task LoadDataAsync()
-        {
-            var barbers = await _api.GetAllBarbersAsync();
-            var users = await _api.GetAllUsersAsync();
-
-            Barbers.Clear();
-            foreach (var b in barbers) Barbers.Add(b);
-
-            Users.Clear();
-            foreach (var u in users) Users.Add(u);
-        }
-
-        [RelayCommand]
-        public void ShowDeleteConfirmation(object parameter)
-        {
-            _itemToDelete = parameter;
-            if (_itemToDelete is Barber b)
-                DeleteConfirmText = $"Biztosan törlöd a fodrászt: {b.Name}?";
-            else if (_itemToDelete is User u)
-                DeleteConfirmText = $"Biztosan törlöd a vendéget: {u.Name}?";
-
-            IsConfirmingDelete = true;
-        }
-
-        [RelayCommand]
-        public void CancelDelete()
-        {
-            _itemToDelete = null;
-            IsConfirmingDelete = false;
-        }
-
-        [RelayCommand]
-        public async Task ExecuteDeleteAsync()
-        {
-            if (_itemToDelete == null) return;
-
-            bool success = false;
-            if (_itemToDelete is Barber b)
-            {
-                success = await _api.DeleteBarberAsync(b.Id);
-                StatusMessage = success ? "Fodrász törölve!" : "Hiba a törlésnél!";
-            }
-            else if (_itemToDelete is User u)
-            {
-                success = await _api.DeleteUserAsync(u.Id);
-                UserStatusMessage = success ? "Vendég törölve!" : "Hiba a törlésnél!";
-                UserStatusColor = success ? "Green" : "Red";
-            }
-
-            IsConfirmingDelete = false;
-            _itemToDelete = null;
-            await LoadDataAsync();
-        }
-
-        [RelayCommand]
         public async Task RegisterBarberAsync()
         {
-            if (string.IsNullOrWhiteSpace(NewName) || string.IsNullOrWhiteSpace(NewEmail) || string.IsNullOrWhiteSpace(NewPassword))
+            StatusMessageColor = "Red";
+
+            string phoneToSave = NewPhone.Trim();
+            if (!string.IsNullOrEmpty(phoneToSave) && !phoneToSave.StartsWith("+")) phoneToSave = "+" + phoneToSave;
+
+            if (!ValidateInput(NewName, NewEmail, phoneToSave, NewPassword, out string err))
             {
-                StatusMessage = "Név, Email és Jelszó kötelező!";
+                StatusMessage = err;
                 return;
             }
 
-            var (success, msg) = await _api.RegisterBarberAsync(NewEmail, NewName, NewPassword, NewPhone, NewIsAdmin);
-            StatusMessage = msg;
+            var (success, msg) = await _api.RegisterBarberAsync(NewEmail, NewName, NewPassword, phoneToSave, NewIsAdmin);
+
             if (success)
             {
+                StatusMessage = "Az új barber regisztrációja sikeres!";
+                StatusMessageColor = "Green";
                 NewName = NewEmail = NewPhone = NewPassword = "";
                 NewIsAdmin = false;
                 await LoadDataAsync();
             }
-        }
-
-        [RelayCommand]
-        public void StartEditUser(object parameter)
-        {
-            if (parameter is User u)
+            else
             {
-                EditingUser = u;
-                EditUserEmail = u.Email;
-                EditUserPhone = u.PhoneNum;
-                ModalErrorMessage = "";
+                StatusMessage = "Hiba: " + msg;
+                StatusMessageColor = "Red";
             }
-        }
-
-        [RelayCommand]
-        public void CancelEditUser()
-        {
-            EditingUser = null;
         }
 
         [RelayCommand]
@@ -176,25 +79,103 @@ namespace BarberManager.ViewModels
         {
             if (EditingUser == null) return;
 
-            if (string.IsNullOrWhiteSpace(EditUserEmail) || string.IsNullOrWhiteSpace(EditUserPhone))
+            string phoneToSave = EditUserPhone.Trim();
+            if (!string.IsNullOrEmpty(phoneToSave) && !phoneToSave.StartsWith("+")) phoneToSave = "+" + phoneToSave;
+
+            if (!ValidateInput("Név", EditUserEmail, phoneToSave, "123456", out string err))
             {
-                ModalErrorMessage = "Email és telefonszám kötelező!";
+                ModalErrorMessage = err;
                 return;
             }
 
-            var (success, msg) = await _api.UpdateUserAdminAsync(EditingUser.Id, EditUserEmail, EditUserPhone);
-
+            var (success, msg) = await _api.UpdateUserAdminAsync(EditingUser.Id, EditUserEmail, phoneToSave);
             if (success)
             {
                 EditingUser = null;
-                UserStatusMessage = "Vendég adatai sikeresen frissítve!";
+                UserStatusMessage = "A vendég adatai sikeresen módosítva!";
                 UserStatusColor = "Green";
                 await LoadDataAsync();
             }
-            else
+            else ModalErrorMessage = "Nem sikerült menteni.";
+        }
+
+        private bool ValidateInput(string name, string email, string phone, string pass, out string error)
+        {
+            error = "";
+            if (string.IsNullOrWhiteSpace(name) || name.Length < 2)
             {
-                ModalErrorMessage = msg;
+                error = "Kérlek, adj meg egy nevet!";
+                return false;
+            }
+            if (string.IsNullOrWhiteSpace(email) || !email.Contains("@"))
+            {
+                error = "Érvénytelen e-mail cím!";
+                return false;
+            }
+            if (string.IsNullOrWhiteSpace(phone) || !phone.StartsWith("+") || phone.Length < 10)
+            {
+                error = "Telefonszám kötelező (+36...)!";
+                return false;
+            }
+            if (string.IsNullOrWhiteSpace(pass) || pass.Length < 6)
+            {
+                error = "A jelszó min. 6 karakter!";
+                return false;
+            }
+            return true;
+        }
+
+        [RelayCommand]
+        public void ShowDeleteConfirmation(object p)
+        {
+            _itemToDelete = p;
+            DeleteConfirmText = "Biztosan törlöd?";
+            IsConfirmingDelete = true;
+        }
+        [RelayCommand]
+        public void CancelDelete()
+        {
+            _itemToDelete = null;
+            IsConfirmingDelete = false;
+        }
+        [RelayCommand]
+        public async Task ExecuteDeleteAsync()
+        {
+            if (_itemToDelete is Barber b) await _api.DeleteBarberAsync(b.Id);
+            else if (_itemToDelete is User u) await _api.DeleteUserAsync(u.Id);
+            UserStatusMessage = "Törölve!";
+            UserStatusColor = "Green";
+            IsConfirmingDelete = false;
+            await LoadDataAsync();
+        }
+        [RelayCommand]
+        public void StartEditUser(object p)
+        {
+            if (p is User u)
+            {
+                EditingUser = u;
+                EditUserEmail = u.Email;
+                EditUserPhone = u.PhoneNum;
+                ModalErrorMessage = "";
             }
         }
+        [RelayCommand] public void CancelEditUser() => EditingUser = null;
+        [RelayCommand]
+        public async Task LoadDataAsync()
+        {
+            var bl = await _api.GetAllBarbersAsync();
+            var ul = await _api.GetAllUsersAsync();
+            Barbers.Clear();
+            foreach (var x in bl) Barbers.Add(x);
+            Users.Clear();
+            foreach (var x in ul) Users.Add(x);
+        }
+        [RelayCommand]
+        public void ToggleNewPasswordVisibility()
+        {
+            IsNewPasswordVisible = !IsNewPasswordVisible;
+            OnPropertyChanged(nameof(NewPasswordIcon));
+        }
+        public string NewPasswordIcon => IsNewPasswordVisible ? "M11.9999 7.5C9.5146 7.5 7.49988 9.51472 7.49988 12C7.49988 14.4853 9.5146 16.5 11.9999 16.5C14.4852 16.5 16.4999 14.4853 16.4999 12C16.4999 9.51472 14.4852 7.5 11.9999 7.5ZM9.49988 12C9.49988 10.6193 10.6192 9.5 11.9999 9.5C13.3806 9.5 14.4999 10.6193 14.4999 12C14.4999 13.3807 13.3806 14.5 11.9999 14.5C10.6192 14.5 9.49988 13.3807 9.49988 12ZM11.9998 2.5C7.80917 2.5 4.80627 4.84327 2.90279 7.0685C1.94654 8.18638 1.24425 9.29981 0.780854 10.1325C0.548544 10.55 0.374643 10.8998 0.257542 11.1484C0.198955 11.2727 0.154474 11.372 0.123909 11.4419C0.108623 11.4769 0.0968071 11.5046 0.0884377 11.5245L0.0784618 11.5483L0.0754044 11.5557L0.0743572 11.5583L0.0739539 11.5593L-0.0742188 11.9233L0.0645713 12.291L0.0649583 12.292L0.0659593 12.2947L0.0688703 12.3023L0.0783443 12.3266C0.0862884 12.3469 0.0975008 12.3751 0.112024 12.4107C0.141064 12.482 0.183381 12.583 0.23932 12.7095C0.351123 12.9623 0.517779 13.318 0.742125 13.7424C1.1896 14.5889 1.87305 15.7209 2.8177 16.8577C4.70134 19.1243 7.7068 21.5 11.9998 21.5C16.2929 21.5 19.2983 19.1243 21.182 16.8577C22.1266 15.7209 22.8101 14.5889 23.2576 13.7424C23.4819 13.318 23.6486 12.9623 23.7604 12.7095C23.8163 12.583 23.8586 12.482 23.8877 12.4107C23.9022 12.3751 23.9134 12.3469 23.9213 12.3266L23.9308 12.3023L23.9337 12.2947L23.9347 12.292L23.9351 12.291L24.0739 11.9233L23.9257 11.5593L23.9243 11.5557L23.9212 11.5483L23.9112 11.5245C23.9029 11.5046 23.8911 11.4769 23.8758 11.4419C23.8452 11.372 23.8007 11.2727 23.7421 11.1484C23.625 10.8998 23.4511 10.55 23.2188 10.1325C22.7554 9.29981 22.0531 8.18638 21.0969 7.0685C19.1934 4.84327 16.1905 2.5 11.9998 2.5ZM22.9998 11.9371C23.9354 12.2902 23.9351 12.291 23.9351 12.291L22.9998 11.9371ZM23.9257 11.5593C23.9257 11.5593 23.926 11.5601 22.9998 11.9371L23.9257 11.5593ZM0.99984 11.9371C0.0736306 11.5601 0.0739539 11.5593 0.0739539 11.5593L0.99984 11.9371ZM0.0645713 12.291C0.0645713 12.291 0.0642597 12.2902 0.99984 11.9371L0.0645713 12.291ZM2.51028 12.8077C2.32519 12.4576 2.18591 12.1632 2.09065 11.9504C2.19077 11.7404 2.33642 11.4501 2.52847 11.105C2.94543 10.3558 3.57456 9.35995 4.4226 8.36857C6.12769 6.37527 8.62479 4.5 11.9998 4.5C15.3749 4.5 17.872 6.37527 19.5771 8.36857C20.4251 9.35995 21.0542 10.3558 21.4712 11.105C21.6633 11.4501 21.8089 11.7404 21.909 11.9504C21.8138 12.1632 21.6745 12.4576 21.4894 12.8077C21.0881 13.5667 20.4781 14.5754 19.6438 15.5794C17.9694 17.5942 15.4749 19.5 11.9998 19.5C8.52477 19.5 6.03023 17.5942 4.3559 15.5794C3.52156 14.5754 2.91153 13.5667 2.51028 12.8077Z" : "M23.7069 0.292893C24.0974 0.683417 24.0974 1.31658 23.7069 1.70711L18.9888 6.4252C18.9803 6.43399 18.9717 6.4426 18.9629 6.45102L6.42828 18.9857C6.41981 18.9945 6.41121 19.0031 6.40249 19.0115L1.70686 23.7071C1.31634 24.0976 0.683173 24.0976 0.292649 23.7071C-0.0978752 23.3166 -0.0978752 22.6834 0.292649 22.2929L4.2341 18.3514C2.91616 17.1406 1.94152 15.7855 1.27296 14.6799C0.867402 14.0092 0.568856 13.421 0.370367 12.9971C0.27101 12.785 0.196402 12.6133 0.145717 12.4922C0.120366 12.4317 0.100973 12.3838 0.0874364 12.3497L0.0715024 12.3091L0.0667999 12.2969L0.0652601 12.2928L0.0646926 12.2913C0.0646926 12.2913 0.0642597 12.2902 0.99984 11.9371L0.0739539 11.5593L0.0743572 11.5583L0.0754044 11.5557L0.0784618 11.5483L0.0884377 11.5245C0.0968071 11.5046 0.108623 11.4769 0.123909 11.4419C0.154474 11.372 0.198955 11.2727 0.257542 11.1484C0.374643 10.8998 0.548544 10.55 0.780854 10.1325C1.24425 9.29981 1.94654 8.18638 2.90279 7.0685C4.80627 4.84327 7.80917 2.5 11.9998 2.5C14.4524 2.5 16.5051 3.30553 18.1647 4.42081L22.2926 0.292893C22.6832 -0.0976311 23.3163 -0.0976311 23.7069 0.292893ZM9.67175 12.9138L12.9135 9.67199C12.6306 9.56087 12.3225 9.5 11.9998 9.5C10.619 9.5 9.49976 10.6193 9.49976 12C9.49976 12.3227 9.56062 12.6308 9.67175 12.9138ZM14.3954 8.19018C13.7018 7.75332 12.8799 7.5 11.9998 7.5C9.51447 7.5 7.49976 9.51472 7.49976 12C7.49976 12.8801 7.75308 13.702 8.18993 14.3956L5.64978 16.9358C4.48361 15.8793 3.60149 14.6655 2.98438 13.645C2.62121 13.0444 2.35534 12.5199 2.1816 12.1489C2.14775 12.0766 2.11745 12.0103 2.09065 11.9504C2.19078 11.7404 2.33642 11.4501 2.52847 11.105C2.94543 10.3558 3.57456 9.35995 4.4226 8.36856C6.12769 6.37527 8.62479 4.5 11.9998 4.5C13.8293 4.5 15.3947 5.04849 16.7183 5.8672L14.3954 8.19018ZM0.0739539 11.5593L-0.0742188 11.9233L0.0642597 12.2902L0.99984 11.9371C0.0736306 11.5601 0.0739539 11.5593 0.0739539 11.5593ZM20.6068 7.99677C21.0545 7.6733 21.6796 7.77395 22.0031 8.22159C22.6473 9.11312 23.1236 9.93792 23.44 10.542C23.5985 10.8445 23.7175 11.0931 23.7981 11.2688C23.8384 11.3567 23.8692 11.4264 23.8905 11.4757C23.9011 11.5004 23.9094 11.5199 23.9153 11.5341L23.9224 11.5512L23.9247 11.5567L23.9255 11.5586L23.9259 11.5598L22.9998 11.9371L23.9351 12.291L23.9347 12.292L23.9337 12.2947L23.9308 12.3023L23.9213 12.3266C23.9134 12.3469 23.9022 12.3751 23.8877 12.4107C23.8586 12.482 23.8163 12.583 23.7604 12.7095C23.6486 12.9623 23.4819 13.318 23.2576 13.7424C22.8101 14.5889 22.1266 15.7209 21.182 16.8577C19.2983 19.1243 16.2929 21.5 11.9998 21.5C11.1271 21.5 10.3029 21.4013 9.52735 21.2228C8.98913 21.099 8.65319 20.5623 8.77702 20.0241C8.90084 19.4859 9.43754 19.1499 9.97576 19.2737C10.6055 19.4186 11.2793 19.5 11.9998 19.5C15.4749 19.5 17.9694 17.5942 19.6438 15.5794C20.4781 14.5754 21.0881 13.5667 21.4894 12.8077C21.6745 12.4576 21.8138 12.1632 21.909 11.9504C21.8466 11.8195 21.7665 11.6573 21.6683 11.4699C21.3863 10.9316 20.959 10.1915 20.382 9.393C20.0585 8.94536 20.1592 8.32025 20.6068 7.99677ZM23.9351 12.291C23.9351 12.291 23.9354 12.2902 22.9998 11.9371C23.926 11.5601 23.9259 11.5598 23.9259 11.5598L24.0739 11.9233L23.9351 12.291Z";
     }
 }

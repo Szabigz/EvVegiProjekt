@@ -58,13 +58,30 @@ namespace BarberManager.ViewModels
             IsLoading = false;
         }
 
-       
+
         [RelayCommand]
         public async Task SaveAll()
         {
+            StatusMessage = "";
+
+            foreach (var day in Days)
+            {
+                if (!TimeSpan.TryParse(day.Start, out var s) || !TimeSpan.TryParse(day.End, out var e))
+                {
+                    StatusMessage = "HH:mm formátumot használj (pl. 08:30)!";
+                    return;
+                }
+
+                if (s >= e)
+                {
+                    StatusMessage = $"{day.DayName}: A kezdésnek előbb kell lennie a végzésnél!";
+                    return;
+                }
+            }
+
             IsLoading = true;
             StatusMessage = "Mentés folyamatban...";
-            int successCount = 0;
+            bool allOk = true;
 
             foreach (var day in Days)
             {
@@ -77,10 +94,10 @@ namespace BarberManager.ViewModels
                 };
 
                 var success = await _api.SaveWorkHourAsync(wh);
-                if (success) successCount++;
+                if (!success) allOk = false;
             }
 
-            StatusMessage = $"Mentés kész! ({successCount}/6 nap sikerült)";
+            StatusMessage = allOk ? "Minden változtatást sikeresen mentettünk!" : "Néhány napot nem sikerült menteni.";
             IsLoading = false;
             await LoadData();
         }

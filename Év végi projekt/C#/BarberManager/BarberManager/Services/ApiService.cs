@@ -30,7 +30,6 @@ namespace BarberManager.Services
             options.Converters.Add(new LocalTimeConverter());
             options.Converters.Add(new IntToBoolConverter());
             options.Converters.Add(new NumberToStringConverter());
-            options.NumberHandling = JsonNumberHandling.AllowReadingFromString | JsonNumberHandling.WriteAsString;
             return options;
         }
 
@@ -38,6 +37,23 @@ namespace BarberManager.Services
         {
             if (!string.IsNullOrEmpty(_jwtToken))
                 _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", _jwtToken);
+        }
+        private async Task<string> GetErrorMessageAsync(HttpResponseMessage response)
+        {
+            try
+            {
+                var content = await response.Content.ReadAsStringAsync();
+                using var doc = JsonDocument.Parse(content);
+                if (doc.RootElement.TryGetProperty("message", out var msgElement))
+                {
+                    return msgElement.GetString() ?? "Ismeretlen hiba";
+                }
+                return "Hiba történt a művelet során";
+            }
+            catch
+            {
+                return "Szerverhiba történt";
+            }
         }
 
         // --- LOGIN ÉS REGISZTRÁCIÓ ---
@@ -254,12 +270,11 @@ namespace BarberManager.Services
             SetAuthorizationHeader();
             try
             {
-                return (await _httpClient.PostAsJsonAsync("/servicesPost", s)).IsSuccessStatusCode ? (true, "Sikeres") : (false, "Hiba");
+                var res = await _httpClient.PostAsJsonAsync("/servicesPost", s);
+                if (res.IsSuccessStatusCode) return (true, "Sikeres");
+                return (false, await GetErrorMessageAsync(res)); 
             }
-            catch
-            {
-                return (false, "Hiba");
-            }
+            catch { return (false, "Hálózati hiba"); }
         }
 
         public async Task<(bool IsSuccess, string Message)> UpdateServiceAsync(Service s)
@@ -267,12 +282,11 @@ namespace BarberManager.Services
             SetAuthorizationHeader();
             try
             {
-                return (await _httpClient.PutAsJsonAsync($"/servicesUpdate/{s.Id}", s)).IsSuccessStatusCode ? (true, "Sikeres") : (false, "Hiba");
+                var res = await _httpClient.PutAsJsonAsync($"/servicesUpdate/{s.Id}", s);
+                if (res.IsSuccessStatusCode) return (true, "Sikeres");
+                return (false, await GetErrorMessageAsync(res));
             }
-            catch
-            {
-                return (false, "Hiba");
-            }
+            catch { return (false, "Hálózati hiba"); }
         }
 
         public async Task<(bool IsSuccess, string Message)> DeleteServiceAsync(int id)
@@ -426,7 +440,6 @@ namespace BarberManager.Services
         public override void Write(Utf8JsonWriter writer, bool value, JsonSerializerOptions options) => writer.WriteBooleanValue(value);
     }
 
-    // ha string helyett int jon akkor ez intet csinal
     public class NumberToStringConverter : JsonConverter<string>
     {
         public override string Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
@@ -435,7 +448,6 @@ namespace BarberManager.Services
             if (reader.TokenType == JsonTokenType.String) return reader.GetString() ?? string.Empty;
             return string.Empty;
         }
-
         public override void Write(Utf8JsonWriter writer, string value, JsonSerializerOptions options) => writer.WriteStringValue(value);
     }
 }
