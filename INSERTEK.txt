@@ -1,0 +1,33 @@
+Barberek:
+INSERT INTO barbers (id, name, phoneNum, email, password, description, profile_image, isAdmin)
+VALUES
+(2, 'Beres Gergő', '+36301234567', 'beresger@barber.hu', '123456', 'Tapasztalt barber, modern és klasszikus stílusok mestere.', NULL, 0),
+(3, 'Kiss Péter', '+36301234567', 'kisp@barber.hu', '987654', 'Tapasztalt barber, modern és klasszikus stílusok mestere.', NULL, 0);
+
+Szolgaltatások:
+INSERT INTO services (barberID, name, description, duration_minutes, price) VALUES
+(2, 'Hajvágás', 'Klasszikus vagy modern stílus', 45, 7200),
+(2, 'Hajmosás & Formázás', 'Alapos ápolás', 15, 1000),
+(2, 'Szakállvágás', 'Precíz formázás', 30, 4490),
+(2, 'Borotválás', 'Hagyományos módszerrel', 30, 4490),
+(2, 'Szakállápolás', 'Prémium termékekkel', 20, 2000),
+(2, 'Haj - Szakáll vágás', 'Hajvágás + Szakállvágás', 60, 10200),
+(3, 'Hajvágás', 'Klasszikus vagy modern stílus', 45, 7200),
+(3, 'Hajmosás & Formázás', 'Alapos ápolás', 15, 1000),
+(3, 'Szakállvágás', 'Precíz formázás', 30, 4490),
+(3, 'Borotválás', 'Hagyományos módszerrel', 30, 4490),
+(3, 'Szakállápolás', 'Prémium termékekkel', 20, 2000),
+(3, 'Haj - Szakáll vágás', 'Hajvágás + Szakállvágás', 60, 10200);
+
+Munkaidők:
+INSERT INTO workhours (barberID, dayOfWeek, start_time, end_time) VALUES
+(2, 1, '09:00:00', '19:00:00'),
+(2, 2, '09:00:00', '19:00:00'),
+(2, 3, '09:30:00', '19:30:00'),
+(2, 4, '10:00:00', '20:00:00'),
+(2, 5, '10:00:00', '20:00:00'),
+(2, 6, '10:00:00', '19:00:00'),
+(3, 1, '09:00:00', '19:00:00'),
+(3, 2, '09:00:00', '19:00:00'),
+(3, 4, '10:00:00', '20:00:00'),
+(3, 6, '10:00:00', '19:00:00');
