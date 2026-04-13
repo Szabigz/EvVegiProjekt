@@ -8,17 +8,6 @@ document.addEventListener("DOMContentLoaded", () => {
     const switchLink = document.getElementById("switchToRegister")
     const switchText=document.getElementById("switch")
     const profileBtn = document.querySelector(".profile-btn");
-    const phoneInput = document.getElementById("phoneNumInput");
-
-    phoneInput.addEventListener("input", (e) => {
-        let value = e.target.value
-        
-        if (value.length > 0 && !value.startsWith('+')) {
-            value = '+' + value.replace(/\+/g, '')
-        }
-        
-        e.target.value = value.charAt(0) + value.slice(1).replace(/[^0-9]/g, '');
-    })
     
     /*Profil gomb*/
     profileBtn.addEventListener("click",(e)=>{

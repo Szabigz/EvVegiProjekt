@@ -189,6 +189,7 @@ router.put('/userUpdate/:id', Auth(), async (req, res) => {
         email,
         name
     } = req.body
+
     try {
         const Id = req.params.id
         if (isNaN(Id)) return res.status(400).json({
@@ -210,11 +211,11 @@ router.put('/userUpdate/:id', Auth(), async (req, res) => {
                 message: "Forbidden"
             })
         }
+
         const oneUser = await dbHandler.user.findOne({
-            where: {
-                id: Id
-            }
+            where: { id: Id }
         })
+
         if (!oneUser) return res.status(404).json({
             message: "Nincs ilyen felhasználó"
         })
@@ -240,13 +241,13 @@ router.put('/userUpdate/:id', Auth(), async (req, res) => {
         if (name) updateData.name = name
 
         await dbHandler.user.update(updateData, {
-            where: {
-                id: Id
-            }
+            where: { id: Id }
         })
+
         res.json({
             message: 'Sikeres módosítás'
         })
+
     } catch (error) {
         res.status(500).json({
             message: 'Szerverhiba'

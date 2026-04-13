@@ -39,6 +39,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     /*Kijelentkes gomb*/
     document.getElementById('logoutBtn').addEventListener('click', () => {
         sessionStorage.removeItem('token')
+        showToast("Kijelentkezve", "success")
         setTimeout(() => {
             window.location.href = "/"
         }, 1500)
@@ -134,18 +135,12 @@ async function saveUpdate(type) {
     const token = sessionStorage.getItem('token')
     let bodyData = {}
     if (type == 'phone') {
-        const val = document.getElementById('input-phone').value;
-        
-        // Ellenőrzés
-        if (!val.startsWith('+') || isNaN(val.slice(1)) || val.length < 10) {
-            return showToast("Helyes formátum: +36201234567", "error");
-        }
-        
-        bodyData.phoneNum = val;
-    } 
-    else {
+        bodyData.phoneNum = document.getElementById('input-phone').value
+    } else {
         bodyData.password = document.getElementById('input-password').value
-        if (!bodyData.password) return showToast("Adj meg egy új jelszót!","success")
+        if (!bodyData.password || bodyData.password.length < 6) {
+            return showToast("A jelszó legalább 6 karakter legyen!", "error")
+        }
     }
 
     try {
@@ -161,15 +156,16 @@ async function saveUpdate(type) {
         const resData = await response.json()
 
         if (response.ok) {
-            showToast("Sikeres módosítás!","success")
+            showToast("Sikeres módosítás!", "success")
             setTimeout(() => {
                 location.reload()
             }, 2000)
         } else {
-            showToast("Hiba: " + resData.message,"error")
+            showToast(resData.message, "error")
         }
     } catch (error) {
         console.error("Hiba a küldéskor:", error)
+        showToast("Szerver hiba történt!", "error")
     }
 }
 
