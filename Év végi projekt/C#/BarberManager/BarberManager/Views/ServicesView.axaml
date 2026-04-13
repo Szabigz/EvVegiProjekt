@@ -57,19 +57,20 @@
 			<StackPanel Spacing="10">
 				<TextBlock Text="Szolgáltatás mentése" FontSize="20" FontWeight="Bold" HorizontalAlignment="Center" Margin="0,0,0,10"/>
 				<TextBlock Text="{Binding ErrorMessage}" Foreground="Red" FontSize="12" HorizontalAlignment="Center" IsVisible="{Binding ErrorMessage, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"/>
-				<TextBlock Text="Szolgáltatás neve" FontWeight="SemiBold"/>
+                <TextBlock Text="Szolgáltatás neve" FontWeight="SemiBold"/>
 				<TextBox Text="{Binding SelectedService.Name}" Watermark="Pl.: Férfi Hajvágás"/>
-				<TextBlock Text="Rövid leírás" FontWeight="SemiBold"/>
+                <TextBlock Text="Rövid leírás" FontWeight="SemiBold"/>
 				<TextBox Text="{Binding SelectedService.Description}" Watermark="Milyen szolgáltatás ez?" Height="60" TextWrapping="Wrap" AcceptsReturn="True"/>
-				<Grid ColumnDefinitions="*, *">
+                <Grid ColumnDefinitions="*, *">
 					<StackPanel Grid.Column="0" Margin="0,0,5,0">
 						<TextBlock Text="Időtartam (perc)" FontWeight="SemiBold"/>
-						<TextBox Text="{Binding SelectedService.DurationMinutes}" Watermark="30"/>
-						<TextBlock Text="min. 30 perc" FontSize="10" Foreground="Gray"/>
+						<TextBox Text="{Binding DurationInput}" Watermark="30"/>
+						<TextBlock Text="30 - 60 perc" FontSize="10" Foreground="Gray"/>
 					</StackPanel>
 					<StackPanel Grid.Column="1" Margin="5,0,0,0">
 						<TextBlock Text="Ár (Ft)" FontWeight="SemiBold"/>
-						<TextBox Text="{Binding SelectedService.Price}" Watermark="6000"/>
+						<TextBox Text="{Binding PriceInput}" Watermark="6000"/>
+                        <TextBlock Text="Csak számot adj meg!" FontSize="10" Foreground="Gray"/>
 					</StackPanel>
 				</Grid>
 				<Grid ColumnDefinitions="*, *" Margin="0,15,0,0">

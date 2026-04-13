@@ -134,26 +134,9 @@ function editField(type) {
 async function saveUpdate(type) {
     const token = sessionStorage.getItem('token')
     let bodyData = {}
-
     if (type == 'phone') {
-        const val = document.getElementById('input-phone').value.trim()
-        
-        const startsWithPlus = val.startsWith('+')
-        const startsWith06 = val.startsWith('06')
-
-        if (!startsWithPlus && !startsWith06) {
-            return showToast("A telefonszám + vagy 06 jellel kezdődjön!", "error")
-        }
-
-        const digitsToCheck = startsWithPlus ? val.slice(1) : val
-        
-        if (isNaN(digitsToCheck) || val.length < 10) {
-            return showToast("Érvénytelen vagy túl rövid telefonszám!", "error")
-        }
-        
-        bodyData.phoneNum = val
-    } 
-    else {
+        bodyData.phoneNum = document.getElementById('input-phone').value
+    } else {
         bodyData.password = document.getElementById('input-password').value
         if (!bodyData.password || bodyData.password.length < 6) {
             return showToast("A jelszó legalább 6 karakter legyen!", "error")

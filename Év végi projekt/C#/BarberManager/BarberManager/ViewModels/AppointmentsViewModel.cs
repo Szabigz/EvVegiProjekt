@@ -76,8 +76,20 @@ namespace BarberManager.ViewModels
         {
             var users = await _api.GetAllUsersAsync();
             var services = await _api.GetServicesAsync();
-            AllUsers = new ObservableCollection<User>(users);
+
+            var userList = new ObservableCollection<User>();
+            userList.Add(new User { Id = 0, Name = "Sétáló / Nem regisztrált vendég", Email = "-" });
+
+            foreach (var u in users)
+            {
+                userList.Add(u);
+            }
+            AllUsers = userList;
             AllServices = new ObservableCollection<Service>(services);
+            if (AllUsers.Count > 0)
+            {
+                NewSelectedUser = AllUsers[0];
+            }
         }
 
         public async Task LoadData()
@@ -116,12 +128,16 @@ namespace BarberManager.ViewModels
             var barber = await _api.GetBarberInfoAsync();
             if (barber == null)
                 return;
-            var slots =
-                await _api.GetAvailableSlotsAsync(barber.Id, NewDate.DateTime);
+
+            var slots = await _api.GetAvailableSlotsAsync(barber.Id, NewDate.DateTime);
             foreach (var slot in slots)
+            {
                 AvailableTimeSlots.Add(slot.ToString("HH:mm"));
+            }
             if (AvailableTimeSlots.Count > 0)
+            {
                 NewTime = AvailableTimeSlots[0];
+            }
         }
 
         [RelayCommand]
@@ -149,20 +165,22 @@ namespace BarberManager.ViewModels
                 var timeParts = NewTime.Split(':');
                 int hour = int.Parse(timeParts[0]);
                 int min = int.Parse(timeParts[1]);
-                DateTime start = new DateTime(NewDate.Year, NewDate.Month, NewDate.Day,
-                                              hour, min, 0);
-
+                DateTime start = new DateTime(NewDate.Year, NewDate.Month, NewDate.Day, hour, min, 0);
                 DateTime end = start.AddHours(1);
 
-                var res = await _api.PostAppointmentAsync(
-                    NewSelectedService.Id, NewSelectedUser?.Id, start, end, NewComment);
+                int? userIdToSend = (NewSelectedUser != null && NewSelectedUser.Id != 0) ? NewSelectedUser.Id : (int?)null;
+
+                var res = await _api.PostAppointmentAsync(NewSelectedService.Id, userIdToSend, start, end, NewComment);
+
                 if (res.IsSuccess)
                 {
                     IsAddingAppointment = false;
                     await LoadData();
                 }
                 else
+                {
                     AddErrorMessage = res.Message;
+                }
             }
             catch
             {
@@ -178,7 +196,9 @@ namespace BarberManager.ViewModels
         public async Task MarkAsDone(AppointmentCard app)
         {
             if (await _api.UpdateAppointmentStatusAsync(app.Id, "completed"))
+            {
                 await LoadData();
+            }
         }
         [RelayCommand]
         public void ViewDetails(AppointmentCard app)
@@ -190,9 +210,23 @@ namespace BarberManager.ViewModels
             IsViewingDetails = true;
         }
         [RelayCommand]
-        public void CloseDetails() => IsViewingDetails = false;
+        public void CloseDetails()
+        {
+            IsViewingDetails = false;
+        }
         [RelayCommand]
-        public void CloseAddPanel() => IsAddingAppointment = false;
+        public void CloseAddPanel()
+        {
+            IsAddingAppointment = false;
+        }
+
+        [RelayCommand]
+        public async Task JumpToToday()
+        {
+            CurrentMonday = GetMonday(DateTime.Today);
+            await LoadData();
+        }
+
         [RelayCommand]
         public async Task NextWeek()
         {
@@ -210,12 +244,11 @@ namespace BarberManager.ViewModels
         {
             if (SelectedAppointment == null)
                 return;
-            bool success =
-                (SelectedAppointment.Status == "canceled" ||
-                 SelectedAppointment.Status == "completed")
+
+            bool success = (SelectedAppointment.Status == "canceled" || SelectedAppointment.Status == "completed")
                     ? await _api.CancelAppointmentAsync(SelectedAppointment.Id)
-                    : await _api.UpdateAppointmentStatusAsync(SelectedAppointment.Id,
-                                                              "canceled");
+                    : await _api.UpdateAppointmentStatusAsync(SelectedAppointment.Id, "canceled");
+
             if (success)
             {
                 IsViewingDetails = false;

@@ -19,7 +19,8 @@ namespace BarberManager.Services
 
         public ApiService()
         {
-            BaseUrl = "https://api.slickbarber.hu";
+            //BaseUrl = "https://api.slickbarber.hu";
+            BaseUrl = "http://127.0.0.1:3000";
             _httpClient = new HttpClient { BaseAddress = new Uri(BaseUrl) };
         }
 
@@ -29,7 +30,6 @@ namespace BarberManager.Services
             options.Converters.Add(new LocalTimeConverter());
             options.Converters.Add(new IntToBoolConverter());
             options.Converters.Add(new NumberToStringConverter());
-            options.NumberHandling = JsonNumberHandling.AllowReadingFromString | JsonNumberHandling.WriteAsString;
             return options;
         }
 
@@ -37,6 +37,23 @@ namespace BarberManager.Services
         {
             if (!string.IsNullOrEmpty(_jwtToken))
                 _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", _jwtToken);
+        }
+        private async Task<string> GetErrorMessageAsync(HttpResponseMessage response)
+        {
+            try
+            {
+                var content = await response.Content.ReadAsStringAsync();
+                using var doc = JsonDocument.Parse(content);
+                if (doc.RootElement.TryGetProperty("message", out var msgElement))
+                {
+                    return msgElement.GetString() ?? "Ismeretlen hiba";
+                }
+                return "Hiba történt a művelet során";
+            }
+            catch
+            {
+                return "Szerverhiba történt";
+            }
         }
 
         // --- LOGIN ÉS REGISZTRÁCIÓ ---
@@ -54,11 +71,11 @@ namespace BarberManager.Services
             }
         }
 
-        public async Task<(bool IsSuccess, string Message)> LoginBarberAsync(string email, string name, string password)
+        public async Task<(bool IsSuccess, string Message)> LoginBarberAsync(string email, string password)
         {
             try
             {
-                var res = await _httpClient.PostAsJsonAsync("/barberLogin", new { email, name, password });
+                var res = await _httpClient.PostAsJsonAsync("/barberLogin", new { email, password });
                 var content = await res.Content.ReadAsStringAsync();
                 var result = JsonSerializer.Deserialize<LoginResponse>(content, GetJsonOptions());
 
@@ -105,7 +122,7 @@ namespace BarberManager.Services
             SetAuthorizationHeader();
             var data = new Dictionary<string, object> {
                 { "name", name },
-                { "phoneNum", phoneNum } 
+                { "phoneNum", phoneNum }
             };
             if (!string.IsNullOrEmpty(password))
                 data.Add("password", password);
@@ -158,6 +175,12 @@ namespace BarberManager.Services
             try
             {
                 var res = await _httpClient.GetAsync("/usersAll");
+
+                if (!res.IsSuccessStatusCode)
+                {
+                    return new List<User>();
+                }
+
                 var content = await res.Content.ReadAsStringAsync();
                 return JsonSerializer.Deserialize<List<User>>(content, GetJsonOptions()) ?? new List<User>();
             }
@@ -179,6 +202,22 @@ namespace BarberManager.Services
             {
                 return false;
             }
+        }
+
+        public async Task<(bool IsSuccess, string Message)> UpdateUserAdminAsync(int id, string email, string phoneNum)
+        {
+            SetAuthorizationHeader();
+            var data = new { email = email, phoneNum = phoneNum };
+            try
+            {
+                var res = await _httpClient.PutAsJsonAsync($"/userUpdate/{id}", data);
+                if (res.IsSuccessStatusCode)
+                {
+                    return (true, "Sikeres mentés!");
+                }
+                return (false, "Hiba a mentés során!");
+            }
+            catch { return (false, "Hálózati hiba"); }
         }
 
         public async Task<List<LogEntry>> GetAllLogsAsync()
@@ -231,12 +270,11 @@ namespace BarberManager.Services
             SetAuthorizationHeader();
             try
             {
-                return (await _httpClient.PostAsJsonAsync("/servicesPost", s)).IsSuccessStatusCode ? (true, "Sikeres") : (false, "Hiba");
+                var res = await _httpClient.PostAsJsonAsync("/servicesPost", s);
+                if (res.IsSuccessStatusCode) return (true, "Sikeres");
+                return (false, await GetErrorMessageAsync(res)); 
             }
-            catch
-            {
-                return (false, "Hiba");
-            }
+            catch { return (false, "Hálózati hiba"); }
         }
 
         public async Task<(bool IsSuccess, string Message)> UpdateServiceAsync(Service s)
@@ -244,12 +282,11 @@ namespace BarberManager.Services
             SetAuthorizationHeader();
             try
             {
-                return (await _httpClient.PutAsJsonAsync($"/servicesUpdate/{s.Id}", s)).IsSuccessStatusCode ? (true, "Sikeres") : (false, "Hiba");
+                var res = await _httpClient.PutAsJsonAsync($"/servicesUpdate/{s.Id}", s);
+                if (res.IsSuccessStatusCode) return (true, "Sikeres");
+                return (false, await GetErrorMessageAsync(res));
             }
-            catch
-            {
-                return (false, "Hiba");
-            }
+            catch { return (false, "Hálózati hiba"); }
         }
 
         public async Task<(bool IsSuccess, string Message)> DeleteServiceAsync(int id)
@@ -392,7 +429,7 @@ namespace BarberManager.Services
             if (reader.TokenType == JsonTokenType.True)
                 return true;
             if (reader.TokenType == JsonTokenType.False)
-                return false;
+            return false;
 
             if (reader.TokenType == JsonTokenType.Number)
                 return reader.GetInt32() == 1;
@@ -403,22 +440,14 @@ namespace BarberManager.Services
         public override void Write(Utf8JsonWriter writer, bool value, JsonSerializerOptions options) => writer.WriteBooleanValue(value);
     }
 
-    // ha string helyett int jon akkor ez intet csinal
     public class NumberToStringConverter : JsonConverter<string>
     {
         public override string Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
         {
-            // int -> string
-            if (reader.TokenType == JsonTokenType.Number)
-                return reader.GetInt64().ToString();
-
-            // string -> string
-            if (reader.TokenType == JsonTokenType.String)
-                return reader.GetString() ?? string.Empty;
-
+            if (reader.TokenType == JsonTokenType.Number) return reader.GetInt64().ToString();
+            if (reader.TokenType == JsonTokenType.String) return reader.GetString() ?? string.Empty;
             return string.Empty;
         }
-
         public override void Write(Utf8JsonWriter writer, string value, JsonSerializerOptions options) => writer.WriteStringValue(value);
     }
 }

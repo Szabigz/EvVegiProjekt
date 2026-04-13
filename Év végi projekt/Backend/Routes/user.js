@@ -1,6 +1,11 @@
 const express = require('express')
 const router = express.Router()
-const { Auth, AuthUser, AuthBarber, AuthAdmin } = require('../Middleware/Auth')
+const {
+    Auth,
+    AuthUser,
+    AuthBarber,
+    AuthAdmin
+} = require('../Middleware/Auth')
 
 const bcrypt = require("bcrypt")
 const dbHandler = require('../dbHandler')
@@ -17,7 +22,7 @@ router.get("/userGet", AuthUser(), async (req, res) => {
     }))
 })
 
-router.get("/usersAll", AuthAdmin(), async (req, res) => {
+router.get("/usersAll", AuthBarber(), async (req, res) => {
     try {
         const users = await dbHandler.user.findAll({
             attributes: ['id', 'name', 'email', 'phoneNum']
@@ -35,23 +40,23 @@ router.delete("/userDelete/:id", Auth(), async (req, res) => {
         const Id = parseInt(req.params.id)
         if (isNaN(Id)) return res.status(400).json({
             message: "Invalid ID"
-        });
+        })
         const oneUser = await dbHandler.user.findOne({
             where: {
                 id: Id
             }
-        });
+        })
         if (!oneUser) return res.status(404).json({
             message: "Nincs ilyen felhasználó"
         })
 
-        const requester = await dbHandler.barber.findByPk(req.uid);
-        const isAdmin = requester && requester.isAdmin;
+        const requester = await dbHandler.barber.findByPk(req.uid)
+        const isAdmin = requester && requester.isAdmin
 
         if (!isAdmin && Number(req.uid) !== Number(Id)) {
             return res.status(403).json({
                 message: "Nincs jogosultságod más fiókját törölni"
-            });
+            })
         }
 
 
@@ -62,23 +67,23 @@ router.delete("/userDelete/:id", Auth(), async (req, res) => {
                 userID: Id,
                 status: 'booked'
             }
-        });
+        })
 
         await dbHandler.user.destroy({
             where: {
                 id: Id
             }
-        });
+        })
 
         return res.status(200).json({
             message: "Sikeres törlés, az időpontok lemondva"
-        });
+        })
     } catch (err) {
         return res.status(500).json({
             message: "Szerverhiba"
-        });
+        })
     }
-});
+})
 
 router.post("/userReg", async (req, res) => {
     const {
@@ -92,21 +97,29 @@ router.post("/userReg", async (req, res) => {
     })
 
     if (!email.includes("@")) {
-    return res.status(400).json({ message: "Invalid email" })
+        return res.status(400).json({
+            message: "Invalid email"
+        })
     }
 
     if (name.length < 2) {
-    return res.status(400).json({ message: "Name too short" })
+        return res.status(400).json({
+            message: "Name too short"
+        })
     }
 
     if (password.length < 6) {
-    return res.status(400).json({ message: "Weak password" })
+        return res.status(400).json({
+            message: "Weak password"
+        })
     }
 
-    if (phoneNum.length < 6) {
-    return res.status(400).json({ message: "Invalid phone number" })
+    if (!isValidHungarianPhone(phoneNum)) {
+        return res.status(400).json({
+            message: "Érvénytelen formátum! (Példa: +36201234567)"
+        })
     }
-    
+
     try {
         const oneUser = await dbHandler.user.findOne({
             where: {
@@ -169,7 +182,7 @@ router.post('/userLogin', async (req, res) => {
     }
 })
 
-router.put('/userUpdate/:id', AuthUser(), async (req, res) => {
+router.put('/userUpdate/:id', Auth(), async (req, res) => {
     const {
         password,
         phoneNum,
@@ -183,8 +196,20 @@ router.put('/userUpdate/:id', AuthUser(), async (req, res) => {
             message: "Invalid ID"
         })
 
-        if (Number(req.uid) != Number(Id)) {
-            return res.status(403).json({ message: "Forbidden" }); 
+        let isAllowed = false
+        if (req.role === 'user' && Number(req.uid) === Number(Id)) {
+            isAllowed = true
+        } else if (req.role === 'barber') {
+            const requester = await dbHandler.barber.findByPk(req.uid)
+            if (requester && requester.isAdmin) {
+                isAllowed = true
+            }
+        }
+
+        if (!isAllowed) {
+            return res.status(403).json({
+                message: "Forbidden"
+            })
         }
 
         const oneUser = await dbHandler.user.findOne({
@@ -194,45 +219,33 @@ router.put('/userUpdate/:id', AuthUser(), async (req, res) => {
         if (!oneUser) return res.status(404).json({
             message: "Nincs ilyen felhasználó"
         })
+        if (!name && !email && !password && !phoneNum) return res.status(400).json({
+            message: "Nincs módosítandó adat"
+        })
 
-        if (!name && !email && !password && !phoneNum) {
+        if (password && password.length < 6) {
             return res.status(400).json({
-                message: "Nincs módosítandó adat"
+                message: "Weak password"
             })
         }
 
-        let updateData = {};
-
-        if (password) {
-            if (password.length < 6) {
-                return res.status(400).json({ message: "A jelszó túl rövid (min 6 karakter)!" })
-            }
-            updateData.password = await bcrypt.hash(password, 9)
+        if (phoneNum && !isValidHungarianPhone(phoneNum)) {
+            return res.status(400).json({
+                message: "Érvénytelen formátum! (Példa: +36201234567)"
+            })
         }
-
-        if (phoneNum) {
-            const trimmedPhone = phoneNum.trim()
-            const startsWithPlus = trimmedPhone.startsWith('+')
-            const startsWith06 = trimmedPhone.startsWith('06')
-
-            if (!startsWithPlus && !startsWith06) {
-                return res.status(400).json({ message: "A telefonszám + vagy 06 jellel kell kezdődjön!" })
-            }
-
-            const digitsOnly = startsWithPlus ? trimmedPhone.slice(1) : trimmedPhone
-            if (!/^\d+$/.test(digitsOnly) || trimmedPhone.length < 10) {
-                return res.status(400).json({ message: "Érvénytelen telefonszám formátum!" })
-            }
-            
-            updateData.phoneNum = trimmedPhone;
-        }
+        let updateData = {}
+        if (password) updateData.password = await bcrypt.hash(password, 9)
+        if (phoneNum) updateData.phoneNum = phoneNum
+        if (email) updateData.email = email
+        if (name) updateData.name = name
 
         await dbHandler.user.update(updateData, {
             where: { id: Id }
         })
 
         res.json({
-            'message': 'sikeres módosítás'
+            message: 'Sikeres módosítás'
         })
 
     } catch (error) {
@@ -241,5 +254,12 @@ router.put('/userUpdate/:id', AuthUser(), async (req, res) => {
         })
     }
 })
+function isValidHungarianPhone(phone) {
+    if (!phone.startsWith('+')) return false
+    const digits = phone.slice(1)
+    const onlyNumbers = /^\d+$/.test(digits)
+    return onlyNumbers && digits.length >= 9
+}
+
 
 module.exports = router

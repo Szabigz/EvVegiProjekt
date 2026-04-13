@@ -4,7 +4,10 @@ const bcrypt = require("bcrypt")
 const {
     Op
 } = require("sequelize")
-const { AuthBarber, AuthAdmin } = require('../Middleware/Auth')
+const {
+    AuthBarber,
+    AuthAdmin
+} = require('../Middleware/Auth')
 
 const dbHandler = require('../dbHandler')
 const JWT = require('jsonwebtoken')
@@ -168,10 +171,10 @@ router.post('/barberLogin', async (req, res) => {
     try {
         const {
             email,
-            name,
             password
         } = req.body
-        if (!email || !name || !password) return res.status(400).json({
+
+        if (!email || !password) return res.status(400).json({
             message: "Missing data"
         })
         const oneBarber = await dbHandler.barber.findOne({
@@ -182,9 +185,7 @@ router.post('/barberLogin', async (req, res) => {
         if (!oneBarber) return res.status(401).json({
             "message": "Nem letezik ilyen felhasznalo"
         })
-        if (oneBarber.name != name) return res.status(400).json({
-            "message": "Hibas nev"
-        })
+
         const validPassword = await bcrypt.compare(password, oneBarber.password)
         if (!validPassword) return res.status(400).json({
             message: "Hibás jelszó"
@@ -195,6 +196,7 @@ router.post('/barberLogin', async (req, res) => {
         }, SK, {
             expiresIn: EI
         })
+
         return res.status(201).json({
             "message": "Sikeres bejelentkezés",
             token
@@ -253,17 +255,21 @@ router.delete("/logsCleanup", AuthBarber(), async (req, res) => {
 router.put('/barberUpdate/:id', AuthBarber(), async (req, res) => {
     try {
         const Id = req.params.id
-        
+
         if (isNaN(Id)) return res.status(400).json({
             message: "Invalid ID"
         })
-        
+
         const barber = await dbHandler.barber.findByPk(Id);
         if (!barber) {
-            return res.status(404).json({ message: "A borbély nem található!" });
+            return res.status(404).json({
+                message: "A borbély nem található!"
+            });
         }
         if (Number(req.uid) !== Number(Id)) {
-            return res.status(403).json({ message: "Forbidden" }); 
+            return res.status(403).json({
+                message: "Forbidden"
+            });
         }
         const {
             name,
@@ -275,7 +281,9 @@ router.put('/barberUpdate/:id', AuthBarber(), async (req, res) => {
         } = req.body
 
         if (!name && !email && !password && !phoneNum && !profile_image && !description) {
-            return res.status(400).json({ message: "Nincs megadva módosítandó adat!" });
+            return res.status(400).json({
+                message: "Nincs megadva módosítandó adat!"
+            });
         }
 
         let updateData = {}

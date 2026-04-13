@@ -28,11 +28,7 @@
                            TextWrapping="Wrap"
                            HorizontalAlignment="Center"
                            IsVisible="{Binding ErrorMessage, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"/>
-				<!-- Nev -->
-				<StackPanel>
-					<TextBlock Text="Név" FontWeight="SemiBold" Margin="0,0,0,5"/>
-					<TextBox Text="{Binding Name}" Watermark="Írd be a neved..."/>
-				</StackPanel>
+				
 				<!-- Email  -->
 				<StackPanel>
 					<TextBlock Text="Email" FontWeight="SemiBold" Margin="0,0,0,5"/>
