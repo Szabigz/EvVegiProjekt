@@ -78,14 +78,15 @@ namespace BarberManager.ViewModels
             var services = await _api.GetServicesAsync();
 
             var userList = new ObservableCollection<User>();
-            userList.Add(new User { Id = 0, Name = "Sétáló / Nem regisztrált vendég", Email = "-" });
 
             foreach (var u in users)
             {
                 userList.Add(u);
             }
+
             AllUsers = userList;
             AllServices = new ObservableCollection<Service>(services);
+
             if (AllUsers.Count > 0)
             {
                 NewSelectedUser = AllUsers[0];
@@ -119,6 +120,14 @@ namespace BarberManager.ViewModels
 
         partial void OnNewDateChanged(DateTimeOffset value)
         {
+            if (value.Date < DateTime.Today)
+            {
+                AddErrorMessage = "A múltba nem tudsz időpontot felvenni!";
+                NewDate = DateTimeOffset.Now;
+                return;
+            }
+
+            AddErrorMessage = ""; 
             _ = LoadAvailableSlotsAsync();
         }
 
@@ -132,8 +141,12 @@ namespace BarberManager.ViewModels
             var slots = await _api.GetAvailableSlotsAsync(barber.Id, NewDate.DateTime);
             foreach (var slot in slots)
             {
+                if (NewDate.Date == DateTime.Today && slot.TimeOfDay < DateTime.Now.TimeOfDay)
+                    continue;
+
                 AvailableTimeSlots.Add(slot.ToString("HH:mm"));
             }
+
             if (AvailableTimeSlots.Count > 0)
             {
                 NewTime = AvailableTimeSlots[0];
@@ -145,7 +158,7 @@ namespace BarberManager.ViewModels
         {
             AddErrorMessage = "";
             NewComment = "";
-            NewSelectedUser = null;
+            NewSelectedUser = AllUsers.FirstOrDefault();
             NewSelectedService = null;
             NewDate = DateTimeOffset.Now;
             IsAddingAppointment = true;
@@ -156,18 +169,23 @@ namespace BarberManager.ViewModels
         {
             if (NewSelectedService == null || string.IsNullOrEmpty(NewTime))
             {
-                AddErrorMessage = "Hiányzó adatok!";
+                AddErrorMessage = "Válassz szolgáltatást és időpontot!";
+                return;
+            }
+
+            var timeParts = NewTime.Split(':');
+            int hour = int.Parse(timeParts[0]);
+            int min = int.Parse(timeParts[1]);
+            DateTime start = new DateTime(NewDate.Year, NewDate.Month, NewDate.Day, hour, min, 0);
+            if (start < DateTime.Now)
+            {
+                AddErrorMessage = "Ez az időpont már elmúlt! Válassz későbbit.";
                 return;
             }
             IsSaving = true;
             try
             {
-                var timeParts = NewTime.Split(':');
-                int hour = int.Parse(timeParts[0]);
-                int min = int.Parse(timeParts[1]);
-                DateTime start = new DateTime(NewDate.Year, NewDate.Month, NewDate.Day, hour, min, 0);
                 DateTime end = start.AddHours(1);
-
                 int? userIdToSend = (NewSelectedUser != null && NewSelectedUser.Id != 0) ? NewSelectedUser.Id : (int?)null;
 
                 var res = await _api.PostAppointmentAsync(NewSelectedService.Id, userIdToSend, start, end, NewComment);
@@ -184,7 +202,7 @@ namespace BarberManager.ViewModels
             }
             catch
             {
-                AddErrorMessage = "Rendszerhiba!";
+                AddErrorMessage = "Rendszerhiba történt a mentéskor!";
             }
             finally
             {

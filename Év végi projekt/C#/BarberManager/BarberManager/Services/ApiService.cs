@@ -19,8 +19,12 @@ namespace BarberManager.Services
 
         public ApiService()
         {
+            //online
             //BaseUrl = "https://api.slickbarber.hu";
-            BaseUrl = "http://127.0.0.1:3000";
+            //telefon
+            //BaseUrl = "http://10.0.2.2:3000";
+            //desktop
+            BaseUrl = "http://localhost:3000";
             _httpClient = new HttpClient { BaseAddress = new Uri(BaseUrl) };
         }
 
