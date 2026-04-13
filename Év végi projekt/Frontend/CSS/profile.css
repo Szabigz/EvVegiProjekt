@@ -16,7 +16,74 @@ h1 {
     text-decoration-color: #d4af37;
     text-decoration-thickness: 2px;
 }
+/*Navigacio*/
 
+.navbar ul {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 50px;
+    list-style: none;
+    padding: 0;
+    margin: 40px 0;
+}
+
+.navbar{
+    flex: 0 0 auto;
+    width: auto;
+    text-align: center;
+    margin: 10px 0;
+}
+.navbar:first-child {
+    flex: 0 0 auto;
+    text-align: center;
+    margin-bottom: 20px;
+    margin-right: 40px;
+}
+.menu-link {
+    position: relative;
+    display: inline-block;
+    text-decoration: none;
+    color: white;
+    font-weight: 600;
+    font-size: 0.95rem;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    padding: 8px 0;
+    transition: all 0.3s ease;
+}
+
+.menu-link:hover {
+    color: #d4af37; 
+}
+
+.menu-link::after {
+    content: "";
+    position: absolute;
+    left: 50%;
+    bottom: -6px;
+    width: 0%;
+    height: 2px;
+    background: linear-gradient(90deg, #d4af37, #ffffff);
+    transition: all 0.3s ease;
+    transform: translateX(-50%);
+}
+
+.menu-link:hover::after {
+    width: 100%;
+}
+
+
+.menu-img {
+    display: block;
+    height: 80px;
+    width: auto;
+    object-fit: contain;
+    border-radius: 8px;
+    transition: transform 0.3s ease;
+    background: rgb(255, 255, 255);
+}
 #profilediv{
     background: rgba(255, 255, 255, 0.15);
     border-left: 5px solid rgba(255, 255, 255, 0.25);

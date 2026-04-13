@@ -135,10 +135,9 @@ router.post('/userLogin', async (req, res) => {
     try {
         const {
             email,
-            name,
             password
         } = req.body
-        if (!email || !name || !password) return res.status(400).json({
+        if (!email || !password) return res.status(400).json({
             message: "Missing data"
         })
         const oneUser = await dbHandler.user.findOne({
@@ -146,8 +145,8 @@ router.post('/userLogin', async (req, res) => {
                 email
             }
         })
-        if (!oneUser || oneUser.name !== name) return res.status(400).json({
-            message: "Hibás név vagy email"
+        if (!oneUser || oneUser.email !== email) return res.status(400).json({
+            message: "Hibás email"
         })
         const validPassword = await bcrypt.compare(password, oneUser.password)
         if (!validPassword) return res.status(400).json({
@@ -196,7 +195,13 @@ router.put('/userUpdate/:id', AuthUser(), async (req, res) => {
         if (!name && !email && !password && !phoneNum) return res.status(400).json({
             message: "Nincs módosítanó adat"
         })
-
+        if (password.length < 6) {
+            return res.status(400).json({ message: "Weak password" })
+        }
+        
+        if (phoneNum.length < 6) {
+            return res.status(400).json({ message: "Invalid phone number" })
+        }
         let updateData = {};
         if (password) updateData.password = await bcrypt.hash(password, 9);
         if (phoneNum) updateData.phoneNum = phoneNum;

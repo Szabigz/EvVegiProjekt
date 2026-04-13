@@ -39,7 +39,9 @@ document.addEventListener("DOMContentLoaded", async () => {
     /*Kijelentkes gomb*/
     document.getElementById('logoutBtn').addEventListener('click', () => {
         sessionStorage.removeItem('token')
-        window.location.href = "/"
+        setTimeout(() => {
+            window.location.href = "/"
+        }, 1500)
     })
 })
 
@@ -114,13 +116,13 @@ function editField(type) {
 
     if (type == 'phone') {
         container.innerHTML = `
-            <input type="text" id="input-phone" class="form-control form-control-sm w-50" value="${originalValue}">
+            <input type="text" id="input-phone" class="form-control form-control-sm w-50" maxlength="15" value="${originalValue}">
             <button class="btn btn-sm btn-dark text-light"" onclick="saveUpdate('phone')">Mentés</button>
             <button class="btn btn-sm btn-outline-light" onclick="location.reload()">Mégse</button>
         `;
     } else {
         container.innerHTML = `
-            <input type="password" id="input-password" class="form-control form-control-sm w-50" placeholder="Új jelszó">
+            <input type="password" id="input-password" class="form-control form-control-sm w-50" placeholder="Új jelszó" minlenght="6">
             <button class="btn btn-sm btn-dark text-light" onclick="saveUpdate('password')">Mentés</button>
             <button class="btn btn-sm btn-outline-light" onclick="location.reload()">Mégse</button>
         `;
@@ -136,7 +138,7 @@ async function saveUpdate(type) {
         bodyData.phoneNum = document.getElementById('input-phone').value
     } else {
         bodyData.password = document.getElementById('input-password').value
-        if (!bodyData.password) return alert("Adj meg egy új jelszót!")
+        if (!bodyData.password) return showToast("Adj meg egy új jelszót!","success")
     }
 
     try {
@@ -152,10 +154,12 @@ async function saveUpdate(type) {
         const resData = await response.json()
 
         if (response.ok) {
-            alert("Sikeres módosítás!")
-            location.reload()
+            showToast("Sikeres módosítás!","success")
+            setTimeout(() => {
+                location.reload()
+            }, 2000)
         } else {
-            alert("Hiba: " + resData.message)
+            showToast("Hiba: " + resData.message,"error")
         }
     } catch (error) {
         console.error("Hiba a küldéskor:", error)
@@ -179,15 +183,15 @@ async function cancelAppointment(id) {
         })
 
         if (res.ok) {
-            alert("Időpont sikeresen lemondva.");
+            showToast("Időpont sikeresen lemondva.","success");
             loadMyAppointment()
         } else {
             const errorText = await res.text()
-            alert("Hiba: " + errorText)
+            showToast("Hiba: " + errorText,"error")
         }
     } catch (err) {
         console.error("Hiba a lemondás során:", err)
-        alert("Hálózati hiba történt a lemondáskor.")
+        showToast("Hálózati hiba történt a lemondáskor.","error")
     }
 }
 

@@ -39,13 +39,15 @@ document.addEventListener("DOMContentLoaded", () => {
     switchLink.addEventListener("click", (e) => {
         e.preventDefault()
         const phoneField = document.getElementById("phoneField")
-    
+        const nameField = document.getElementById("nameField")
+
         if (modalTitle.textContent == "Bejelentkezés") {
             modalTitle.textContent = "Regisztráció"
             modalSubmitBtn.textContent = "Regisztrálás"
             switchLink.textContent = "Bejelentkezés"
             switchText.textContent = ""
             phoneField.classList.remove("d-none"); 
+            nameField.classList.remove("d-none")
             document.getElementById("nameInput").setAttribute("required", true)
             document.getElementById("phoneNumInput").setAttribute("required", true)
         } else {
@@ -54,6 +56,7 @@ document.addEventListener("DOMContentLoaded", () => {
             switchLink.textContent = "Regisztrálj!"
             switchText.textContent = "Még nincs fiókod? "
             phoneField.classList.add("d-none") 
+            nameField.classList.add("d-none")
             document.getElementById("nameInput").removeAttribute("required")
             document.getElementById("phoneNumInput").removeAttribute("required")
 

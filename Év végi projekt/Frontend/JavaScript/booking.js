@@ -7,7 +7,7 @@ async function loadBarbers() {
     container.innerHTML = "<p class='text-white'>Barbererek betöltése...</p>"
 
     try {
-        const res = await fetch(`${CONFIG.BASE_URL}/barbersBooking`)
+        const res = await fetch(`${CONFIG.BASE_URL}/barberBooking`)
         const barbers = await res.json()
         
         container.innerHTML = ""
@@ -261,10 +261,10 @@ function formatLocalDateTime(date) {
 document.getElementById("finalBookingBtn").addEventListener("click", finalizeBooking)
 
 async function finalizeBooking() {
-    if (!selectedBarber) return alert("Kérlek válassz egy fodrászt!")
-    if (!selectedService) return alert("Kérlek válassz egy szolgáltatást!")
-    if (!selectedDate) return alert("Kérlek válassz egy napot!")
-    if (!selectedTime) return alert("Kérlek válassz időpontot!")
+    if (!selectedBarber) return showToast("Kérlek válassz egy fodrászt!", "error")
+    if (!selectedService) return showToast("Kérlek válassz egy szolgáltatást!", "error")
+    if (!selectedDate) return showToast("Kérlek válassz egy napot!", "error")
+    if (!selectedTime) return showToast("Kérlek válassz időpontot!", "error")
 
     const comment = document.getElementById("commentInput").value || "Nincs megjegyzés";
     
@@ -301,16 +301,18 @@ async function finalizeBooking() {
         const serviceElem = document.querySelector(`.service-btn[data-service="${selectedService}"]`)
         const serviceName = serviceElem ? serviceElem.innerText.split("\n")[0] : "Szolgáltatás"
 
-        alert(`Foglalás sikeres!\n
-            Fodrász: ${barberName}\n
-            Szolgáltatás: ${serviceName}\n
-            Dátum: ${dateText}\n
-            Időpont: ${timeText}`)
+        showToast(`Foglalás sikeres!<br>
+            Fodrász: ${barberName}<br>
+            Szolgáltatás: ${serviceName}<br>
+            Dátum: ${dateText}<br>
+            Időpont: ${timeText}`,"success")
 
         generateTimeSlots()
-        window.location.href= "/HTML/profile.html"
+        setTimeout(() => {
+            window.location.href = "/HTML/profile.html"
+        }, 2500)
     } else {
-        alert("Hiba történt a foglalás során!")
+        showToast("Hiba történt a foglalás során!", "error")
     }
 }
 
