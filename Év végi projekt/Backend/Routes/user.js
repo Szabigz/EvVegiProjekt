@@ -176,44 +176,65 @@ router.put('/userUpdate/:id', AuthUser(), async (req, res) => {
         email,
         name
     } = req.body
+
     try {
         const Id = req.params.id
         if (isNaN(Id)) return res.status(400).json({
             message: "Invalid ID"
         })
-        if (Number(req.uid) !== Number(Id)) {
+
+        if (Number(req.uid) != Number(Id)) {
             return res.status(403).json({ message: "Forbidden" }); 
         }
+
         const oneUser = await dbHandler.user.findOne({
-            where: {
-                id: Id
-            }
+            where: { id: Id }
         })
+
         if (!oneUser) return res.status(404).json({
             message: "Nincs ilyen felhasználó"
         })
-        if (!name && !email && !password && !phoneNum) return res.status(400).json({
-            message: "Nincs módosítanó adat"
-        })
-        if (password.length < 6) {
-            return res.status(400).json({ message: "Weak password" })
+
+        if (!name && !email && !password && !phoneNum) {
+            return res.status(400).json({
+                message: "Nincs módosítandó adat"
+            })
         }
-        
-        if (phoneNum.length < 6) {
-            return res.status(400).json({ message: "Invalid phone number" })
-        }
+
         let updateData = {};
-        if (password) updateData.password = await bcrypt.hash(password, 9);
-        if (phoneNum) updateData.phoneNum = phoneNum;
+
+        if (password) {
+            if (password.length < 6) {
+                return res.status(400).json({ message: "A jelszó túl rövid (min 6 karakter)!" })
+            }
+            updateData.password = await bcrypt.hash(password, 9)
+        }
+
+        if (phoneNum) {
+            const trimmedPhone = phoneNum.trim()
+            const startsWithPlus = trimmedPhone.startsWith('+')
+            const startsWith06 = trimmedPhone.startsWith('06')
+
+            if (!startsWithPlus && !startsWith06) {
+                return res.status(400).json({ message: "A telefonszám + vagy 06 jellel kell kezdődjön!" })
+            }
+
+            const digitsOnly = startsWithPlus ? trimmedPhone.slice(1) : trimmedPhone
+            if (!/^\d+$/.test(digitsOnly) || trimmedPhone.length < 10) {
+                return res.status(400).json({ message: "Érvénytelen telefonszám formátum!" })
+            }
+            
+            updateData.phoneNum = trimmedPhone;
+        }
 
         await dbHandler.user.update(updateData, {
-            where: {
-                id: Id
-            }
+            where: { id: Id }
         })
+
         res.json({
             'message': 'sikeres módosítás'
         })
+
     } catch (error) {
         res.status(500).json({
             message: 'Szerverhiba'

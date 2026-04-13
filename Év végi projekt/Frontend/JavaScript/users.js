@@ -34,8 +34,25 @@ async function userRegister() {
     const name = document.getElementById("nameInput").value
     const email = document.getElementById("emailInput").value
     const password = document.getElementById("passwordInput").value
-    const phoneNum = document.getElementById("phoneNumInput").value
+    const phoneNum = document.getElementById("phoneNumInput").value.trim()
 
+    //Telefonszam validacio
+    const startsWithPlus = phoneNum.startsWith('+')
+    const startsWith06 = phoneNum.startsWith('06')
+    const testValue = startsWithPlus ? phoneNum.slice(1) : phoneNum;
+    const onlyNumbers = /^\d+$/.test(testValue);
+    
+    
+    if (!startsWithPlus && !startsWith06) {
+        return showToast("A telefonszámnak + vagy 06 jellel kell kezdődnie!", "error")
+    }
+    if (!onlyNumbers) {
+        return showToast("A telefonszám csak számokat tartalmazhat!", "error")
+    }
+    if (phoneNum.length < 10) {
+        return showToast("A megadott telefonszám túl rövid!", "error");
+    }
+    
     try {
         const response = await fetch(`${CONFIG.BASE_URL}/userReg`, {
             method: 'POST',
