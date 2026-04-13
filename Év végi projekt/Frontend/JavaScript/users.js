@@ -45,22 +45,12 @@ async function userRegister() {
         })
 
         const data = await response.json()
-        /*Modal megnyitasa ha regisztralt a felhasznalo*/
+        
         if (response.ok) {
-            alert(data.message || "Sikeres regisztráció!")
-            const modalTitle = document.querySelector("#loginModal .modal-title")
-            const modalSubmitBtn = document.getElementById("modalSubmitBtn")
-            const switchLink = document.getElementById("switchToRegister")
-            const switchText = document.getElementById("switch")
-            const phoneField = document.getElementById("phoneField")
+            alert(data.message || "Sikeres regisztráció! Rendszerünk most bejelentkeztet...")
+            const redirect = sessionStorage.getItem('postLoginRedirect') || "/HTML/booking.html"
+            await userLogin(redirect)
             
-            modalTitle.textContent = "Bejelentkezés"
-            modalSubmitBtn.textContent = "Bejelentkezés"
-            switchLink.textContent = "Regisztrálj!"
-            switchText.textContent = "Még nincs fiókod? "
-            phoneField.classList.add("d-none")
-            document.getElementById("nameInput").removeAttribute("required")
-            document.getElementById("phoneNumInput").removeAttribute("required")
         } else {
             alert("Regisztrációs hiba: " + data.message)
         }

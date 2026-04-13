@@ -12,15 +12,27 @@ document.addEventListener("DOMContentLoaded", () => {
     /*Profil gomb*/
     profileBtn.addEventListener("click",(e)=>{
         e.preventDefault()
-        sessionStorage.setItem('postLoginRedirect', "/HTML/profile.html")
-        loginModal.show()
+        const token = sessionStorage.getItem('token')
+        if (token) {
+            //Ha mar be van jelentkezve, egybol menjen a profilra
+            window.location.href = "/HTML/profile.html"
+        } else {
+            //Ha nincs, nyiljon meg a modal
+            sessionStorage.setItem('postLoginRedirect', "/HTML/profile.html")
+            loginModal.show()
+        }
     })
 
     /*Foglalas gomb*/
     bookingBtn.addEventListener("click", (e) => {
         e.preventDefault()
-        sessionStorage.setItem('postLoginRedirect', "/HTML/booking.html")
-        loginModal.show()
+        const token = sessionStorage.getItem('token');
+        if (token) {
+            window.location.href = "/HTML/booking.html";
+        } else {
+            sessionStorage.setItem('postLoginRedirect', "/HTML/booking.html")
+            loginModal.show()
+        }
     })
 
     /*Bejelentkezes - Regisztracio*/
@@ -58,7 +70,6 @@ document.addEventListener("DOMContentLoaded", () => {
         } 
         else {
             userRegister()
-
         }
     })
 })
