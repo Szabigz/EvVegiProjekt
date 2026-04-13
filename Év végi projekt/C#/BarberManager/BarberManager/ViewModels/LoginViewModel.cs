@@ -17,8 +17,6 @@ namespace BarberManager.ViewModels
         }
 
         [ObservableProperty]
-        private string _name = string.Empty;
-        [ObservableProperty]
         private string _email = string.Empty;
         [ObservableProperty]
         private string _password = string.Empty;
@@ -40,13 +38,13 @@ namespace BarberManager.ViewModels
         public async Task SubmitAsync()
         {
             ErrorMessage = string.Empty;
-            if (string.IsNullOrWhiteSpace(Name) || string.IsNullOrWhiteSpace(Email) || string.IsNullOrWhiteSpace(Password))
+            if (string.IsNullOrWhiteSpace(Email) || string.IsNullOrWhiteSpace(Password))
             {
-                ErrorMessage = "Név, Email és Jelszó kötelező!";
+                ErrorMessage = "Email és Jelszó kötelező!";
                 return;
             }
 
-            var (isSuccess, message) = await _api.LoginBarberAsync(Email, Name, Password);
+            var (isSuccess, message) = await _api.LoginBarberAsync(Email, Password);
             if (isSuccess)
                 OnLoginSuccess?.Invoke();
             else

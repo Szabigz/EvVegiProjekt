@@ -18,7 +18,7 @@
 				</MultiBinding>
 			</Grid.IsVisible>
 			<Border Grid.Row="0" Background="White" Padding="0,10" BorderThickness="0,0,0,1" BorderBrush="#EEEEEE">
-				<Grid ColumnDefinitions="60, *, *, *, *, *, *, Auto, Auto">
+				<Grid ColumnDefinitions="60, *, *, *, *, *, *, Auto, Auto, Auto">
 					<Button Grid.Column="0" Command="{Binding ShowAddPanelCommand}" Background="Transparent" ToolTip.Tip="Új foglalás rögzítése" Margin="10,0,10,0">
 						<Path Fill="Black" Stretch="Uniform" Width="20" Height="20" 
 							  Data="M12 6C12.5523 6 13 6.44772 13 7V11H17C17.5523 11 18 11.4477 18 12C18 12.5523 17.5523 13 17 13H13V17C13 17.5523 12.5523 18 12 18C11.4477 18 11 17.5523 11 17V13H7C6.44772 13 6 12.5523 6 12C6 11.4477 6.44772 11 7 11H11V7C11 6.44772 11.4477 6 12 6Z M1 12C1 5.92487 5.92487 1 12 1C18.0751 1 23 5.92487 23 12C23 18.0751 18.0751 23 12 23C5.92487 23 1 18.0751 1 12ZM12 3C7.02944 3 3 7.02944 3 12C3 16.9706 7.02944 21 12 21C16.9706 21 21 16.9706 21 12C21 7.02944 16.9706 3 12 3Z"/>
@@ -47,10 +47,15 @@
 						<TextBlock Text="Szombat" FontWeight="Bold" FontSize="14" />
 						<TextBlock Text="{Binding Sat}" FontSize="11" Foreground="Gray" HorizontalAlignment="Center"/>
 					</StackPanel>
+					
 					<Button Grid.Column="7" Command="{Binding PrevWeekCommand}" Background="Transparent" Padding="10">
 						<Path Fill="Black" Stretch="Uniform" Width="14" Height="14" Data="M15.2071 6.29289C15.5976 6.68342 15.5976 7.31658 15.2071 7.70711L10.9142 12L15.2071 16.2929C15.5976 16.6834 15.5976 17.3166 15.2071 17.7071C14.8166 18.0976 14.1834 18.0976 13.7929 17.7071L8.79289 12.7071C8.40237 12.3166 8.40237 11.6834 8.79289 11.2929L13.7929 6.29289C14.1834 5.90237 14.8166 5.90237 15.2071 6.29289Z"/>
 					</Button>
-					<Button Grid.Column="8" Command="{Binding NextWeekCommand}" Background="Transparent" Padding="10" Margin="0,0,10,0">
+					
+					<!-- MAI NAP GOMB -->
+					<Button Grid.Column="8" Command="{Binding JumpToTodayCommand}" Content="Mai nap" Background="#EEEEEE" Foreground="Black" FontWeight="SemiBold" CornerRadius="8" Padding="15,8" Margin="5,0"/>
+
+					<Button Grid.Column="9" Command="{Binding NextWeekCommand}" Background="Transparent" Padding="10" Margin="0,0,10,0">
 						<Path Fill="Black" Stretch="Uniform" Width="14" Height="14" Data="M8.79289 6.29289C9.18342 5.90237 9.81658 5.90237 10.2071 6.29289L15.2071 11.2929C15.5976 11.6834 15.5976 12.3166 15.2071 12.7071L10.2071 17.7071C9.81658 18.0976 9.18342 18.0976 8.79289 17.7071C8.40237 17.3166 8.40237 16.6834 8.79289 16.2929L13.0858 12L8.79289 7.70711C8.40237 7.31658 8.40237 6.68342 8.79289 6.29289Z"/>
 					</Button>
 				</Grid>
