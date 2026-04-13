@@ -220,5 +220,14 @@ router.put('/userUpdate/:id', AuthUser(), async (req, res) => {
         })
     }
 })
+function isValidHungarianPhone(phone) {
+    if (!phone.startsWith('+')) return false
+    const digits = phone.slice(1)
+    const onlyNumbers = /^\d+$/.test(digits)
+    return onlyNumbers && digits.length >= 9;
+}
 
+if (!isValidHungarianPhone(phoneNum)) {
+    return res.status(400).json({ message: "Érvénytelen formátum! (Példa: +36201234567)" })
+}
 module.exports = router

@@ -35,7 +35,13 @@ async function userRegister() {
     const email = document.getElementById("emailInput").value
     const password = document.getElementById("passwordInput").value
     const phoneNum = document.getElementById("phoneNumInput").value
-
+    if (!phoneNum.startsWith('+')) {
+        return showToast("A telefonszámnak + jellel kell kezdődnie!", "error");
+    }
+    const phoneDigits = phoneNum.slice(1);
+    if (phoneDigits.length < 9 || isNaN(phoneDigits)) {
+        return showToast("Érvénytelen telefonszám formátum!", "error");
+    }
     try {
         const response = await fetch(`${CONFIG.BASE_URL}/userReg`, {
             method: 'POST',

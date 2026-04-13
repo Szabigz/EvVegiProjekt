@@ -133,10 +133,17 @@ function editField(type) {
 async function saveUpdate(type) {
     const token = sessionStorage.getItem('token')
     let bodyData = {}
-
     if (type == 'phone') {
-        bodyData.phoneNum = document.getElementById('input-phone').value
-    } else {
+        const val = document.getElementById('input-phone').value;
+        
+        // Ellenőrzés
+        if (!val.startsWith('+') || isNaN(val.slice(1)) || val.length < 10) {
+            return showToast("Helyes formátum: +36201234567", "error");
+        }
+        
+        bodyData.phoneNum = val;
+    } 
+    else {
         bodyData.password = document.getElementById('input-password').value
         if (!bodyData.password) return showToast("Adj meg egy új jelszót!","success")
     }
