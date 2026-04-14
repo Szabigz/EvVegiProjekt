@@ -16,7 +16,7 @@ server.use(express.json({ limit: '10mb' }));
 server.use(cors())
 server.use(express.urlencoded({ limit: '10mb', extended: true }));
 server.use(express.static(path.join(__dirname, "../Frontend")));
-dbHandler.db.sync()
+dbHandler.db.sync({alter:true})
 require('dotenv').config()
 
 server.get("/", (req, res) => {
