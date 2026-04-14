@@ -60,7 +60,6 @@ describe("testing /barberLogin post route", () => {
             .post("/barberLogin")
             .send({
                 email: 'testEmail',
-                name: 'testName',
                 password: 'testPass',
                 isAdmin:1   
             })
@@ -103,7 +102,7 @@ describe("testing /userReg post route", () => {
                 email: 'aaaa@ssss',
                 name: 'testName',
                 password: "testPass",
-                phoneNum: 12345
+                phoneNum: "+36201234567"
             })
             .set('Content-Type', 'application/json')
 
@@ -117,7 +116,7 @@ describe("testing /userReg post route", () => {
                 email: "aaaa@ssss",
                 name: "ggggg",
                 password: "testPass",
-                phoneNum: 12345
+                phoneNum: "+36201234567"
             })
 
         expect(res.statusCode).toBe(400)
@@ -144,7 +143,6 @@ describe("POST /userLogin", () => {
             .post("/userLogin")
             .send({
                 email: 'aaaa@ssss',
-                name: 'testName',
                 password: "testPass"
             })
             .set('Content-Type', 'application/json')
@@ -159,7 +157,6 @@ describe("POST /userLogin", () => {
             .post("/userLogin")
             .send({
                 email: "asd",
-                nam: "testName",
                 password: "testPass"
             })
 
@@ -694,7 +691,7 @@ describe('testing /userUpdate/:id put route', () => {
         const response = await request(server)
             .put(`/userUpdate/${userId}`)
             .send({
-                phoneNum: 1111111
+                phoneNum: "+36301111111"
             })
             .set("Authorization", `Bearer ${userToken}`)
         expect(response.statusCode).toBe(200)
