@@ -71,7 +71,7 @@ async function loadMyAppointment() {
         container.innerHTML = "";
         /*Ha van*/
         data.forEach(appointment => {
-            const date = new Date(appointment.start_time);
+            const date = new Date(appointment.end_time);
             /*Foglalas divek letrehozasa*/
             const appointmentHtml = `
                 <div class="col-lg-6 col-md-6 col-sm-12 mb-4">
